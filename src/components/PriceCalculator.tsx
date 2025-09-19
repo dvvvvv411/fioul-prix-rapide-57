@@ -5,11 +5,12 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { heizölConfig } from '@/config/heizol';
-import { backendService } from '@/services/backendService';
 import { Truck, Calculator, Gift } from 'lucide-react';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const PriceCalculator = () => {
+  const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState('premium');
   const [quantity, setQuantity] = useState('3000');
   const [zipCode, setZipCode] = useState('');
@@ -54,7 +55,7 @@ const PriceCalculator = () => {
     }
   };
 
-  const handleCheckout = async () => {
+  const handleCheckout = () => {
     if (parseInt(quantity) < heizölConfig.limits.minLiters) {
       toast.error(`Quantité minimum : ${heizölConfig.limits.minLiters}L`);
       return;
@@ -65,45 +66,17 @@ const PriceCalculator = () => {
       return;
     }
 
-    setIsCalculating(true);
-    
-    try {
-      const productName = heizölConfig.products[selectedProduct as keyof typeof heizölConfig.products].name;
-      
-      const checkoutData = {
-        product: productName,
-        quantity: quantity,
-        zipCode: zipCode,
-        shopId: heizölConfig.shopId,
-        totalPrice: finalPrice, // Fixed: changed from totalPrice to finalPrice
-        deliveryFee: deliveryFee
-      };
+    // Navigate to checkout with order data
+    const checkoutParams = new URLSearchParams({
+      product: selectedProduct,
+      quantity: quantity,
+      zipCode: zipCode,
+      totalPrice: totalPrice.toString(),
+      deliveryFee: deliveryFee.toString(),
+      finalPrice: finalPrice.toString()
+    });
 
-      console.log('Price calculator - sending checkout data:', checkoutData);
-      
-      const result = await backendService.createCheckout(checkoutData);
-      
-      if (result.success && result.checkoutUrl) {
-        console.log('Price calculator - opening checkout URL:', result.checkoutUrl);
-        window.open(result.checkoutUrl, '_blank');
-        
-        if (result.error) {
-          toast.success('Redirection vers le checkout...', {
-            description: result.error
-          });
-        } else {
-          toast.success('Redirection vers le checkout...');
-        }
-      } else {
-        console.error('Price calculator - checkout failed:', result);
-        toast.error(result.error || 'Erreur lors de la création du checkout');
-      }
-    } catch (error) {
-      console.error('Price calculator - checkout error:', error);
-      toast.error('Erreur lors de la commande. Veuillez réessayer.');
-    } finally {
-      setIsCalculating(false);
-    }
+    navigate(`/checkout?${checkoutParams.toString()}`);
   };
 
   return (
