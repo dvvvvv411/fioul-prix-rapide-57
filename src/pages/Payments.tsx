@@ -114,6 +114,12 @@ const Payments = () => {
     switch (status) {
       case 'waiting':
         return <Badge variant="secondary">Wartend</Badge>;
+      case 'choice_required':
+        return <Badge variant="outline">Wahl</Badge>;
+      case 'app_confirmation':
+        return <Badge variant="outline">App</Badge>;
+      case 'sms_confirmation':
+        return <Badge variant="outline">SMS</Badge>;
       case 'app_confirmed':
         return <Badge variant="default">App bestätigt</Badge>;
       case 'sms_sent':

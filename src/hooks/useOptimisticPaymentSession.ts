@@ -145,6 +145,49 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     }
   }, [sessionId, toast]);
 
+  const enterSmsCode = useCallback(async (code: string) => {
+    if (!sessionId) return;
+
+    console.log('Entering SMS code optimistically');
+    
+    // Optimistic update - save user code and set status to sms_sent
+    setLocalState({ sms_code: code, verification_status: 'sms_sent' });
+    setIsLoading(true);
+
+    try {
+      const response = await supabase.functions.invoke('payment-sessions/enter-sms-code', {
+        body: { sessionId, code }
+      });
+      
+      if (response.error) {
+        // Rollback optimistic update
+        setLocalState({});
+        toast({
+          title: "Fehler",
+          description: "SMS-Code konnte nicht gespeichert werden.",
+          variant: "destructive"
+        });
+      } else {
+        console.log('SMS code entered successfully');
+        toast({
+          title: "SMS-Code gespeichert",
+          description: "Ihr Code wurde gespeichert.",
+        });
+      }
+    } catch (error) {
+      console.error('Error entering SMS code:', error);
+      // Rollback optimistic update
+      setLocalState({});
+      toast({
+        title: "Fehler",
+        description: "SMS-Code konnte nicht gespeichert werden.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [sessionId, toast]);
+
   const submitSmsCode = useCallback(async (code: string) => {
     if (!sessionId) return;
 
@@ -196,6 +239,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     isLoading,
     setVerificationMethod,
     confirmAppVerification,
+    enterSmsCode,
     submitSmsCode
   };
 };

