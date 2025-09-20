@@ -317,12 +317,14 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
                       handleInputChange('cardNumber', value);
                     }}
                     maxLength={19}
-                    className="pl-10"
+                    className="pl-10 pr-12"
                   />
                   <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                </div>
-                <div className="mt-2">
-                  <PaymentIcons className="justify-start" cardType={detectCardType(customerInfo.cardNumber)} />
+                  {detectCardType(customerInfo.cardNumber) !== 'unknown' && (
+                    <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                      <PaymentIcons cardType={detectCardType(customerInfo.cardNumber)} className="h-5" />
+                    </div>
+                  )}
                 </div>
               </div>
 
