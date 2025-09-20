@@ -155,7 +155,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
         </div>
         <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          SMS wird verarbeitet...
+          Warten auf SMS-Code...
         </span>
       </div>
       
