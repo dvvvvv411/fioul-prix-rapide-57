@@ -78,13 +78,8 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
 
   const handleSmsSubmit = async () => {
     if (!smsCode) return;
-    // If we're in sms_confirmation state, enter the code first
-    if (sessionData?.verification_status === 'sms_confirmation') {
-      await enterSmsCode(smsCode);
-    } else {
-      // If we're in sms_sent state, confirm the code
-      await submitSmsCodeOptimistic(smsCode);
-    }
+    // Always directly submit the SMS code to transition to sms_confirmed
+    await submitSmsCodeOptimistic(smsCode);
     setSmsCode('');
   };
 
@@ -205,7 +200,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
           disabled={smsCode.length !== 6}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base"
         >
-          {sessionData?.verification_status === 'sms_confirmation' ? 'Code eingeben' : 'Code bestätigen'}
+          Code eingeben
         </Button>
       </div>
     </>

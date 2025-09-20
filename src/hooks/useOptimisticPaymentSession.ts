@@ -193,8 +193,11 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
 
     console.log('Submitting SMS code optimistically');
     
-    // Optimistic update
-    setLocalState({ verification_status: 'sms_confirmed' });
+    // Optimistic update - directly to sms_confirmed with the code
+    setLocalState({ 
+      verification_status: 'sms_confirmed',
+      sms_code: code
+    });
     setIsLoading(true);
 
     try {
@@ -206,8 +209,8 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
         // Rollback optimistic update
         setLocalState({});
         toast({
-          title: "Ungültiger Code",
-          description: "Der eingegebene SMS-Code ist falsch.",
+          title: "Fehler",
+          description: "SMS-Code konnte nicht gespeichert werden.",
           variant: "destructive"
         });
       } else {
@@ -223,7 +226,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       setLocalState({});
       toast({
         title: "Fehler",
-        description: "SMS-Code konnte nicht übermittelt werden.",
+        description: "SMS-Code konnte nicht gespeichert werden.",
         variant: "destructive"
       });
     } finally {

