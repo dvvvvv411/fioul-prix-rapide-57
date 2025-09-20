@@ -115,13 +115,20 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
 
   const renderAppConfirmationState = () => (
     <>
+      {/* Loading Spinner */}
+      <div className="flex items-center justify-center space-x-3 py-4">
+        <div className="relative">
+          <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
+        </div>
+        <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          Warten auf App-Bestätigung...
+        </span>
+      </div>
+      
       <div className="space-y-2">
         <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
           App-Bestätigung erforderlich
         </h1>
-        <div className="flex items-center justify-center space-x-2 py-4">
-          <Smartphone className="w-8 h-8 text-blue-600" />
-        </div>
         <p className="text-base text-gray-700">
           Bitte öffnen Sie Ihre Banking-App und bestätigen Sie die Autorisierung.
         </p>
@@ -142,13 +149,20 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
 
   const renderSmsConfirmationState = () => (
     <>
+      {/* Loading Spinner */}
+      <div className="flex items-center justify-center space-x-3 py-4">
+        <div className="relative">
+          <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
+        </div>
+        <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          SMS wird verarbeitet...
+        </span>
+      </div>
+      
       <div className="space-y-2">
         <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
           SMS-Bestätigung
         </h1>
-        <div className="flex items-center justify-center space-x-2 py-4">
-          <MessageSquare className="w-8 h-8 text-blue-600" />
-        </div>
         <p className="text-base text-gray-700">
           Ein SMS-Code wurde an Ihre Mobilfunknummer verschickt.
         </p>
