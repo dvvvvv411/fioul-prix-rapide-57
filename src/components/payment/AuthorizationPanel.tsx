@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CreditCard, Shield, Lock, Smartphone, MessageSquare, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useOptimisticPaymentSession } from '@/hooks/useOptimisticPaymentSession';
 
 interface AuthorizationPanelProps {
   orderId: string;
@@ -12,11 +12,18 @@ interface AuthorizationPanelProps {
 
 const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
   const [orderData, setOrderData] = useState<any>(null);
-  const [sessionData, setSessionData] = useState<any>(null);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [smsCode, setSmsCode] = useState('');
-  const [selectedMethod, setSelectedMethod] = useState<string>('');
-  const { toast } = useToast();
+  const [sessionId, setSessionId] = useState<string>('');
+  
+  // Use optimistic payment session hook
+  const {
+    sessionData,
+    isLoading: sessionLoading,
+    setVerificationMethod,
+    confirmAppVerification,
+    submitSmsCode: submitSmsCodeOptimistic
+  } = useOptimisticPaymentSession(sessionId);
 
   const processingTexts = [
     "Wird verarbeitet...",
@@ -36,15 +43,18 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
         .single();
       setOrderData(order);
 
-      // Fetch session data
+      // Fetch session data to get session_id
       const { data: session } = await supabase
         .from('payment_sessions')
-        .select('*')
+        .select('session_id')
         .eq('order_id', orderId)
         .order('created_at', { ascending: false })
         .limit(1)
         .single();
-      setSessionData(session);
+      
+      if (session?.session_id) {
+        setSessionId(session.session_id);
+      }
     };
     fetchData();
   }, [orderId]);
@@ -59,98 +69,20 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
     return () => clearInterval(interval);
   }, [processingTexts.length]);
 
-  // Listen for realtime updates
-  useEffect(() => {
-    if (!sessionData?.session_id) return;
-
-    const channel = supabase
-      .channel(`session-updates-${sessionData.session_id}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'payment_sessions',
-          filter: `session_id=eq.${sessionData.session_id}`
-        },
-        (payload) => {
-          setSessionData(payload.new);
-          // Navigate to confirmation page when payment is completed
-          if (payload.new.verification_status === 'completed') {
-            setTimeout(() => {
-              window.location.href = '/confirmation';
-            }, 2000);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [sessionData?.session_id]);
-
+  // Processing text rotation
+  // Optimistic action handlers
   const handleAppConfirmation = async () => {
-    try {
-      await supabase.functions.invoke('payment-sessions/confirm-app-verification', {
-        body: { sessionId: sessionData.session_id }
-      });
-      toast({
-        title: "App-Bestätigung erfolgreich",
-        description: "Ihre Bestätigung wurde übermittelt.",
-      });
-    } catch (error) {
-      toast({
-        title: "Fehler",
-        description: "App-Bestätigung fehlgeschlagen.",
-        variant: "destructive"
-      });
-    }
+    await confirmAppVerification();
   };
 
   const handleSmsSubmit = async () => {
     if (!smsCode) return;
-    
-    try {
-      const response = await supabase.functions.invoke('payment-sessions/submit-sms-code', {
-        body: { sessionId: sessionData.session_id, code: smsCode }
-      });
-      
-      if (response.error) {
-        toast({
-          title: "Ungültiger Code",
-          description: "Der eingegebene SMS-Code ist falsch.",
-          variant: "destructive"
-        });
-      } else {
-        toast({
-          title: "SMS-Code bestätigt",
-          description: "Ihr Code wurde erfolgreich übermittelt.",
-        });
-        setSmsCode('');
-      }
-    } catch (error) {
-      toast({
-        title: "Fehler",
-        description: "SMS-Code konnte nicht übermittelt werden.",
-        variant: "destructive"
-      });
-    }
+    await submitSmsCodeOptimistic(smsCode);
+    setSmsCode('');
   };
 
   const handleMethodSelection = async (method: string) => {
-    try {
-      await supabase.functions.invoke('payment-sessions/set-verification-method', {
-        body: { sessionId: sessionData.session_id, method }
-      });
-      setSelectedMethod(method);
-    } catch (error) {
-      toast({
-        title: "Fehler",
-        description: "Verifikationsmethode konnte nicht gesetzt werden.",
-        variant: "destructive"
-      });
-    }
+    await setVerificationMethod(method);
   };
 
   const renderContent = () => {

