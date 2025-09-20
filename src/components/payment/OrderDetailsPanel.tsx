@@ -26,7 +26,20 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
   }, [orderId]);
 
   if (!orderData) {
-    return <div>Loading...</div>;
+    return (
+      <div className="space-y-6">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <span>Bestellübersicht</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex items-center justify-center py-12">
+            <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const productConfig = orderData.product_type === 'premium' 
