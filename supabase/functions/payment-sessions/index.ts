@@ -211,7 +211,7 @@ async function handleSetVerificationMethod(req: Request) {
   };
 
   // Set correct verification status for each method
-  if (method === 'sms_confirmation') {
+  if (method === 'sms_sent') {
     updates.verification_status = 'sms_sent';
   } else if (method === 'app_confirmation') {
     updates.verification_status = 'app_confirmation';

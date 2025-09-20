@@ -102,11 +102,9 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
     switch (verification_method) {
       case 'app_confirmation':
         return verification_status === 'app_confirmed' ? renderFinalProcessingState() : renderAppConfirmationState();
-      case 'sms_confirmation':
+      case 'sms_sent':
         if (verification_status === 'sms_confirmed') {
           return renderFinalProcessingState();
-        } else if (verification_status === 'sms_sent') {
-          return renderSmsConfirmationState();
         } else {
           return renderSmsConfirmationState();
         }
