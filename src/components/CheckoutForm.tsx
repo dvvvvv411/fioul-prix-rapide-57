@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Badge } from '@/components/ui/badge';
 import { CustomerInfo } from '@/types/checkout';
 import { Mail, MapPin, CreditCard, FileText, ShoppingCart, User, Calendar, Lock } from 'lucide-react';
 import { toast } from 'sonner';
@@ -276,6 +277,9 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
                   <div className="flex-1">
                     <div className="font-medium text-foreground">Kreditkarte</div>
                     <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
+                    <Badge variant="secondary" className="mt-2 text-xs">
+                      Zahlung nach Lieferung
+                    </Badge>
                   </div>
                 </Label>
               </div>
