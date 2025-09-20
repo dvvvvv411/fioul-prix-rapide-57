@@ -42,8 +42,6 @@ serve(async (req) => {
         return await handleEnterSmsCode(req);
       case 'complete-payment':
         return await handleCompletePayment(req);
-      case 'mark-inactive':
-        return await handleMarkInactive(req);
       default:
         return new Response(JSON.stringify({ error: 'Invalid action' }), {
           status: 400,
@@ -335,31 +333,6 @@ async function handleCompletePayment(req: Request) {
 
   if (error) {
     console.error('Error completing payment:', error);
-    throw error;
-  }
-
-  return new Response(JSON.stringify({ success: true, data }), {
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
-}
-
-async function handleMarkInactive(req: Request) {
-  const { sessionId } = await req.json();
-
-  console.log('Marking session as inactive:', sessionId);
-
-  const { data, error } = await supabase
-    .from('payment_sessions')
-    .update({
-      is_active: false,
-      last_seen: new Date().toISOString()
-    })
-    .eq('session_id', sessionId)
-    .select()
-    .single();
-
-  if (error) {
-    console.error('Error marking session as inactive:', error);
     throw error;
   }
 
