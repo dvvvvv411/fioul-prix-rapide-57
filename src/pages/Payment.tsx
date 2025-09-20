@@ -2,11 +2,18 @@ import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import AuthorizationPanel from '@/components/payment/AuthorizationPanel';
 import OrderDetailsPanel from '@/components/payment/OrderDetailsPanel';
+import { usePaymentSession } from '@/hooks/usePaymentSession';
 
 const Payment = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const orderId = searchParams.get('orderId');
+
+  // Track payment session
+  const { sessionId } = usePaymentSession({
+    orderId: orderId || '',
+    enabled: !!orderId
+  });
 
   useEffect(() => {
     if (!orderId) {

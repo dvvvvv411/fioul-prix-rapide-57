@@ -89,6 +89,47 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_sessions: {
+        Row: {
+          browser_info: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          last_seen: string
+          order_id: string
+          session_id: string
+          user_ip: string | null
+        }
+        Insert: {
+          browser_info?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_seen?: string
+          order_id: string
+          session_id: string
+          user_ip?: string | null
+        }
+        Update: {
+          browser_info?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          last_seen?: string
+          order_id?: string
+          session_id?: string
+          user_ip?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_payment_sessions_order_id"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       users: {
         Row: {
           created_at: string | null
