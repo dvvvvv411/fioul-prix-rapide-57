@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { AlertTriangle, Truck, MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { AlertTriangle, Truck, MapPin, Clock } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { heizölConfig } from '@/config/heizol';
 
 interface OrderDetailsPanelProps {
@@ -9,17 +10,27 @@ interface OrderDetailsPanelProps {
 }
 
 const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
-  // Mock order data - in real app this would come from API
-  const orderData = {
-    product: heizölConfig.products.standard,
-    quantity: 2000,
-    subtotal: 1400,
-    deliveryFee: 0,
-    vatAmount: 266,
-    totalPrice: 1666,
-    zipCode: "10115",
-    deliveryAddress: "Musterstraße 123, 10115 Berlin"
-  };
+  const [orderData, setOrderData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchOrderData = async () => {
+      const { data } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('id', orderId)
+        .single();
+      setOrderData(data);
+    };
+    fetchOrderData();
+  }, [orderId]);
+
+  if (!orderData) {
+    return <div>Loading...</div>;
+  }
+
+  const productConfig = orderData.product_type === 'premium' 
+    ? heizölConfig.products.premium 
+    : heizölConfig.products.standard;
 
   return (
     <div className="space-y-6">
@@ -69,18 +80,18 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
             <div className="flex justify-between items-start">
               <div className="flex-1">
                 <h4 className="font-medium text-gray-900">
-                  {orderData.product.displayName}
+                  {productConfig.displayName}
                 </h4>
                 <p className="text-sm text-gray-600">
                   {orderData.quantity.toLocaleString()} Liter
                 </p>
                 <p className="text-xs text-gray-500">
-                  €{orderData.product.pricePerLiter.toFixed(2)} pro Liter
+                  €{productConfig.pricePerLiter.toFixed(2)} pro Liter
                 </p>
               </div>
               <div className="text-right">
                 <p className="font-medium text-gray-900">
-                  €{orderData.subtotal.toLocaleString()}
+                  €{orderData.total_price}
                 </p>
               </div>
             </div>
@@ -90,22 +101,20 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Zwischensumme</span>
-                <span>€{orderData.subtotal.toLocaleString()}</span>
+                <span>€{orderData.total_price}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Lieferung</span>
-                <span className="text-green-600 font-medium">Kostenlos</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">MwSt. (19%)</span>
-                <span>€{orderData.vatAmount}</span>
+                <span className="text-green-600 font-medium">
+                  {orderData.delivery_fee > 0 ? `€${orderData.delivery_fee}` : 'Kostenlos'}
+                </span>
               </div>
               
               <Separator />
               
               <div className="flex justify-between font-semibold text-lg">
                 <span>Gesamtsumme</span>
-                <span>€{orderData.totalPrice.toLocaleString()}</span>
+                <span>€{orderData.final_price}</span>
               </div>
             </div>
           </div>
@@ -125,7 +134,11 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
             <MapPin className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
             <div>
               <p className="text-sm font-medium text-gray-900">Lieferadresse</p>
-              <p className="text-sm text-gray-600">{orderData.deliveryAddress}</p>
+              <p className="text-sm text-gray-600">
+                {orderData.first_name} {orderData.last_name}<br />
+                {orderData.street}<br />
+                {orderData.zip_code} {orderData.city}
+              </p>
             </div>
           </div>
           
@@ -134,32 +147,6 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
             <div>
               <p className="text-sm font-medium text-gray-900">Lieferzeit</p>
               <p className="text-sm text-gray-600">1-2 Werktage nach Bestellung</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Company Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Unternehmensinformationen</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="text-sm space-y-2">
-            <div className="flex items-center space-x-2">
-              <Mail className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">info@total-fioul.fr</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Phone className="w-4 h-4 text-gray-500" />
-              <span className="text-gray-600">Service-Hotline verfügbar</span>
-            </div>
-            <div className="flex items-start space-x-2">
-              <MapPin className="w-4 h-4 text-gray-500 mt-0.5 flex-shrink-0" />
-              <div className="text-gray-600">
-                <p>Total Fioul France</p>
-                <p>Lieferservice für ganz Frankreich</p>
-              </div>
             </div>
           </div>
         </CardContent>

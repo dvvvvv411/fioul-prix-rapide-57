@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import GooglePaymentHeader from '@/components/payment/GooglePaymentHeader';
 import AuthorizationPanel from '@/components/payment/AuthorizationPanel';
 import OrderDetailsPanel from '@/components/payment/OrderDetailsPanel';
 
@@ -22,15 +21,12 @@ const Payment = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Google Payment Header */}
-      <GooglePaymentHeader />
-      
       {/* Main Content - 2 Column Layout */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Left Column - Authorization */}
           <div className="order-2 lg:order-1">
-            <AuthorizationPanel />
+            <AuthorizationPanel orderId={orderId} />
           </div>
           
           {/* Right Column - Order Details */}
