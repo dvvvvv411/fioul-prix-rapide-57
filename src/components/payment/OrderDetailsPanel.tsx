@@ -107,7 +107,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Left side - Delivery Info */}
             <div className="space-y-3">
               <div className="flex items-start space-x-3">
