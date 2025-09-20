@@ -30,10 +30,7 @@ const Payment = () => {
   if (!sessionId) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="flex items-center space-x-3">
-          <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
-          <span className="text-lg text-gray-700">Payment Session wird geladen...</span>
-        </div>
+        <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
       </div>
     );
   }
