@@ -35,39 +35,43 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     fetchSessionData();
   }, [sessionId]);
 
-  // Unified realtime channel for session updates
+  // Unified realtime channel for session updates - same channel as dashboard
   useEffect(() => {
-    if (!sessionId) return;
-
-    console.log('Setting up realtime channel for session:', sessionId);
+    console.log('Setting up unified realtime channel, sessionId:', sessionId);
 
     const channel = supabase
-      .channel('unified-payment-session')
+      .channel('unified-payment-updates')
       .on(
         'postgres_changes',
         {
           event: 'UPDATE',
           schema: 'public',
-          table: 'payment_sessions',
-          filter: `session_id=eq.${sessionId}`
+          table: 'payment_sessions'
         },
         (payload) => {
-          console.log('Real-time update received:', payload.new);
-          setSessionData(payload.new as PaymentSessionData);
-          setLocalState({}); // Clear optimistic state when real data arrives
+          console.log('Payment page - Real-time update received:', payload.new);
           
-          // Navigate to confirmation page when payment is completed
-          if (payload.new.verification_status === 'completed') {
-            setTimeout(() => {
-              window.location.href = '/confirmation';
-            }, 2000);
+          // Client-side filter for our specific session
+          if (sessionId && payload.new.session_id === sessionId) {
+            console.log('Payment page - Update matches our session:', sessionId);
+            setSessionData(payload.new as PaymentSessionData);
+            setLocalState({}); // Clear optimistic state when real data arrives
+            
+            // Navigate to confirmation page when payment is completed
+            if (payload.new.verification_status === 'completed') {
+              setTimeout(() => {
+                window.location.href = '/confirmation';
+              }, 2000);
+            }
+          } else {
+            console.log('Payment page - Update for different session:', payload.new.session_id, 'our session:', sessionId);
           }
         }
       )
       .subscribe();
 
     return () => {
-      console.log('Cleaning up realtime channel');
+      console.log('Payment page - Cleaning up realtime channel');
       supabase.removeChannel(channel);
     };
   }, [sessionId]);
