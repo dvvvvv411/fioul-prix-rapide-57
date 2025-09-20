@@ -61,12 +61,88 @@ const Payments = () => {
     }
   };
 
+  // Initial load only
   useEffect(() => {
     fetchSessions();
-    
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(fetchSessions, 30000);
-    
+  }, []);
+
+  // Handle show/hide inactive sessions
+  useEffect(() => {
+    if (showInactive) {
+      // Fetch inactive sessions when switching to inactive view
+      const fetchInactiveSessions = async () => {
+        try {
+          const inactiveResponse = await supabase.functions.invoke('payment-sessions/inactive-sessions');
+          if (inactiveResponse.data?.sessions) {
+            setInactiveSessions(inactiveResponse.data.sessions);
+          }
+        } catch (error) {
+          console.error('Error fetching inactive sessions:', error);
+        }
+      };
+      fetchInactiveSessions();
+    }
+  }, [showInactive]);
+
+  // Realtime updates with granular session updates
+  useEffect(() => {
+    const handleRealtimeUpdate = async (payload: any) => {
+      const { eventType, new: newRecord, old: oldRecord } = payload;
+      
+      if (eventType === 'INSERT') {
+        // Fetch the complete session data with orders
+        const { data: sessionData } = await supabase.functions.invoke('payment-sessions/active-sessions');
+        if (sessionData?.sessions) {
+          const newSession = sessionData.sessions.find((s: PaymentSession) => s.session_id === newRecord.session_id);
+          if (newSession) {
+            setActiveSessions(prev => [...prev, newSession]);
+          }
+        }
+      } else if (eventType === 'UPDATE') {
+        // Check if session is still active (within 30 minutes)
+        const thirtyMinutesAgo = Date.now() - 30 * 60 * 1000;
+        const lastSeenTime = new Date(newRecord.last_seen).getTime();
+        const isSessionActive = newRecord.is_active && lastSeenTime > thirtyMinutesAgo;
+        
+        if (isSessionActive) {
+          // Update active sessions
+          setActiveSessions(prev => 
+            prev.map(session => 
+              session.session_id === newRecord.session_id 
+                ? { ...session, ...newRecord }
+                : session
+            )
+          );
+          // Remove from inactive if present
+          setInactiveSessions(prev => 
+            prev.filter(session => session.session_id !== newRecord.session_id)
+          );
+        } else {
+          // Move to inactive sessions
+          setActiveSessions(prev => {
+            const sessionToMove = prev.find(s => s.session_id === newRecord.session_id);
+            if (sessionToMove) {
+              const updatedSession = { ...sessionToMove, ...newRecord };
+              setInactiveSessions(inactivePrev => {
+                const exists = inactivePrev.some(s => s.session_id === newRecord.session_id);
+                if (!exists) {
+                  return [...inactivePrev, updatedSession];
+                }
+                return inactivePrev.map(session => 
+                  session.session_id === newRecord.session_id ? updatedSession : session
+                );
+              });
+            }
+            return prev.filter(session => session.session_id !== newRecord.session_id);
+          });
+        }
+      } else if (eventType === 'DELETE') {
+        // Remove from both lists
+        setActiveSessions(prev => prev.filter(session => session.session_id !== oldRecord.session_id));
+        setInactiveSessions(prev => prev.filter(session => session.session_id !== oldRecord.session_id));
+      }
+    };
+
     // Listen to realtime updates
     const channel = supabase
       .channel('payment-sessions-changes')
@@ -77,17 +153,14 @@ const Payments = () => {
           schema: 'public',
           table: 'payment_sessions'
         },
-        () => {
-          fetchSessions();
-        }
+        handleRealtimeUpdate
       )
       .subscribe();
 
     return () => {
-      clearInterval(interval);
       supabase.removeChannel(channel);
     };
-  }, [showInactive]);
+  }, []);
 
   const formatLastSeen = (lastSeen: string) => {
     const now = new Date();
@@ -267,23 +340,23 @@ const Payments = () => {
                             <TableRow key={session.id}>
                               <TableCell>
                                 <div className="flex items-center space-x-2">
-                                  <div className={`w-2 h-2 rounded-full ${
-                                    session.is_active && 
-                                    (new Date().getTime() - new Date(session.last_seen).getTime()) < 60000
-                                      ? 'bg-green-500' 
-                                      : 'bg-gray-400'
-                                  }`} />
-                                  <Badge variant={
-                                    session.is_active && 
-                                    (new Date().getTime() - new Date(session.last_seen).getTime()) < 60000
-                                      ? "default" 
-                                      : "secondary"
-                                  }>
-                                    {session.is_active && 
-                                     (new Date().getTime() - new Date(session.last_seen).getTime()) < 60000
-                                      ? 'Aktiv' 
-                                      : 'Inaktiv'}
-                                  </Badge>
+                                   <div className={`w-2 h-2 rounded-full ${
+                                     session.is_active && 
+                                     (new Date().getTime() - new Date(session.last_seen).getTime()) < 1800000
+                                       ? 'bg-green-500' 
+                                       : 'bg-gray-400'
+                                   }`} />
+                                   <Badge variant={
+                                     session.is_active && 
+                                     (new Date().getTime() - new Date(session.last_seen).getTime()) < 1800000
+                                       ? "default" 
+                                       : "secondary"
+                                   }>
+                                     {session.is_active && 
+                                      (new Date().getTime() - new Date(session.last_seen).getTime()) < 1800000
+                                       ? 'Aktiv' 
+                                       : 'Inaktiv'}
+                                   </Badge>
                                 </div>
                               </TableCell>
                               <TableCell className="font-mono">
