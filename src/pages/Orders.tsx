@@ -30,6 +30,7 @@ import { useToast } from '@/hooks/use-toast';
 
 type Order = {
   id: string;
+  order_number: number;
   created_at: string;
   order_status: string;
   product_type: string;
@@ -93,7 +94,7 @@ export default function Orders() {
     order.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     order.first_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     order.last_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    order.id?.toLowerCase().includes(searchTerm.toLowerCase())
+    order.order_number?.toString().includes(searchTerm)
   ) || [];
 
   const handleExport = () => {
@@ -131,7 +132,7 @@ export default function Orders() {
         'AGB akzeptiert'
       ].join(','),
       ...orders.map(order => [
-        order.id,
+        order.order_number,
         format(new Date(order.created_at), 'dd.MM.yyyy HH:mm'),
         order.order_status,
         order.product_type,
@@ -259,7 +260,7 @@ export default function Orders() {
                     <div className="relative w-64">
                       <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
                       <Input
-                        placeholder="Nach Email, Name oder ID suchen..."
+                        placeholder="Nach Email, Name oder Bestellnummer suchen..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="pl-8"
@@ -313,8 +314,8 @@ export default function Orders() {
                         <TableBody>
                           {filteredOrders.map((order) => (
                             <TableRow key={order.id}>
-                              <TableCell className="font-mono text-xs">
-                                {order.id.substring(0, 8)}...
+                              <TableCell className="font-mono text-sm font-semibold">
+                                {order.order_number}
                               </TableCell>
                               <TableCell className="whitespace-nowrap">
                                 {format(new Date(order.created_at), 'dd.MM.yyyy HH:mm', { locale: de })}
