@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { CustomerInfo, CheckoutData } from '@/types/checkout';
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { Mail, MapPin, CreditCard, FileText, ShoppingCart, User, Calendar, Lock } from 'lucide-react';
+import { Mail, MapPin, CreditCard, FileText, ShoppingCart, User, Calendar, Lock, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { PaymentIcons } from '@/components/ui/PaymentIcons';
 
@@ -23,6 +23,7 @@ interface CheckoutFormProps {
 
 const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, checkoutData }: CheckoutFormProps) => {
   const navigate = useNavigate();
+  const [showCvv, setShowCvv] = useState(false);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     email: '',
     firstName: '',
@@ -410,7 +411,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
                   <div className="relative mt-1">
                     <Input
                       id="cvv"
-                      type="text"
+                      type={showCvv ? "text" : "password"}
                       placeholder="123"
                       value={customerInfo.cvv}
                       onChange={(e) => {
@@ -419,9 +420,16 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
                         handleInputChange('cvv', value);
                       }}
                       maxLength={4}
-                      className="pl-10"
+                      className="pl-10 pr-10"
                     />
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <button
+                      type="button"
+                      onClick={() => setShowCvv(!showCvv)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground hover:text-foreground"
+                    >
+                      {showCvv ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
                   </div>
                 </div>
               </div>
