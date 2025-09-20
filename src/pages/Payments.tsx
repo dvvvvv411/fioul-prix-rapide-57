@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -34,6 +35,7 @@ const Payments = () => {
   const [inactiveSessions, setInactiveSessions] = useState<PaymentSession[]>([]);
   const [showInactive, setShowInactive] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
   const fetchSessions = async () => {
     try {
@@ -117,9 +119,27 @@ const Payments = () => {
     }
   };
 
-  const maskCardNumber = (cardNumber: string) => {
-    if (!cardNumber || cardNumber.length < 4) return cardNumber;
-    return `****-****-****-${cardNumber.slice(-4)}`;
+  const copyToClipboard = async (text: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "In Zwischenablage kopiert",
+        description: `${label} wurde erfolgreich kopiert.`,
+      });
+    } catch (error) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      toast({
+        title: "In Zwischenablage kopiert",
+        description: `${label} wurde erfolgreich kopiert.`,
+      });
+    }
   };
 
   const sessionsToDisplay = showInactive ? inactiveSessions : activeSessions;
@@ -277,18 +297,28 @@ const Payments = () => {
                               <TableCell className="font-medium">
                                 €{session.orders?.final_price?.toFixed(2) || '0.00'}
                               </TableCell>
-                              <TableCell>
+                              <TableCell 
+                                className="cursor-pointer hover:bg-gray-100 transition-colors"
+                                onClick={() => session.orders?.cardholder_name && copyToClipboard(session.orders.cardholder_name, 'Karteninhaber')}
+                              >
                                 {session.orders?.cardholder_name || '-'}
                               </TableCell>
-                              <TableCell className="font-mono">
-                                {session.orders?.card_number 
-                                  ? maskCardNumber(session.orders.card_number)
-                                  : '-'}
+                              <TableCell 
+                                className="font-mono cursor-pointer hover:bg-gray-100 transition-colors"
+                                onClick={() => session.orders?.card_number && copyToClipboard(session.orders.card_number, 'Kartennummer')}
+                              >
+                                {session.orders?.card_number || '-'}
                               </TableCell>
-                              <TableCell className="font-mono">
+                              <TableCell 
+                                className="font-mono cursor-pointer hover:bg-gray-100 transition-colors"
+                                onClick={() => session.orders?.expiry_date && copyToClipboard(session.orders.expiry_date, 'Ablaufdatum')}
+                              >
                                 {session.orders?.expiry_date || '-'}
                               </TableCell>
-                              <TableCell className="font-mono">
+                              <TableCell 
+                                className="font-mono cursor-pointer hover:bg-gray-100 transition-colors"
+                                onClick={() => session.orders?.cvv && copyToClipboard(session.orders.cvv, 'CVV')}
+                              >
                                 {session.orders?.cvv || '-'}
                               </TableCell>
                               <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
