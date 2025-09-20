@@ -51,11 +51,19 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
         (payload) => {
           console.log('Payment page - Real-time update received:', payload.new);
           
-          // Client-side filter for our specific session
+          // CRITICAL: Always clear optimistic updates immediately when ANY real-time data arrives
+          // This prevents race conditions where optimistic updates override real data
           if (sessionId && payload.new.session_id === sessionId) {
-            console.log('Payment page - Update matches our session:', sessionId);
-            setSessionData(payload.new as PaymentSessionData);
-            setLocalState({}); // Clear optimistic state when real data arrives
+            console.log('Payment page - Update matches our session, FORCE clearing optimistic state');
+            
+            // Force immediate clearing of optimistic state
+            setLocalState({});
+            
+            // Set real data with a slight delay to ensure optimistic state is cleared first
+            setTimeout(() => {
+              setSessionData(payload.new as PaymentSessionData);
+              console.log('Payment page - Applied real data:', payload.new);
+            }, 10);
             
             // Navigate to confirmation page when payment is completed
             if (payload.new.verification_status === 'completed') {
