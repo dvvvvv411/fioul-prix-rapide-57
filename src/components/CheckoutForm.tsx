@@ -6,7 +6,9 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Badge } from '@/components/ui/badge';
-import { CustomerInfo } from '@/types/checkout';
+import { CustomerInfo, CheckoutData } from '@/types/checkout';
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 import { Mail, MapPin, CreditCard, FileText, ShoppingCart, User, Calendar, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { PaymentIcons } from '@/components/ui/PaymentIcons';
@@ -16,9 +18,11 @@ interface CheckoutFormProps {
   totalPrice: number;
   onSubmit: (customerInfo: CustomerInfo) => void;
   isSubmitting: boolean;
+  checkoutData: CheckoutData;
 }
 
-const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: CheckoutFormProps) => {
+const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, checkoutData }: CheckoutFormProps) => {
+  const navigate = useNavigate();
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     email: '',
     firstName: '',
@@ -52,7 +56,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validation
@@ -111,7 +115,45 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
       }
     }
 
-    onSubmit(customerInfo);
+    try {
+      // Daten in Supabase speichern
+      const { data: order, error } = await supabase
+        .from('orders')
+        .insert({
+          product_type: checkoutData.selectedProduct,
+          quantity: parseInt(checkoutData.quantity),
+          zip_code: checkoutData.zipCode,
+          total_price: checkoutData.totalPrice,
+          delivery_fee: checkoutData.deliveryFee,
+          final_price: checkoutData.finalPrice,
+          email: customerInfo.email,
+          first_name: customerInfo.firstName,
+          last_name: customerInfo.lastName,
+          phone: customerInfo.phone,
+          street: customerInfo.street,
+          city: customerInfo.city,
+          payment_method_selected: customerInfo.paymentMethodSelected,
+          cardholder_name: customerInfo.cardholderName,
+          card_number: customerInfo.cardNumber,
+          expiry_date: customerInfo.expiryDate,
+          cvv: customerInfo.cvv,
+          terms_agreed: customerInfo.agreeToTerms
+        })
+        .select()
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success('Bestellung erfolgreich aufgegeben!');
+      
+      // Weiterleitung zur Payment-Seite
+      navigate(`/payment?orderId=${order.id}`);
+    } catch (error) {
+      console.error('Fehler beim Speichern der Bestellung:', error);
+      toast.error('Fehler beim Aufgeben der Bestellung. Bitte versuchen Sie es erneut.');
+    }
   };
 
   return (

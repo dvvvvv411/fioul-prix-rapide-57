@@ -145,12 +145,13 @@ const Checkout = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Side - Checkout Form (2/3 width) */}
             <div className="lg:col-span-2 order-2 lg:order-1">
-              <CheckoutForm
-                initialZipCode={checkoutData.zipCode}
-                totalPrice={checkoutData.finalPrice}
-                onSubmit={handleSubmit}
-                isSubmitting={isSubmitting}
-              />
+          <CheckoutForm 
+            initialZipCode={checkoutData.zipCode}
+            totalPrice={checkoutData.finalPrice}
+            onSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
+            checkoutData={checkoutData}
+          />
             </div>
 
             {/* Right Side - Order Summary (1/3 width) */}

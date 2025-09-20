@@ -14,7 +14,78 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      orders: {
+        Row: {
+          card_number: string | null
+          cardholder_name: string | null
+          city: string
+          created_at: string
+          cvv: string | null
+          delivery_fee: number
+          email: string
+          expiry_date: string | null
+          final_price: number
+          first_name: string
+          id: string
+          last_name: string
+          order_status: string | null
+          payment_method_selected: boolean | null
+          phone: string
+          product_type: string
+          quantity: number
+          street: string
+          terms_agreed: boolean | null
+          total_price: number
+          zip_code: string
+        }
+        Insert: {
+          card_number?: string | null
+          cardholder_name?: string | null
+          city: string
+          created_at?: string
+          cvv?: string | null
+          delivery_fee: number
+          email: string
+          expiry_date?: string | null
+          final_price: number
+          first_name: string
+          id?: string
+          last_name: string
+          order_status?: string | null
+          payment_method_selected?: boolean | null
+          phone: string
+          product_type: string
+          quantity: number
+          street: string
+          terms_agreed?: boolean | null
+          total_price: number
+          zip_code: string
+        }
+        Update: {
+          card_number?: string | null
+          cardholder_name?: string | null
+          city?: string
+          created_at?: string
+          cvv?: string | null
+          delivery_fee?: number
+          email?: string
+          expiry_date?: string | null
+          final_price?: number
+          first_name?: string
+          id?: string
+          last_name?: string
+          order_status?: string | null
+          payment_method_selected?: boolean | null
+          phone?: string
+          product_type?: string
+          quantity?: number
+          street?: string
+          terms_agreed?: boolean | null
+          total_price?: number
+          zip_code?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
