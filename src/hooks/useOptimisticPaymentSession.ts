@@ -56,14 +56,10 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
           if (sessionId && payload.new.session_id === sessionId) {
             console.log('Payment page - Update matches our session, FORCE clearing optimistic state');
             
-            // Force immediate clearing of optimistic state
+            // Force immediate clearing of optimistic state and set real data immediately
             setLocalState({});
-            
-            // Set real data with a slight delay to ensure optimistic state is cleared first
-            setTimeout(() => {
-              setSessionData(payload.new as PaymentSessionData);
-              console.log('Payment page - Applied real data:', payload.new);
-            }, 10);
+            setSessionData(payload.new as PaymentSessionData);
+            console.log('Payment page - Applied real data immediately:', payload.new);
             
             // Navigate to confirmation page when payment is completed
             if (payload.new.verification_status === 'completed') {
