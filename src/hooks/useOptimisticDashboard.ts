@@ -225,6 +225,48 @@ export const useOptimisticDashboard = () => {
     }
   }, [toast]);
 
+  const handleMarkInactive = useCallback(async (sessionId: string) => {
+    // Optimistic update
+    const optimisticUpdate = {
+      is_active: false,
+    };
+    
+    setOptimisticUpdates(prev => ({
+      ...prev,
+      [sessionId]: optimisticUpdate
+    }));
+
+    try {
+      const { error } = await supabase.functions.invoke('payment-sessions', {
+        body: { 
+          action: 'mark-inactive',
+          sessionId 
+        }
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Erfolg",
+        description: "Session wurde als inaktiv markiert",
+      });
+    } catch (error) {
+      console.error('Error marking session as inactive:', error);
+      
+      // Rollback optimistic update
+      setOptimisticUpdates(prev => {
+        const { [sessionId]: _, ...rest } = prev;
+        return rest;
+      });
+      
+      toast({
+        title: "Fehler",
+        description: "Session konnte nicht als inaktiv markiert werden",
+        variant: "destructive",
+      });
+    }
+  }, [toast]);
+
   // Apply optimistic updates to sessions
   const applyOptimisticUpdates = useCallback((sessions: PaymentSession[]) => {
     return sessions.map(session => ({
@@ -239,6 +281,7 @@ export const useOptimisticDashboard = () => {
     loading,
     fetchInactiveSessions,
     handleVerificationAction,
-    handleCompletePayment
+    handleCompletePayment,
+    handleMarkInactive
   };
 };

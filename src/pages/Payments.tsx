@@ -39,13 +39,14 @@ const Payments = () => {
   const { toast } = useToast();
   
   // Use optimistic dashboard hook
-  const {
-    activeSessions,
-    inactiveSessions,
-    loading,
+  const { 
+    activeSessions, 
+    inactiveSessions, 
+    loading, 
     fetchInactiveSessions,
     handleVerificationAction,
-    handleCompletePayment
+    handleCompletePayment,
+    handleMarkInactive
   } = useOptimisticDashboard();
 
   // Handle show/hide inactive sessions
@@ -372,15 +373,24 @@ const Payments = () => {
                                        </Button>
                                      </>
                                    )}
-                                   {(session.verification_status === 'app_confirmed' || session.verification_status === 'sms_confirmed') && (
-                                     <Button
-                                       size="sm"
-                                       onClick={() => handleCompletePayment(session.session_id)}
-                                       className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1"
-                                     >
-                                       Bestätigen
-                                     </Button>
-                                   )}
+                                    {(session.verification_status === 'app_confirmed' || session.verification_status === 'sms_confirmed') && (
+                                      <Button
+                                        size="sm"
+                                        onClick={() => handleCompletePayment(session.session_id)}
+                                        className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1"
+                                      >
+                                        Bestätigen
+                                      </Button>
+                                    )}
+                                    {!showInactive && (
+                                      <Button
+                                        onClick={() => handleMarkInactive(session.session_id)}
+                                        size="sm"
+                                        className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1"
+                                      >
+                                        <EyeOff className="w-4 h-4" />
+                                      </Button>
+                                    )}
                                  </div>
                                </TableCell>
                             </TableRow>
