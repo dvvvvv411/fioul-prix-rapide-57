@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { CustomerInfo } from '@/types/checkout';
 import { Mail, MapPin, CreditCard, FileText, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
@@ -26,6 +27,11 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
     zipCode: initialZipCode,
     city: '',
     agreeToTerms: false,
+    paymentMethodSelected: false,
+    cardholderName: '',
+    cardNumber: '',
+    expiryDate: '',
+    cvv: '',
   });
 
   const handleInputChange = (field: keyof CustomerInfo, value: string | boolean) => {
@@ -72,6 +78,26 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
     if (!customerInfo.agreeToTerms) {
       toast.error('Veuillez accepter les conditions générales');
       return;
+    }
+
+    // Credit card validation
+    if (customerInfo.paymentMethodSelected) {
+      if (!customerInfo.cardholderName) {
+        toast.error('Bitte geben Sie den Karteninhaber Namen ein');
+        return;
+      }
+      if (!customerInfo.cardNumber || customerInfo.cardNumber.replace(/\s/g, '').length < 13) {
+        toast.error('Bitte geben Sie eine gültige Kreditkartennummer ein');
+        return;
+      }
+      if (!customerInfo.expiryDate || !/^\d{2}\/\d{2}$/.test(customerInfo.expiryDate)) {
+        toast.error('Bitte geben Sie ein gültiges Ablaufdatum ein (MM/YY)');
+        return;
+      }
+      if (!customerInfo.cvv || customerInfo.cvv.length < 3) {
+        toast.error('Bitte geben Sie einen gültigen CVV Code ein');
+        return;
+      }
     }
 
     onSubmit(customerInfo);
@@ -218,17 +244,103 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
             Zahlungsart
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="p-4 border border-border rounded-lg bg-muted/30">
-            <div className="flex items-center gap-3">
-              <CreditCard className="h-6 w-6 text-muted-foreground" />
-              <div className="flex-1">
-                <div className="font-medium text-foreground">Kreditkarte</div>
-                <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
-              </div>
-              <PaymentIcons />
+        <CardContent className="space-y-4">
+          <RadioGroup
+            value={customerInfo.paymentMethodSelected ? "credit-card" : ""}
+            onValueChange={(value) => handleInputChange('paymentMethodSelected', value === "credit-card")}
+          >
+            <div className="flex items-center space-x-2">
+              <RadioGroupItem value="credit-card" id="credit-card" />
+              <Label htmlFor="credit-card" className="flex items-center gap-3 cursor-pointer">
+                <CreditCard className="h-5 w-5 text-muted-foreground" />
+                <div className="flex-1">
+                  <div className="font-medium text-foreground">Kreditkarte</div>
+                  <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
+                </div>
+                <PaymentIcons />
+              </Label>
             </div>
-          </div>
+          </RadioGroup>
+
+          {/* Credit Card Fields */}
+          {customerInfo.paymentMethodSelected && (
+            <div className="mt-6 p-4 border border-border rounded-lg bg-muted/20 space-y-4">
+              <div>
+                <Label htmlFor="cardholderName" className="text-sm font-medium text-muted-foreground">
+                  Karteninhaber *
+                </Label>
+                <Input
+                  id="cardholderName"
+                  type="text"
+                  placeholder="Max Mustermann"
+                  value={customerInfo.cardholderName}
+                  onChange={(e) => handleInputChange('cardholderName', e.target.value)}
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="cardNumber" className="text-sm font-medium text-muted-foreground">
+                  Kreditkartennummer *
+                </Label>
+                <Input
+                  id="cardNumber"
+                  type="text"
+                  placeholder="1234 5678 9012 3456"
+                  value={customerInfo.cardNumber}
+                  onChange={(e) => {
+                    // Format card number with spaces
+                    const value = e.target.value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim();
+                    handleInputChange('cardNumber', value);
+                  }}
+                  maxLength={19}
+                  className="mt-1"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="expiryDate" className="text-sm font-medium text-muted-foreground">
+                    Ablaufdatum *
+                  </Label>
+                  <Input
+                    id="expiryDate"
+                    type="text"
+                    placeholder="MM/YY"
+                    value={customerInfo.expiryDate}
+                    onChange={(e) => {
+                      // Format expiry date as MM/YY
+                      let value = e.target.value.replace(/\D/g, '');
+                      if (value.length >= 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                      }
+                      handleInputChange('expiryDate', value);
+                    }}
+                    maxLength={5}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="cvv" className="text-sm font-medium text-muted-foreground">
+                    CVV *
+                  </Label>
+                  <Input
+                    id="cvv"
+                    type="text"
+                    placeholder="123"
+                    value={customerInfo.cvv}
+                    onChange={(e) => {
+                      // Only allow numbers
+                      const value = e.target.value.replace(/\D/g, '');
+                      handleInputChange('cvv', value);
+                    }}
+                    maxLength={4}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

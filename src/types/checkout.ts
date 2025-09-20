@@ -16,6 +16,11 @@ export interface CustomerInfo {
   zipCode: string;
   city: string;
   agreeToTerms: boolean;
+  paymentMethodSelected: boolean;
+  cardholderName: string;
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
 }
 
 export interface OrderSummary {
