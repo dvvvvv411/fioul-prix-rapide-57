@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { AlertTriangle, Truck, MapPin, Clock } from 'lucide-react';
+import { CheckCircle, Truck, MapPin, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { heizölConfig } from '@/config/heizol';
+import { calculateFrenchPricing } from '@/utils/pricing';
 
 interface OrderDetailsPanelProps {
   orderId: string;
@@ -32,35 +33,23 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
     ? heizölConfig.products.premium 
     : heizölConfig.products.standard;
 
+  // Calculate French pricing with VAT
+  const totalPricing = calculateFrenchPricing(parseFloat(orderData.total_price));
+  const deliveryPricing = orderData.delivery_fee > 0 ? calculateFrenchPricing(parseFloat(orderData.delivery_fee)) : null;
+  const finalPricing = calculateFrenchPricing(parseFloat(orderData.final_price));
+
   return (
     <div className="space-y-6">
-      {/* Total Fioul Header */}
-      <div className="text-center space-y-4">
-        <img 
-          src="https://i.imgur.com/NqMqAH6.png" 
-          alt="Total Fioul Logo" 
-          className="h-12 mx-auto"
-        />
-        <div>
-          <h2 className="text-xl font-semibold text-gray-900">
-            Total Fioul France
-          </h2>
-          <p className="text-sm text-gray-600">
-            Partout en France
-          </p>
-        </div>
-      </div>
-
       {/* Important Payment Notice */}
-      <Card className="border-orange-200 bg-orange-50">
+      <Card className="border-green-200 bg-green-50">
         <CardContent className="pt-4">
           <div className="flex items-start space-x-3">
-            <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
+            <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
             <div>
-              <h3 className="text-sm font-medium text-orange-900 mb-1">
+              <h3 className="text-sm font-medium text-green-900 mb-1">
                 Zahlung bei Lieferung
               </h3>
-              <p className="text-sm text-orange-800">
+              <p className="text-sm text-green-800">
                 Die Zahlung erfolgt erst nach der Lieferung. Ihre Karte wird nur zur Sicherheit autorisiert.
               </p>
             </div>
@@ -100,8 +89,8 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Zwischensumme</span>
-                <span>€{orderData.total_price}</span>
+                <span className="text-gray-600">Netto-Preis (HT)</span>
+                <span>€{totalPricing.netPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Lieferung</span>
@@ -109,11 +98,15 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
                   {orderData.delivery_fee > 0 ? `€${orderData.delivery_fee}` : 'Kostenlos'}
                 </span>
               </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">MwSt. (20%)</span>
+                <span>€{finalPricing.vatAmount.toFixed(2)}</span>
+              </div>
               
               <Separator />
               
               <div className="flex justify-between font-semibold text-lg">
-                <span>Gesamtsumme</span>
+                <span>Gesamtsumme (TTC)</span>
                 <span>€{orderData.final_price}</span>
               </div>
             </div>
@@ -129,24 +122,46 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
             <span>Lieferinformationen</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="flex items-start space-x-3">
-            <MapPin className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-gray-900">Lieferadresse</p>
-              <p className="text-sm text-gray-600">
-                {orderData.first_name} {orderData.last_name}<br />
-                {orderData.street}<br />
-                {orderData.zip_code} {orderData.city}
-              </p>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {/* Left side - Delivery Info */}
+            <div className="space-y-3">
+              <div className="flex items-start space-x-3">
+                <MapPin className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Lieferadresse</p>
+                  <p className="text-sm text-gray-600">
+                    {orderData.first_name} {orderData.last_name}<br />
+                    {orderData.street}<br />
+                    {orderData.zip_code} {orderData.city}
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start space-x-3">
+                <Clock className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Lieferzeit</p>
+                  <p className="text-sm text-gray-600">2-3 Werktage nach Bestellung</p>
+                </div>
+              </div>
             </div>
-          </div>
-          
-          <div className="flex items-start space-x-3">
-            <Clock className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-gray-900">Lieferzeit</p>
-              <p className="text-sm text-gray-600">1-2 Werktage nach Bestellung</p>
+
+            {/* Right side - Company Info */}
+            <div className="flex flex-col items-center justify-center space-y-2">
+              <img 
+                src="https://i.imgur.com/NqMqAH6.png" 
+                alt="Total Fioul Logo" 
+                className="h-10"
+              />
+              <div className="text-center">
+                <p className="text-sm font-semibold text-gray-900">
+                  Total Fioul France
+                </p>
+                <p className="text-xs text-gray-600">
+                  Partout en France
+                </p>
+              </div>
             </div>
           </div>
         </CardContent>
