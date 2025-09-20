@@ -36,7 +36,7 @@ const Payment = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50 flex items-start justify-center lg:items-center pt-6 lg:pt-0">
       {/* Main Content - Perfect 50/50 Layout */}
       <div className="w-full max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
