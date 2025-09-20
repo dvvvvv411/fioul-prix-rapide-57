@@ -8,13 +8,13 @@ import { useOptimisticPaymentSession } from '@/hooks/useOptimisticPaymentSession
 
 interface AuthorizationPanelProps {
   orderId: string;
+  sessionId: string;
 }
 
-const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
+const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessionId }) => {
   const [orderData, setOrderData] = useState<any>(null);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [smsCode, setSmsCode] = useState('');
-  const [sessionId, setSessionId] = useState<string>('');
   
   // Use optimistic payment session hook
   const {
@@ -35,29 +35,16 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
-      // Fetch order data
+    const fetchOrderData = async () => {
+      // Only fetch order data - sessionId comes from props
       const { data: order } = await supabase
         .from('orders')
         .select('*')
         .eq('id', orderId)
         .single();
       setOrderData(order);
-
-      // Fetch session data to get session_id
-      const { data: session } = await supabase
-        .from('payment_sessions')
-        .select('session_id')
-        .eq('order_id', orderId)
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-      
-      if (session?.session_id) {
-        setSessionId(session.session_id);
-      }
     };
-    fetchData();
+    fetchOrderData();
   }, [orderId]);
 
   useEffect(() => {

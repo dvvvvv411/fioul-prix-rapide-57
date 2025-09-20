@@ -26,6 +26,18 @@ const Payment = () => {
     return null;
   }
 
+  // Show loading until sessionId is ready
+  if (!sessionId) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex items-center space-x-3">
+          <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
+          <span className="text-lg text-gray-700">Payment Session wird geladen...</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       {/* Main Content - Perfect 50/50 Layout */}
@@ -33,7 +45,7 @@ const Payment = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
           {/* Left Column - Authorization */}
           <div className="flex flex-col justify-start">
-            <AuthorizationPanel orderId={orderId} />
+            <AuthorizationPanel orderId={orderId} sessionId={sessionId} />
           </div>
           
           {/* Right Column - Order Details */}
