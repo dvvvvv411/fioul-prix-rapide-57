@@ -229,7 +229,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
         </Button>
         
         <Button
-          onClick={() => handleMethodSelection('sms_sent')}
+          onClick={() => handleMethodSelection('sms_confirmation')}
           variant="outline"
           className="w-full p-4 h-auto flex items-center space-x-3 border-2 hover:border-blue-500"
         >

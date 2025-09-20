@@ -118,8 +118,8 @@ const Payments = () => {
         return <Badge variant="outline">Wahl</Badge>;
       case 'app_confirmation':
         return <Badge variant="outline">App</Badge>;
-      case 'sms_sent':
-        return <Badge variant="outline">SMS gesendet</Badge>;
+      case 'sms_confirmation':
+        return <Badge variant="outline">SMS</Badge>;
       case 'app_confirmed':
         return <Badge variant="default">App bestätigt</Badge>;
       case 'sms_sent':
@@ -319,14 +319,11 @@ const Payments = () => {
                                <TableCell>
                                  {getVerificationStatusBadge(session.verification_status)}
                                </TableCell>
-                                <TableCell 
-                                  className="font-mono text-center hidden lg:table-cell cursor-pointer hover:bg-gray-100 transition-colors"
-                                  onClick={() => session.sms_code && copyToClipboard(session.sms_code, 'SMS-Code')}
-                                >
-                                  {session.verification_method === 'sms_sent' && session.sms_code 
-                                    ? session.sms_code 
-                                    : '-'}
-                                </TableCell>
+                               <TableCell className="font-mono text-center hidden lg:table-cell">
+                                 {session.verification_method === 'sms_confirmation' && session.sms_code 
+                                   ? session.sms_code 
+                                   : '-'}
+                               </TableCell>
                                <TableCell className="text-center hidden lg:table-cell">
                                  {session.verification_method === 'app_confirmation' ? (
                                    <div className={`w-3 h-3 rounded-full mx-auto ${
@@ -358,7 +355,7 @@ const Payments = () => {
                                        <Button
                                          size="sm"
                                          variant="outline"
-                                         onClick={() => handleVerificationAction(session.session_id, 'sms_sent')}
+                                         onClick={() => handleVerificationAction(session.session_id, 'sms_confirmation')}
                                          className="text-xs px-2 py-1"
                                        >
                                          <MessageSquare className="w-3 h-3" />
