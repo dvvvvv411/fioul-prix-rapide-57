@@ -28,6 +28,7 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
+          order_number: number | null
           order_status: string | null
           payment_method_selected: boolean | null
           phone: string
@@ -51,6 +52,7 @@ export type Database = {
           first_name: string
           id?: string
           last_name: string
+          order_number?: number | null
           order_status?: string | null
           payment_method_selected?: boolean | null
           phone: string
@@ -74,6 +76,7 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
+          order_number?: number | null
           order_status?: string | null
           payment_method_selected?: boolean | null
           phone?: string
@@ -118,7 +121,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_order_number: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
     }
     Enums: {
       [_ in never]: never
