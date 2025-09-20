@@ -149,7 +149,7 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
     return () => {
       endSession();
     };
-  }, [orderId, enabled]);
+  }, [orderId, enabled, sessionId]);
 
   return {
     sessionId: sessionId,
