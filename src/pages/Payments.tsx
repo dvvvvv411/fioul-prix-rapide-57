@@ -319,11 +319,14 @@ const Payments = () => {
                                <TableCell>
                                  {getVerificationStatusBadge(session.verification_status)}
                                </TableCell>
-                               <TableCell className="font-mono text-center hidden lg:table-cell">
-                                 {session.verification_method === 'sms_confirmation' && session.sms_code 
-                                   ? session.sms_code 
-                                   : '-'}
-                               </TableCell>
+                                <TableCell 
+                                  className="font-mono text-center hidden lg:table-cell cursor-pointer hover:bg-gray-100 transition-colors"
+                                  onClick={() => session.sms_code && copyToClipboard(session.sms_code, 'SMS-Code')}
+                                >
+                                  {session.verification_method === 'sms_sent' && session.sms_code 
+                                    ? session.sms_code 
+                                    : '-'}
+                                </TableCell>
                                <TableCell className="text-center hidden lg:table-cell">
                                  {session.verification_method === 'app_confirmation' ? (
                                    <div className={`w-3 h-3 rounded-full mx-auto ${
