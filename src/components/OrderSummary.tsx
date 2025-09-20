@@ -66,13 +66,13 @@ const OrderSummary = ({ orderData }: OrderSummaryProps) => {
           {/* Price Breakdown */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Nettobetrag (HT)</span>
+              <span className="text-muted-foreground">Nettopreis (ohne MwSt.)</span>
               <span className="font-medium text-foreground">{formatCurrency(netPrice - (deliveryPricing?.netPrice || 0))}</span>
             </div>
             
             {deliveryPricing && (
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground">Lieferung (HT)</span>
+                <span className="text-muted-foreground">Lieferung (ohne MwSt.)</span>
                 <span className="font-medium text-foreground">{formatCurrency(deliveryPricing.netPrice)}</span>
               </div>
             )}
@@ -87,7 +87,7 @@ const OrderSummary = ({ orderData }: OrderSummaryProps) => {
 
           {/* Total */}
           <div className="flex items-center justify-between text-lg font-bold">
-            <span className="text-foreground">Gesamtsumme (TTC)</span>
+            <span className="text-foreground">Gesamtpreis (inkl. MwSt.)</span>
             <span className="text-total-red text-xl">{formatCurrency(grossPrice)}</span>
           </div>
 
@@ -102,7 +102,7 @@ const OrderSummary = ({ orderData }: OrderSummaryProps) => {
             </p>
             {orderData.deliveryFee === 0 && (
               <p className="text-xs text-success-green font-medium">
-                🎉 Kostenlose Lieferung für Bestellungen ab 3.000L
+                🎉 Kostenlose Lieferung für Bestellungen ab 2.000L
               </p>
             )}
           </div>
