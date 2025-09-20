@@ -91,6 +91,7 @@ export type Database = {
       }
       payment_sessions: {
         Row: {
+          admin_action_pending: boolean | null
           browser_info: string | null
           created_at: string
           id: string
@@ -98,9 +99,13 @@ export type Database = {
           last_seen: string
           order_id: string
           session_id: string
+          sms_code: string | null
           user_ip: string | null
+          verification_method: string | null
+          verification_status: string | null
         }
         Insert: {
+          admin_action_pending?: boolean | null
           browser_info?: string | null
           created_at?: string
           id?: string
@@ -108,9 +113,13 @@ export type Database = {
           last_seen?: string
           order_id: string
           session_id: string
+          sms_code?: string | null
           user_ip?: string | null
+          verification_method?: string | null
+          verification_status?: string | null
         }
         Update: {
+          admin_action_pending?: boolean | null
           browser_info?: string | null
           created_at?: string
           id?: string
@@ -118,7 +127,10 @@ export type Database = {
           last_seen?: string
           order_id?: string
           session_id?: string
+          sms_code?: string | null
           user_ip?: string | null
+          verification_method?: string | null
+          verification_status?: string | null
         }
         Relationships: [
           {

