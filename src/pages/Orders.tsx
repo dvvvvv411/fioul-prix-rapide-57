@@ -111,7 +111,6 @@ export default function Orders() {
       [
         'Bestellnummer',
         'Datum',
-        'Status',
         'Produkttyp',
         'Menge',
         'Vorname',
@@ -127,14 +126,11 @@ export default function Orders() {
         'Karteninhaber',
         'Kartennummer',
         'Ablaufdatum',
-        'CVV',
-        'Zahlungsmethode ausgewählt',
-        'AGB akzeptiert'
+        'CVV'
       ].join(','),
       ...orders.map(order => [
         order.order_number,
         format(new Date(order.created_at), 'dd.MM.yyyy HH:mm'),
-        order.order_status,
         order.product_type,
         order.quantity,
         order.first_name,
@@ -150,9 +146,7 @@ export default function Orders() {
         order.cardholder_name || '',
         order.card_number || '',
         order.expiry_date || '',
-        order.cvv || '',
-        order.payment_method_selected ? 'Ja' : 'Nein',
-        order.terms_agreed ? 'Ja' : 'Nein'
+        order.cvv || ''
       ].join(','))
     ].join('\n');
 
@@ -295,7 +289,6 @@ export default function Orders() {
                           <TableRow>
                             <TableHead>Bestellnr.</TableHead>
                             <TableHead>Datum</TableHead>
-                            <TableHead>Status</TableHead>
                             <TableHead>Kunde</TableHead>
                             <TableHead>Email</TableHead>
                             <TableHead>Telefon</TableHead>
@@ -307,8 +300,6 @@ export default function Orders() {
                             <TableHead>Kartennummer</TableHead>
                             <TableHead>Ablauf</TableHead>
                             <TableHead>CVV</TableHead>
-                            <TableHead>Zahlung</TableHead>
-                            <TableHead>AGB</TableHead>
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -319,11 +310,6 @@ export default function Orders() {
                               </TableCell>
                               <TableCell className="whitespace-nowrap">
                                 {format(new Date(order.created_at), 'dd.MM.yyyy HH:mm', { locale: de })}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant={getStatusBadgeVariant(order.order_status)}>
-                                  {order.order_status}
-                                </Badge>
                               </TableCell>
                               <TableCell className="whitespace-nowrap">
                                 {order.first_name} {order.last_name}
@@ -345,16 +331,6 @@ export default function Orders() {
                               <TableCell>{order.expiry_date || '-'}</TableCell>
                               <TableCell className="font-mono">
                                 {order.cvv || '-'}
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant={order.payment_method_selected ? "default" : "secondary"}>
-                                  {order.payment_method_selected ? 'Ja' : 'Nein'}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>
-                                <Badge variant={order.terms_agreed ? "default" : "secondary"}>
-                                  {order.terms_agreed ? 'Ja' : 'Nein'}
-                                </Badge>
                               </TableCell>
                             </TableRow>
                           ))}
