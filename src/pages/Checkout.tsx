@@ -144,7 +144,7 @@ const Checkout = () => {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Side - Checkout Form (2/3 width) */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-2 order-2 lg:order-1">
               <CheckoutForm
                 initialZipCode={checkoutData.zipCode}
                 totalPrice={checkoutData.finalPrice}
@@ -154,7 +154,7 @@ const Checkout = () => {
             </div>
 
             {/* Right Side - Order Summary (1/3 width) */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 order-1 lg:order-2">
               <OrderSummary orderData={orderSummary} />
             </div>
           </div>
