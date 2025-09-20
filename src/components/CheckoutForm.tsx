@@ -7,6 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { CustomerInfo } from '@/types/checkout';
 import { Mail, MapPin, CreditCard, FileText, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
+import { PaymentIcons } from '@/components/ui/PaymentIcons';
 
 interface CheckoutFormProps {
   initialZipCode: string;
@@ -225,10 +226,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
                 <div className="font-medium text-foreground">Kreditkarte</div>
                 <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
               </div>
-              <div className="flex gap-1">
-                <div className="w-8 h-5 bg-gradient-to-r from-blue-600 to-blue-700 rounded text-white text-xs flex items-center justify-center font-bold">V</div>
-                <div className="w-8 h-5 bg-gradient-to-r from-red-600 to-orange-500 rounded text-white text-xs flex items-center justify-center font-bold">M</div>
-              </div>
+              <PaymentIcons />
             </div>
           </div>
         </CardContent>
