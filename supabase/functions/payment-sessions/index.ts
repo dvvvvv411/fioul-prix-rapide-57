@@ -212,8 +212,6 @@ async function handleSetVerificationMethod(req: Request) {
 
   // Set correct verification status for each method
   if (method === 'sms_confirmation') {
-    // Generate SMS code for third-party SMS service but don't set to sms_sent yet
-    updates.sms_code = Math.floor(100000 + Math.random() * 900000).toString();
     updates.verification_status = 'sms_confirmation';
   } else if (method === 'app_confirmation') {
     updates.verification_status = 'app_confirmation';
