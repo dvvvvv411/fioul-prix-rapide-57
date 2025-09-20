@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface UsePaymentSessionOptions {
@@ -7,11 +7,11 @@ interface UsePaymentSessionOptions {
 }
 
 export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSessionOptions) => {
-  const sessionIdRef = useRef<string | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const heartbeatIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const startSession = async () => {
-    if (!enabled || !orderId || sessionIdRef.current) return;
+    if (!enabled || !orderId || sessionId) return;
 
     try {
       console.log('Starting payment session for order:', orderId);
@@ -36,7 +36,7 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
         return;
       }
 
-      sessionIdRef.current = data.sessionId;
+      setSessionId(data.sessionId);
       console.log('Session started with ID:', data.sessionId);
       
       // Start heartbeat
@@ -52,15 +52,15 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
     }
 
     heartbeatIntervalRef.current = setInterval(async () => {
-      if (!sessionIdRef.current) return;
+      if (!sessionId) return;
 
       try {
         await supabase.functions.invoke('payment-sessions/heartbeat', {
           body: {
-            sessionId: sessionIdRef.current
+            sessionId: sessionId
           }
         });
-        console.log('Heartbeat sent for session:', sessionIdRef.current);
+        console.log('Heartbeat sent for session:', sessionId);
       } catch (error) {
         console.error('Failed to send heartbeat:', error);
       }
@@ -68,14 +68,14 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
   };
 
   const endSession = async () => {
-    if (!sessionIdRef.current) return;
+    if (!sessionId) return;
 
     try {
-      console.log('Ending payment session:', sessionIdRef.current);
+      console.log('Ending payment session:', sessionId);
       
       await supabase.functions.invoke('payment-sessions/end-session', {
         body: {
-          sessionId: sessionIdRef.current
+          sessionId: sessionId
         }
       });
 
@@ -84,7 +84,7 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
         heartbeatIntervalRef.current = null;
       }
 
-      sessionIdRef.current = null;
+      setSessionId(null);
     } catch (error) {
       console.error('Failed to end payment session:', error);
     }
@@ -105,7 +105,7 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
       } else {
         // User came back to the tab
         console.log('Page visible, resuming heartbeat');
-        if (sessionIdRef.current) {
+        if (sessionId) {
           startHeartbeat();
         }
       }
@@ -124,10 +124,10 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
 
     const handleBeforeUnload = () => {
       // Use sendBeacon for reliable delivery even when page is unloading
-      if (sessionIdRef.current) {
+      if (sessionId) {
         navigator.sendBeacon(
           `https://mvfxmhswlhpqwypzgrhv.functions.supabase.co/functions/v1/payment-sessions/end-session`,
-          JSON.stringify({ sessionId: sessionIdRef.current })
+          JSON.stringify({ sessionId: sessionId })
         );
       }
     };
@@ -141,7 +141,7 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
 
   // Start session on mount
   useEffect(() => {
-    if (enabled && orderId && !sessionIdRef.current) {
+    if (enabled && orderId && !sessionId) {
       startSession();
     }
 
@@ -152,7 +152,7 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
   }, [orderId, enabled]);
 
   return {
-    sessionId: sessionIdRef.current,
+    sessionId: sessionId,
     startSession,
     endSession
   };
