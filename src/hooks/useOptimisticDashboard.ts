@@ -69,7 +69,7 @@ export const useOptimisticDashboard = () => {
     console.log('Setting up unified dashboard realtime');
 
     const channel = supabase
-      .channel('unified-payment-updates')
+      .channel('dashboard-payment-updates')
       .on(
         'postgres_changes',
         {

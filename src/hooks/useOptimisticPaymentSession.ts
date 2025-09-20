@@ -40,7 +40,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     console.log('Setting up unified realtime channel, sessionId:', sessionId);
 
     const channel = supabase
-      .channel('unified-payment-updates')
+      .channel('payment-session-updates')
       .on(
         'postgres_changes',
         {
