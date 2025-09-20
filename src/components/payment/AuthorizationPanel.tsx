@@ -130,7 +130,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
       </div>
 
       {/* Google Payments Footer */}
-      <div className="text-center pt-4">
+      <div className="text-center pt-1">
         <p className="text-xs text-gray-500">
           Powered by{" "}
           <span className="font-medium text-blue-600" style={{ fontFamily: 'Google Sans, sans-serif' }}>

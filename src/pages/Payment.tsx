@@ -25,12 +25,12 @@ const Payment = () => {
       <div className="w-full max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
           {/* Left Column - Authorization */}
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-start">
             <AuthorizationPanel orderId={orderId} />
           </div>
           
           {/* Right Column - Order Details */}
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-start">
             <OrderDetailsPanel orderId={orderId} />
           </div>
         </div>
