@@ -147,21 +147,13 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
               </div>
             </div>
 
-            {/* Right side - Company Info */}
-            <div className="flex flex-col items-center justify-center space-y-2">
+            {/* Right side - Company Logo */}
+            <div className="flex flex-col items-center justify-center">
               <img 
                 src="https://i.imgur.com/NqMqAH6.png" 
                 alt="Total Fioul Logo" 
-                className="h-10"
+                className="h-16"
               />
-              <div className="text-center">
-                <p className="text-sm font-semibold text-gray-900">
-                  Total Fioul France
-                </p>
-                <p className="text-xs text-gray-600">
-                  Partout en France
-                </p>
-              </div>
             </div>
           </div>
         </CardContent>
