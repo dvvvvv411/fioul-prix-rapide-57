@@ -27,22 +27,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [initialAuthCheck, setInitialAuthCheck] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        const wasLoggedIn = !!user;
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Auto-redirect logic
-        if (event === 'SIGNED_IN' && session) {
-          toast.success('Erfolgreich angemeldet!');
-          setTimeout(() => {
-            navigate('/dashboard');
-          }, 100);
+        // Only navigate on genuine login events, not on tab switches or token refreshes
+        if (event === 'SIGNED_IN' && session && !wasLoggedIn && initialAuthCheck) {
+          const currentPath = window.location.pathname;
+          // Only navigate to dashboard if not already on a dashboard page and this is a genuine login
+          if (!currentPath.startsWith('/dashboard')) {
+            toast.success('Erfolgreich angemeldet!');
+            setTimeout(() => {
+              navigate('/dashboard');
+            }, 100);
+          }
         } else if (event === 'SIGNED_OUT') {
           toast.success('Erfolgreich abgemeldet!');
           setTimeout(() => {
@@ -52,11 +58,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     );
 
-    // Check for existing session
+    // Check for existing session on initial load
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      setInitialAuthCheck(true);
     });
 
     return () => subscription.unsubscribe();
