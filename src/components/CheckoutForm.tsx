@@ -448,7 +448,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
         ) : (
           <div className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
-            Jetzt kostenpflichtig bestellen - {totalPrice.toFixed(2)}€
+            Zahlung autorisieren - {totalPrice.toFixed(2)}€
           </div>
         )}
       </Button>
