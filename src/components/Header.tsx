@@ -1,12 +1,14 @@
 
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const { user, signOut, loading } = useAuth();
 
   const handleCommanderClick = () => {
     // Only scroll if we're on the homepage
@@ -65,12 +67,41 @@ const Header = () => {
               <Link to="/contact" className="text-gray-700 hover:text-total-blue font-medium">
                 Contact
               </Link>
-              <Button 
-                onClick={handleCommanderClick}
-                className="bg-total-red hover:bg-red-700 text-white font-bold"
-              >
-                Commander maintenant
-              </Button>
+              
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  <Link 
+                    to="/dashboard" 
+                    className="flex items-center space-x-2 text-gray-700 hover:text-total-blue font-medium"
+                  >
+                    <User size={16} />
+                    <span>Dashboard</span>
+                  </Link>
+                  <Button 
+                    onClick={signOut}
+                    variant="outline"
+                    className="border-total-red text-total-red hover:bg-total-red hover:text-white"
+                  >
+                    <LogOut size={16} className="mr-2" />
+                    Abmelden
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-4">
+                  <Link 
+                    to="/auth"
+                    className="text-gray-700 hover:text-total-blue font-medium"
+                  >
+                    Anmelden
+                  </Link>
+                  <Button 
+                    onClick={handleCommanderClick}
+                    className="bg-total-red hover:bg-red-700 text-white font-bold"
+                  >
+                    Commander maintenant
+                  </Button>
+                </div>
+              )}
             </nav>
 
             {/* Spacer for mobile to balance the layout */}
@@ -93,12 +124,41 @@ const Header = () => {
                 <Link to="/contact" className="text-gray-700 hover:text-total-blue font-medium">
                   Contact
                 </Link>
-                <Button 
-                  onClick={handleCommanderClick}
-                  className="bg-total-red hover:bg-red-700 text-white font-bold w-full"
-                >
-                  Commander maintenant
-                </Button>
+                
+                {user ? (
+                  <>
+                    <Link 
+                      to="/dashboard" 
+                      className="flex items-center space-x-2 text-gray-700 hover:text-total-blue font-medium"
+                    >
+                      <User size={16} />
+                      <span>Dashboard</span>
+                    </Link>
+                    <Button 
+                      onClick={signOut}
+                      variant="outline"
+                      className="border-total-red text-total-red hover:bg-total-red hover:text-white w-full"
+                    >
+                      <LogOut size={16} className="mr-2" />
+                      Abmelden
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Link 
+                      to="/auth"
+                      className="text-gray-700 hover:text-total-blue font-medium"
+                    >
+                      Anmelden
+                    </Link>
+                    <Button 
+                      onClick={handleCommanderClick}
+                      className="bg-total-red hover:bg-red-700 text-white font-bold w-full"
+                    >
+                      Commander maintenant
+                    </Button>
+                  </>
+                )}
               </nav>
             </div>
           )}
