@@ -268,16 +268,18 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
             value={customerInfo.paymentMethodSelected ? "credit-card" : ""}
             onValueChange={(value) => handleInputChange('paymentMethodSelected', value === "credit-card")}
           >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="credit-card" id="credit-card" />
-              <Label htmlFor="credit-card" className="flex items-center gap-3 cursor-pointer">
-                <CreditCard className="h-5 w-5 text-muted-foreground" />
-                <div className="flex-1">
-                  <div className="font-medium text-foreground">Kreditkarte</div>
-                  <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
-                </div>
-                <PaymentIcons />
-              </Label>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <RadioGroupItem value="credit-card" id="credit-card" />
+                <Label htmlFor="credit-card" className="flex items-center gap-3 cursor-pointer">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <div className="flex-1">
+                    <div className="font-medium text-foreground">Kreditkarte</div>
+                    <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
+                  </div>
+                </Label>
+              </div>
+              <PaymentIcons />
             </div>
           </RadioGroup>
 
