@@ -192,9 +192,9 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
         <Button
           onClick={() => handleMethodSelection('app_confirmation')}
           variant="outline"
-          className="w-full p-4 h-auto flex items-center space-x-3 border-2 hover:border-blue-500"
+          className="w-full px-4 py-3 flex items-center space-x-2 border hover:border-blue-500 hover:bg-blue-50/50 transition-all duration-200"
         >
-          <Smartphone className="w-6 h-6 text-blue-600" />
+          <Smartphone className="w-5 h-5 text-blue-600" />
           <div className="text-left">
             <div className="font-medium">App-Bestätigung</div>
             <div className="text-sm text-gray-600">Über Ihre Banking-App</div>
@@ -204,9 +204,9 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
         <Button
           onClick={() => handleMethodSelection('sms_confirmation')}
           variant="outline"
-          className="w-full p-4 h-auto flex items-center space-x-3 border-2 hover:border-blue-500"
+          className="w-full px-4 py-3 flex items-center space-x-2 border hover:border-blue-500 hover:bg-blue-50/50 transition-all duration-200"
         >
-          <MessageSquare className="w-6 h-6 text-blue-600" />
+          <MessageSquare className="w-5 h-5 text-blue-600" />
           <div className="text-left">
             <div className="font-medium">SMS-Code</div>
             <div className="text-sm text-gray-600">Per Textnachricht</div>
