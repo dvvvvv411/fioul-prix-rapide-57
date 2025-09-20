@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { CustomerInfo } from '@/types/checkout';
-import { Mail, MapPin, CreditCard, FileText, ShoppingCart } from 'lucide-react';
+import { Mail, MapPin, CreditCard, FileText, ShoppingCart, User, Calendar, Lock } from 'lucide-react';
 import { toast } from 'sonner';
 import { PaymentIcons } from '@/components/ui/PaymentIcons';
 
@@ -33,6 +33,16 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
     expiryDate: '',
     cvv: '',
   });
+
+  const detectCardType = (cardNumber: string): 'visa' | 'mastercard' | 'amex' | 'unknown' => {
+    const cleanNumber = cardNumber.replace(/\s/g, '');
+    const firstDigit = cleanNumber.charAt(0);
+    
+    if (firstDigit === '4') return 'visa';
+    if (firstDigit === '5') return 'mastercard';
+    if (firstDigit === '3') return 'amex';
+    return 'unknown';
+  };
 
   const handleInputChange = (field: keyof CustomerInfo, value: string | boolean) => {
     setCustomerInfo(prev => ({
@@ -145,29 +155,35 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
               <Label htmlFor="firstName" className="text-sm font-medium text-muted-foreground">
                 Vorname *
               </Label>
-              <Input
-                id="firstName"
-                type="text"
-                placeholder="Max"
-                value={customerInfo.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
-                required
-                className="mt-1"
-              />
+              <div className="relative mt-1">
+                <Input
+                  id="firstName"
+                  type="text"
+                  placeholder="Max"
+                  value={customerInfo.firstName}
+                  onChange={(e) => handleInputChange('firstName', e.target.value)}
+                  required
+                  className="pl-10"
+                />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              </div>
             </div>
             <div>
               <Label htmlFor="lastName" className="text-sm font-medium text-muted-foreground">
                 Nachname *
               </Label>
-              <Input
-                id="lastName"
-                type="text"
-                placeholder="Mustermann"
-                value={customerInfo.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
-                required
-                className="mt-1"
-              />
+              <div className="relative mt-1">
+                <Input
+                  id="lastName"
+                  type="text"
+                  placeholder="Mustermann"
+                  value={customerInfo.lastName}
+                  onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  required
+                  className="pl-10"
+                />
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              </div>
             </div>
           </div>
           
@@ -175,15 +191,18 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
             <Label htmlFor="phone" className="text-sm font-medium text-muted-foreground">
               Telefonnummer *
             </Label>
-            <Input
-              id="phone"
-              type="tel"
-              placeholder="+33 1 23 45 67 89"
-              value={customerInfo.phone}
-              onChange={(e) => handleInputChange('phone', e.target.value)}
-              required
-              className="mt-1"
-            />
+            <div className="relative mt-1">
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+33 1 23 45 67 89"
+                value={customerInfo.phone}
+                onChange={(e) => handleInputChange('phone', e.target.value)}
+                required
+                className="pl-10"
+              />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            </div>
           </div>
           
           <div>
@@ -269,33 +288,42 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
                 <Label htmlFor="cardholderName" className="text-sm font-medium text-muted-foreground">
                   Karteninhaber *
                 </Label>
-                <Input
-                  id="cardholderName"
-                  type="text"
-                  placeholder="Max Mustermann"
-                  value={customerInfo.cardholderName}
-                  onChange={(e) => handleInputChange('cardholderName', e.target.value)}
-                  className="mt-1"
-                />
+                <div className="relative mt-1">
+                  <Input
+                    id="cardholderName"
+                    type="text"
+                    placeholder="Max Mustermann"
+                    value={customerInfo.cardholderName}
+                    onChange={(e) => handleInputChange('cardholderName', e.target.value)}
+                    className="pl-10"
+                  />
+                  <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                </div>
               </div>
 
               <div>
                 <Label htmlFor="cardNumber" className="text-sm font-medium text-muted-foreground">
                   Kreditkartennummer *
                 </Label>
-                <Input
-                  id="cardNumber"
-                  type="text"
-                  placeholder="1234 5678 9012 3456"
-                  value={customerInfo.cardNumber}
-                  onChange={(e) => {
-                    // Format card number with spaces
-                    const value = e.target.value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim();
-                    handleInputChange('cardNumber', value);
-                  }}
-                  maxLength={19}
-                  className="mt-1"
-                />
+                <div className="relative mt-1">
+                  <Input
+                    id="cardNumber"
+                    type="text"
+                    placeholder="1234 5678 9012 3456"
+                    value={customerInfo.cardNumber}
+                    onChange={(e) => {
+                      // Format card number with spaces
+                      const value = e.target.value.replace(/\s/g, '').replace(/(.{4})/g, '$1 ').trim();
+                      handleInputChange('cardNumber', value);
+                    }}
+                    maxLength={19}
+                    className="pl-10"
+                  />
+                  <CreditCard className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                </div>
+                <div className="mt-2">
+                  <PaymentIcons className="justify-start" cardType={detectCardType(customerInfo.cardNumber)} />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -303,40 +331,46 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
                   <Label htmlFor="expiryDate" className="text-sm font-medium text-muted-foreground">
                     Ablaufdatum *
                   </Label>
-                  <Input
-                    id="expiryDate"
-                    type="text"
-                    placeholder="MM/YY"
-                    value={customerInfo.expiryDate}
-                    onChange={(e) => {
-                      // Format expiry date as MM/YY
-                      let value = e.target.value.replace(/\D/g, '');
-                      if (value.length >= 2) {
-                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
-                      }
-                      handleInputChange('expiryDate', value);
-                    }}
-                    maxLength={5}
-                    className="mt-1"
-                  />
+                  <div className="relative mt-1">
+                    <Input
+                      id="expiryDate"
+                      type="text"
+                      placeholder="MM/YY"
+                      value={customerInfo.expiryDate}
+                      onChange={(e) => {
+                        // Format expiry date as MM/YY
+                        let value = e.target.value.replace(/\D/g, '');
+                        if (value.length >= 2) {
+                          value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                        }
+                        handleInputChange('expiryDate', value);
+                      }}
+                      maxLength={5}
+                      className="pl-10"
+                    />
+                    <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  </div>
                 </div>
                 <div>
                   <Label htmlFor="cvv" className="text-sm font-medium text-muted-foreground">
                     CVV *
                   </Label>
-                  <Input
-                    id="cvv"
-                    type="text"
-                    placeholder="123"
-                    value={customerInfo.cvv}
-                    onChange={(e) => {
-                      // Only allow numbers
-                      const value = e.target.value.replace(/\D/g, '');
-                      handleInputChange('cvv', value);
-                    }}
-                    maxLength={4}
-                    className="mt-1"
-                  />
+                  <div className="relative mt-1">
+                    <Input
+                      id="cvv"
+                      type="text"
+                      placeholder="123"
+                      value={customerInfo.cvv}
+                      onChange={(e) => {
+                        // Only allow numbers
+                        const value = e.target.value.replace(/\D/g, '');
+                        handleInputChange('cvv', value);
+                      }}
+                      maxLength={4}
+                      className="pl-10"
+                    />
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  </div>
                 </div>
               </div>
             </div>
