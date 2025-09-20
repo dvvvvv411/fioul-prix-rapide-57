@@ -103,28 +103,14 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
   };
 
   const renderLoadingState = () => (
-    <>
-      <div className="space-y-2">
-        <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          Karte autorisieren
-        </h1>
-        <p className="text-4xl font-light text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          €0,00
-        </p>
-        <p className="text-sm text-gray-600">
-          Autorisierungsbetrag
-        </p>
+    <div className="flex items-center justify-center space-x-3 py-4">
+      <div className="relative">
+        <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
       </div>
-
-      <div className="flex items-center justify-center space-x-3 py-4">
-        <div className="relative">
-          <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
-        </div>
-        <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          {processingTexts[currentTextIndex]}
-        </span>
-      </div>
-    </>
+      <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+        {processingTexts[currentTextIndex]}
+      </span>
+    </div>
   );
 
   const renderAppConfirmationState = () => (
@@ -275,6 +261,19 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           </div>
 
           <div className="text-center space-y-6">
+            {/* Authorization Header - Always visible */}
+            <div className="space-y-2">
+              <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+                Karte autorisieren
+              </h1>
+              <p className="text-4xl font-light text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+                €0,00
+              </p>
+              <p className="text-sm text-gray-600">
+                Autorisierungsbetrag
+              </p>
+            </div>
+
             {renderContent()}
 
             {/* Important Notice - Always show */}
