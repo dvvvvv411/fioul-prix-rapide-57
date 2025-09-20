@@ -89,7 +89,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     // Optimistic update
     const optimisticUpdate = {
       verification_method: method,
-      verification_status: method === 'sms_confirmation' ? 'sms_sent' : 'waiting',
+      verification_status: method === 'sms_confirmation' ? 'sms_confirmation' : 'waiting',
       admin_action_pending: true,
     };
     
@@ -155,7 +155,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     console.log('Entering SMS code optimistically');
     
     // Optimistic update - save user code and set status to sms_sent
-    setLocalState({ sms_code: code, verification_status: 'sms_sent' });
+    setLocalState({ sms_code: code, verification_status: 'sms_confirmation' });
     setIsLoading(true);
 
     try {

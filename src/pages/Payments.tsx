@@ -122,8 +122,8 @@ const Payments = () => {
         return <Badge variant="outline">SMS</Badge>;
       case 'app_confirmed':
         return <Badge variant="default">App bestätigt</Badge>;
-      case 'sms_sent':
-        return <Badge variant="outline">SMS gesendet</Badge>;
+      case 'sms_confirmation':
+        return <Badge variant="outline">SMS bestätigung</Badge>;
       case 'sms_confirmed':
         return <Badge variant="default">SMS bestätigt</Badge>;
       case 'completed':
