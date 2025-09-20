@@ -40,22 +40,6 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
 
   return (
     <div className="space-y-6">
-      {/* Important Payment Notice */}
-      <Card className="border-green-200 bg-green-50">
-        <CardContent className="pt-4">
-          <div className="flex items-start space-x-3">
-            <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
-            <div>
-              <h3 className="text-sm font-medium text-green-900 mb-1">
-                Zahlung bei Lieferung
-              </h3>
-              <p className="text-sm text-green-800">
-                Die Zahlung erfolgt erst nach der Lieferung. Ihre Karte wird nur zur Sicherheit autorisiert.
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Order Summary */}
       <Card>
