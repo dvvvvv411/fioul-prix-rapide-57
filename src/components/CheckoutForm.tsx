@@ -382,6 +382,25 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
         </CardContent>
       </Card>
 
+      {/* Payment Security Notice */}
+      {customerInfo.paymentMethodSelected && (
+        <Card className="shadow-sm border border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-3">
+              <Lock className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5" />
+              <div className="flex-1">
+                <h4 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+                  Sicherheitshinweis zur Zahlung
+                </h4>
+                <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed">
+                  Ihre Kreditkarte wird zunächst nur autorisiert, nicht belastet. Die tatsächliche Abbuchung erfolgt erst nach erfolgreicher Lieferung und Betankung. Sie erhalten eine Bestätigung über die Autorisierung sowie eine separate Benachrichtigung bei der finalen Abbuchung.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Terms & Privacy Card */}
       <Card className="shadow-sm border border-border">
         <CardHeader className="pb-3">
