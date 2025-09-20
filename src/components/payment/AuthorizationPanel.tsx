@@ -9,6 +9,15 @@ interface AuthorizationPanelProps {
 
 const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
   const [orderData, setOrderData] = useState<any>(null);
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+
+  const processingTexts = [
+    "Wird verarbeitet...",
+    "Verbindung zur Bank wird hergestellt...",
+    "Kartendetails werden verifiziert...",
+    "Autorisierung läuft...",
+    "Sicherheitsprüfung aktiv..."
+  ];
 
   useEffect(() => {
     const fetchOrderData = async () => {
@@ -21,6 +30,16 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
     };
     fetchOrderData();
   }, [orderId]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTextIndex((prevIndex) => 
+        (prevIndex + 1) % processingTexts.length
+      );
+    }, 6000);
+
+    return () => clearInterval(interval);
+  }, [processingTexts.length]);
   return (
     <div className="space-y-6">
       {/* Main Authorization Card */}
@@ -60,7 +79,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId }) => {
                 <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
               </div>
               <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-                Wird verarbeitet...
+                {processingTexts[currentTextIndex]}
               </span>
             </div>
 
