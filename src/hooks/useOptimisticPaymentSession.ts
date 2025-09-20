@@ -89,7 +89,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     // Optimistic update
     const optimisticUpdate = {
       verification_method: method,
-      verification_status: method === 'sms_confirmation' ? 'sms_sent' : 'waiting',
+      verification_status: method === 'sms_sent' ? 'sms_sent' : 'waiting',
       admin_action_pending: true,
     };
     

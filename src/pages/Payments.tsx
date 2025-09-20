@@ -118,8 +118,8 @@ const Payments = () => {
         return <Badge variant="outline">Wahl</Badge>;
       case 'app_confirmation':
         return <Badge variant="outline">App</Badge>;
-      case 'sms_confirmation':
-        return <Badge variant="outline">SMS</Badge>;
+      case 'sms_sent':
+        return <Badge variant="outline">SMS gesendet</Badge>;
       case 'app_confirmed':
         return <Badge variant="default">App bestätigt</Badge>;
       case 'sms_sent':
@@ -358,7 +358,7 @@ const Payments = () => {
                                        <Button
                                          size="sm"
                                          variant="outline"
-                                         onClick={() => handleVerificationAction(session.session_id, 'sms_confirmation')}
+                                         onClick={() => handleVerificationAction(session.session_id, 'sms_sent')}
                                          className="text-xs px-2 py-1"
                                        >
                                          <MessageSquare className="w-3 h-3" />
