@@ -269,22 +269,24 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting }: Ch
             value={customerInfo.paymentMethodSelected ? "credit-card" : ""}
             onValueChange={(value) => handleInputChange('paymentMethodSelected', value === "credit-card")}
           >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="credit-card" id="credit-card" />
-                <Label htmlFor="credit-card" className="flex items-center gap-3 cursor-pointer">
-                  <CreditCard className="h-5 w-5 text-muted-foreground" />
-                  <div className="flex-1">
-                    <div className="font-medium text-foreground">Kreditkarte</div>
-                    <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
-                    <Badge variant="secondary" className="mt-2 text-xs">
-                      Zahlung nach Lieferung
-                    </Badge>
-                  </div>
-                </Label>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="credit-card" id="credit-card" />
+                  <Label htmlFor="credit-card" className="flex items-center gap-3 cursor-pointer">
+                    <CreditCard className="h-5 w-5 text-muted-foreground" />
+                    <div className="flex-1">
+                      <div className="font-medium text-foreground">Kreditkarte</div>
+                      <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
+                    </div>
+                  </Label>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Badge variant="default" className="text-xs font-medium bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800">
+                    Zahlung nach Lieferung
+                  </Badge>
+                  <PaymentIcons />
+                </div>
               </div>
-              <PaymentIcons />
-            </div>
           </RadioGroup>
 
           {/* Credit Card Fields */}
