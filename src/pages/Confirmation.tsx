@@ -158,15 +158,15 @@ const Confirmation = () => {
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</div>
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</div>
                       <p className="text-sm text-muted-foreground">Wir prüfen Ihre Bestellung und bestätigen den Liefertermin per E-Mail</p>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</div>
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</div>
                       <p className="text-sm text-muted-foreground">Unser Lieferteam kontaktiert Sie vor der Anlieferung</p>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
+                      <div className="w-6 h-6 rounded-full bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
                       <p className="text-sm text-muted-foreground">Die Bezahlung erfolgt direkt bei der Betankung</p>
                     </div>
                   </div>
