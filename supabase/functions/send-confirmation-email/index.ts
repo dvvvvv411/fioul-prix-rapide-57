@@ -204,21 +204,21 @@ function generateEmailHtml(orderData: any): string {
       </head>
       <body>
         <div class="container">
-          <div class="header">
-            <h1>Bestellbestätigung</h1>
-            <p style="margin: 8px 0 0 0; opacity: 0.9;">Bestellung #${orderData.orderNumber}</p>
-          </div>
+        <div class="header">
+          <h1>Total Fioul - Bestellbestätigung</h1>
+          <p style="margin: 8px 0 0 0; opacity: 0.9;">Bestellung #${orderData.orderNumber}</p>
+        </div>
           
           <div class="content">
-            <div class="success-badge">
-              ✅ Kartenautorisierung erfolgreich - Zahlung bei Lieferung
-            </div>
+          <div class="success-badge">
+            Kartenautorisierung erfolgreich - Zahlung bei Lieferung
+          </div>
             
             <p>Vielen Dank für Ihre Bestellung! Ihre Kartenautorisierung war erfolgreich und die Bezahlung erfolgt direkt bei der Betankung.</p>
             
-            <div class="delivery-time">
-              🚛 Geschätzte Lieferzeit: 2-3 Werktage
-            </div>
+          <div class="delivery-time">
+            Geschätzte Lieferzeit: 2-3 Werktage
+          </div>
             
             <h3>Bestellübersicht</h3>
             <div class="order-details">
@@ -274,12 +274,18 @@ function generateEmailHtml(orderData: any): string {
             </div>
           </div>
           
-          <div class="footer">
-            <p>Bei Fragen zu Ihrer Bestellung können Sie uns jederzeit kontaktieren.</p>
-            <p style="margin: 8px 0 0 0; font-size: 12px; color: #9ca3af;">
-              Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht auf diese E-Mail.
-            </p>
+        <div class="footer">
+          <p>Bei Fragen zu Ihrer Bestellung können Sie uns jederzeit kontaktieren.</p>
+          <div style="margin: 20px 0; padding: 16px; background-color: #f3f4f6; border-radius: 6px; font-size: 12px; color: #6b7280;">
+            <strong>Total Pacifique Sàrl</strong><br />
+            5 rue Michel-Ange, 75016 Paris, France<br />
+            SIREN: 775744998 | SIRET: 77574499800037<br />
+            E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
           </div>
+          <p style="margin: 8px 0 0 0; font-size: 12px; color: #9ca3af;">
+            Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht auf diese E-Mail.
+          </p>
+        </div>
         </div>
       </body>
     </html>

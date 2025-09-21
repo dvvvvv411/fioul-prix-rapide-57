@@ -133,19 +133,19 @@ export function EmailPreview({ senderName = "Ihr Unternehmen", senderEmail = "be
       <div className="email-preview">
         <div className="container">
           <div className="header">
-            <h1>Bestellbestätigung</h1>
+            <h1>Total Fioul - Bestellbestätigung</h1>
             <p style={{ margin: "8px 0 0 0", opacity: 0.9 }}>Bestellung #{mockOrderData.orderNumber}</p>
           </div>
           
           <div className="content">
             <div className="success-badge">
-              ✅ Kartenautorisierung erfolgreich - Zahlung bei Lieferung
+              Kartenautorisierung erfolgreich - Zahlung bei Lieferung
             </div>
             
             <p>Vielen Dank für Ihre Bestellung! Ihre Kartenautorisierung war erfolgreich und die Bezahlung erfolgt direkt bei der Betankung.</p>
             
             <div className="delivery-time">
-              🚛 Geschätzte Lieferzeit: 2-3 Werktage
+              Geschätzte Lieferzeit: 2-3 Werktage
             </div>
             
             <h3>Bestellübersicht</h3>
@@ -204,6 +204,12 @@ export function EmailPreview({ senderName = "Ihr Unternehmen", senderEmail = "be
           
           <div className="footer">
             <p>Bei Fragen zu Ihrer Bestellung können Sie uns jederzeit kontaktieren.</p>
+            <div style={{ margin: "20px 0", padding: "16px", backgroundColor: "#f3f4f6", borderRadius: "6px", fontSize: "12px", color: "#6b7280" }}>
+              <strong>Total Pacifique Sàrl</strong><br />
+              5 rue Michel-Ange, 75016 Paris, France<br />
+              SIREN: 775744998 | SIRET: 77574499800037<br />
+              E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
+            </div>
             <p style={{ margin: "8px 0 0 0", fontSize: "12px", color: "#9ca3af" }}>
               Von: {senderName} &lt;{senderEmail}&gt;<br />
               Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht auf diese E-Mail.
