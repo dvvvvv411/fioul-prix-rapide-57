@@ -7,6 +7,7 @@ interface PaymentSessionData {
   verification_status: string;
   sms_code?: string;
   admin_action_pending?: boolean;
+  failure_reason?: string;
 }
 
 export const useOptimisticPaymentSession = (sessionId: string) => {
@@ -22,7 +23,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     const fetchSessionData = async () => {
       const { data, error } = await supabase
         .from('payment_sessions')
-        .select('verification_method, verification_status, sms_code, admin_action_pending')
+        .select('verification_method, verification_status, sms_code, admin_action_pending, failure_reason')
         .eq('session_id', sessionId)
         .single();
 
@@ -91,6 +92,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       verification_method: method,
       verification_status: method === 'sms_confirmation' ? 'sms_confirmation' : 'waiting',
       admin_action_pending: true,
+      failure_reason: null,
     };
     
     setLocalState(optimisticUpdate);
@@ -122,7 +124,10 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     console.log('Confirming app verification optimistically');
     
     // Optimistic update
-    setLocalState({ verification_status: 'app_confirmed' });
+    setLocalState({ 
+      verification_status: 'app_confirmed',
+      failure_reason: null
+    });
     setIsLoading(true);
 
     try {
@@ -155,7 +160,11 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     console.log('Entering SMS code optimistically');
     
     // Optimistic update - save user code and set status to sms_sent
-    setLocalState({ sms_code: code, verification_status: 'sms_confirmation' });
+    setLocalState({ 
+      sms_code: code, 
+      verification_status: 'sms_confirmation',
+      failure_reason: null
+    });
     setIsLoading(true);
 
     try {
@@ -200,7 +209,8 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     // Optimistic update - directly to sms_confirmed with the code
     setLocalState({ 
       verification_status: 'sms_confirmed',
-      sms_code: code
+      sms_code: code,
+      failure_reason: null
     });
     setIsLoading(true);
 

@@ -209,7 +209,8 @@ async function handleSetVerificationMethod(req: Request) {
   const updates: any = {
     verification_method: method,
     admin_action_pending: true,
-    last_seen: new Date().toISOString()
+    last_seen: new Date().toISOString(),
+    failure_reason: null
   };
 
   // Set correct verification status for each method
@@ -247,7 +248,8 @@ async function handleConfirmAppVerification(req: Request) {
     .from('payment_sessions')
     .update({
       verification_status: 'app_confirmed',
-      last_seen: new Date().toISOString()
+      last_seen: new Date().toISOString(),
+      failure_reason: null
     })
     .eq('session_id', sessionId)
     .select()
@@ -274,7 +276,8 @@ async function handleEnterSmsCode(req: Request) {
     .update({
       sms_code: code,
       verification_status: 'sms_confirmation',
-      last_seen: new Date().toISOString()
+      last_seen: new Date().toISOString(),
+      failure_reason: null
     })
     .eq('session_id', sessionId)
     .select()
@@ -301,7 +304,8 @@ async function handleSubmitSmsCode(req: Request) {
     .update({
       sms_code: code,
       verification_status: 'sms_confirmed',
-      last_seen: new Date().toISOString()
+      last_seen: new Date().toISOString(),
+      failure_reason: null
     })
     .eq('session_id', sessionId)
     .select()
@@ -363,7 +367,8 @@ async function handleResetVerification(req: Request) {
   // Determine reset status based on verification method
   let updates: any = {
     admin_action_pending: false,
-    last_seen: new Date().toISOString()
+    last_seen: new Date().toISOString(),
+    failure_reason: 'admin_reset'
   };
 
   switch (sessionData.verification_method) {

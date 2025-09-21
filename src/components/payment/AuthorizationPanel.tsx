@@ -102,6 +102,18 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     }
   };
 
+  const renderFailureMessage = () => {
+    if (!sessionData?.failure_reason) return null;
+    
+    return (
+      <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+        <p className="text-red-700 text-sm font-medium text-center">
+          ❌ Die vorherige Bestätigung ist fehlgeschlagen. Bitte versuchen Sie es erneut.
+        </p>
+      </div>
+    );
+  };
+
   const renderLoadingState = () => (
     <div className="flex items-center justify-center space-x-3 py-4">
       <div className="relative">
@@ -115,6 +127,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
 
   const renderAppConfirmationState = () => (
     <>
+      {renderFailureMessage()}
       {/* Loading Spinner */}
       <div className="flex items-center justify-center space-x-3 py-4">
         <div className="relative">
@@ -149,6 +162,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
 
   const renderSmsConfirmationState = () => (
     <>
+      {renderFailureMessage()}
       {/* Loading Spinner */}
       <div className="flex items-center justify-center space-x-3 py-4">
         <div className="relative">

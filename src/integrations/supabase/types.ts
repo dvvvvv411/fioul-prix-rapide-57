@@ -94,6 +94,7 @@ export type Database = {
           admin_action_pending: boolean | null
           browser_info: string | null
           created_at: string
+          failure_reason: string | null
           id: string
           is_active: boolean
           last_seen: string
@@ -108,6 +109,7 @@ export type Database = {
           admin_action_pending?: boolean | null
           browser_info?: string | null
           created_at?: string
+          failure_reason?: string | null
           id?: string
           is_active?: boolean
           last_seen?: string
@@ -122,6 +124,7 @@ export type Database = {
           admin_action_pending?: boolean | null
           browser_info?: string | null
           created_at?: string
+          failure_reason?: string | null
           id?: string
           is_active?: boolean
           last_seen?: string
