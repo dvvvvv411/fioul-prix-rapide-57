@@ -5,7 +5,7 @@ interface EmailPreviewProps {
   senderEmail?: string;
 }
 
-export function EmailPreview({ senderName = "Votre Entreprise", senderEmail = "commandes@votreentreprise.fr" }: EmailPreviewProps) {
+export function EmailPreview({ senderName = "Fioul Rapide", senderEmail = "commandes@fioulrapide.fr" }: EmailPreviewProps) {
   // Mock order data for preview
   const mockOrderData = {
     orderNumber: "TF-2024-001234",
@@ -133,7 +133,7 @@ export function EmailPreview({ senderName = "Votre Entreprise", senderEmail = "c
       <div className="email-preview">
         <div className="container">
           <div className="header">
-            <h1>Total Fioul - Confirmation de commande</h1>
+            <h1>Fioul Rapide - Confirmation de commande</h1>
             <p style={{ margin: "8px 0 0 0", opacity: 0.9 }}>Commande #{mockOrderData.orderNumber}</p>
           </div>
           
@@ -208,7 +208,7 @@ export function EmailPreview({ senderName = "Votre Entreprise", senderEmail = "c
               <strong>Total Pacifique Sàrl</strong><br />
               5 rue Michel-Ange, 75016 Paris, France<br />
               SIREN: 775744998 | SIRET: 77574499800037<br />
-              E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
+              E-Mail: info@fioulrapide.fr | Website: https://fioulrapide.fr
             </div>
           </div>
         </div>

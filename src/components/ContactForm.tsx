@@ -66,7 +66,7 @@ const ContactForm = () => {
                         Envoyez-nous un message, nous vous répondons sous 24h
                       </p>
                       <div className="space-y-1">
-                        <p className="font-semibold text-lg text-gray-900">contact@total-fioul-france.fr</p>
+                        <p className="font-semibold text-lg text-gray-900">contact@fioulrapide.fr</p>
                         <p className="text-gray-500 text-sm">Réponse garantie sous 24h</p>
                       </div>
                     </div>
