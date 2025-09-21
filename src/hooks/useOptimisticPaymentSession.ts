@@ -64,8 +64,9 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
             
             // Navigate to confirmation page when payment is completed
             if (payload.new.verification_status === 'completed') {
+              const orderId = payload.new.order_id;
               setTimeout(() => {
-                window.location.href = '/confirmation';
+                window.location.href = `/confirmation?orderId=${orderId}`;
               }, 2000);
             }
           } else {
