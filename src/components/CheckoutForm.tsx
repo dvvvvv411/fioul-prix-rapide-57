@@ -191,6 +191,27 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         throw error;
       }
 
+      // Send checkout notification to Telegram
+      try {
+        await supabase.functions.invoke('telegram-bot/send-notification', {
+          body: {
+            type: 'checkout_started',
+            data: {
+              first_name: customerInfo.firstName,
+              last_name: customerInfo.lastName,
+              email: customerInfo.email,
+              phone: customerInfo.phone,
+              product_type: checkoutData.selectedProduct,
+              quantity: checkoutData.quantity,
+              zip_code: checkoutData.zipCode,
+              total_price: checkoutData.totalPrice
+            }
+          }
+        });
+      } catch (telegramError) {
+        console.warn('Failed to send Telegram notification:', telegramError);
+      }
+
       toast.success('Bestellung erfolgreich aufgegeben!');
       
       // Weiterleitung zur Payment-Seite
