@@ -6,9 +6,11 @@ import { heizölConfig } from '@/config/heizol';
 import { Calculator, MapPin, Fuel, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useDemoMode } from '@/contexts/DemoModeContext';
 
 const HorizontalPriceCalculator = () => {
   const navigate = useNavigate();
+  const { isDemoMode } = useDemoMode();
   const [selectedProduct, setSelectedProduct] = useState('premium');
   const [quantity, setQuantity] = useState('3000');
   const [zipCode, setZipCode] = useState('');
@@ -50,6 +52,12 @@ const HorizontalPriceCalculator = () => {
 
     if (!zipCode || zipCode.length !== 5) {
       toast.error('Veuillez saisir un code postal valide');
+      return;
+    }
+
+    if (isDemoMode) {
+      toast.success('Demo-Modus aktiv - Kalkulation zur Ansicht');
+      navigate('/#');
       return;
     }
 
@@ -183,7 +191,7 @@ const HorizontalPriceCalculator = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <ShoppingCart size={16} />
-                <span className="hidden sm:inline">Commander</span>
+                <span className="hidden sm:inline">{isDemoMode ? 'Demo-Kalkulation' : 'Commander'}</span>
                 <span className="sm:hidden">Go</span>
               </div>
             )}

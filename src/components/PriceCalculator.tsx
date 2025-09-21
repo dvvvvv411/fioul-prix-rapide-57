@@ -8,9 +8,11 @@ import { heizölConfig } from '@/config/heizol';
 import { Truck, Calculator, Gift } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useDemoMode } from '@/contexts/DemoModeContext';
 
 const PriceCalculator = () => {
   const navigate = useNavigate();
+  const { isDemoMode } = useDemoMode();
   const [selectedProduct, setSelectedProduct] = useState('premium');
   const [quantity, setQuantity] = useState('3000');
   const [zipCode, setZipCode] = useState('');
@@ -63,6 +65,12 @@ const PriceCalculator = () => {
 
     if (!zipCode || zipCode.length !== 5) {
       toast.error('Veuillez saisir un code postal valide');
+      return;
+    }
+
+    if (isDemoMode) {
+      toast.success('Demo-Modus aktiv - Kalkulation zur Ansicht');
+      navigate('/#');
       return;
     }
 
@@ -216,7 +224,7 @@ const PriceCalculator = () => {
               Préparation...
             </div>
           ) : (
-            `Commander maintenant - ${finalPrice.toFixed(2)}€`
+            isDemoMode ? `Demo-Kalkulation - ${finalPrice.toFixed(2)}€` : `Commander maintenant - ${finalPrice.toFixed(2)}€`
           )}
         </Button>
 
