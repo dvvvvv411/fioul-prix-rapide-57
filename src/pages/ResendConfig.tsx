@@ -6,10 +6,11 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, Mail, Save, TestTube } from "lucide-react";
+import { Loader2, Mail, Save, TestTube, Eye } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { EmailPreview } from "@/components/EmailPreview";
 
 interface ResendConfig {
   id?: string;
@@ -292,6 +293,24 @@ export default function ResendConfig() {
             <li>Ihr API Key wird sicher verschlüsselt gespeichert</li>
             <li>Testen Sie die Konfiguration bevor Sie live gehen</li>
           </ul>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Eye className="h-5 w-5" />
+            Vorschau der Bestätigungs-E-Mail
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-muted-foreground mb-4">
+            So sieht die E-Mail aus, die Ihre Kunden nach der Bestellung erhalten:
+          </p>
+          <EmailPreview 
+            senderName={config.sender_name || "Ihr Unternehmen"} 
+            senderEmail={config.sender_email || "bestellungen@ihrunternehmen.de"} 
+          />
         </CardContent>
       </Card>
               </div>

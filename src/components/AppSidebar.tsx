@@ -23,8 +23,6 @@ const menuItems = [
   { title: 'Bestellungen', url: '/dashboard/orders', icon: ShoppingCart },
   { title: 'Zahlungen', url: '/dashboard/payments', icon: CreditCard },
   { title: 'Resend', url: '/dashboard/resend', icon: Mail },
-  { title: 'Profil', url: '/dashboard/profile', icon: User },
-  { title: 'Einstellungen', url: '/dashboard/settings', icon: Settings },
 ];
 
 export function AppSidebar() {
