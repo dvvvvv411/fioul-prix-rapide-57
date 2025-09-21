@@ -1,7 +1,6 @@
 
 import { Mail, MapPin } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import logoImage from '@/assets/fioul24-logo.png';
 
 const Footer = () => {
   const scrollToTop = () => {
@@ -15,7 +14,7 @@ const Footer = () => {
           {/* Company Info */}
           <div>
             <img 
-              src={logoImage} 
+              src="/fioul24-logo.png" 
               alt="Fioul 24"
               className="h-24 mb-4"
             />

@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button';
 import { Menu, X, User, LogOut } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import logoImage from '@/assets/fioul24-logo.png';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -47,7 +46,7 @@ const Header = () => {
             <div className="flex items-center order-2 md:order-1 flex-1 md:flex-none justify-center md:justify-start">
               <Link to="/">
                 <img 
-                  src={logoImage} 
+                  src="/fioul24-logo.png" 
                   alt="Fioul 24"
                   className="h-24"
                 />
