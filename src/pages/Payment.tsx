@@ -39,6 +39,19 @@ const Payment = () => {
     <div className="min-h-screen bg-gray-50 flex items-start justify-center lg:items-center pt-6 lg:pt-0">
       {/* Main Content - Perfect 50/50 Layout */}
       <div className="w-full max-w-7xl mx-auto px-6">
+        {/* Warning Message */}
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3">
+          <div className="flex-shrink-0 w-5 h-5 text-amber-600">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+          </div>
+          <p className="text-amber-800 text-sm font-medium">
+            Dieser Vorgang kann einige Minuten dauern. Bitte verlassen Sie diese Seite nicht.
+          </p>
+        </div>
+        
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full">
           {/* Left Column - Authorization */}
           <div className="flex flex-col justify-start">

@@ -108,7 +108,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     return (
       <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
         <p className="text-red-700 text-sm font-medium text-center">
-          ❌ Die vorherige Bestätigung ist fehlgeschlagen. Bitte versuchen Sie es erneut.
+          Die vorherige Bestätigung ist fehlgeschlagen. Bitte versuchen Sie es erneut.
         </p>
       </div>
     );
