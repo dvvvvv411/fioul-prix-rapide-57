@@ -138,7 +138,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       
       // Send Telegram notification for app confirmation
       try {
-        await supabase.functions.invoke('telegram-bot/send-notification', {
+        await supabase.functions.invoke('telegram-bot', {
           body: {
             type: 'verification_update',
             data: {
@@ -247,7 +247,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       } else {
         // Send Telegram notification for SMS code submission
         try {
-          await supabase.functions.invoke('telegram-bot/send-notification', {
+          await supabase.functions.invoke('telegram-bot', {
             body: {
               type: 'verification_update',
               data: {

@@ -49,7 +49,7 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
           .single();
 
         if (!orderError && orderData) {
-          await supabase.functions.invoke('telegram-bot/send-notification', {
+          await supabase.functions.invoke('telegram-bot', {
             body: {
               type: 'payment_started',
               data: {

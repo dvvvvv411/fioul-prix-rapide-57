@@ -20,6 +20,23 @@ serve(async (req) => {
   try {
     const url = new URL(req.url);
     const action = url.pathname.split('/').pop();
+    
+    // Handle the case where function is called directly with body containing type/action
+    if (action === 'telegram-bot') {
+      const body = await req.json();
+      
+      // Check if this is a notification request
+      if (body.type) {
+        return await handleSendNotification({ json: () => Promise.resolve(body) } as Request);
+      }
+      
+      // Check if this is a test message request
+      if (body.chatId) {
+        return await handleTestMessage({ json: () => Promise.resolve(body) } as Request);
+      }
+      
+      return new Response('Invalid request body', { status: 400 });
+    }
 
     switch (action) {
       case 'webhook':

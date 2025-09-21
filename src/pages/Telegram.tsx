@@ -130,7 +130,7 @@ const Telegram = () => {
     setTestingChatId(chatId);
 
     try {
-      const { error } = await supabase.functions.invoke('telegram-bot/test-message', {
+      const { error } = await supabase.functions.invoke('telegram-bot', {
         body: { chatId }
       });
 
