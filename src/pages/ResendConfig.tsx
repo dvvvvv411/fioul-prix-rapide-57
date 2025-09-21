@@ -31,10 +31,8 @@ export default function ResendConfig() {
   });
 
   useEffect(() => {
-    if (user) {
-      loadConfig();
-    }
-  }, [user]);
+    loadConfig();
+  }, []);
 
   const loadConfig = async () => {
     try {
@@ -42,7 +40,7 @@ export default function ResendConfig() {
       const { data, error } = await supabase
         .from("resend_config")
         .select("*")
-        .eq("user_id", user?.id)
+        .limit(1)
         .single();
 
       if (error && error.code !== "PGRST116") {
@@ -76,7 +74,6 @@ export default function ResendConfig() {
       setLoading(true);
       
       const configData = {
-        user_id: user.id,
         sender_name: config.sender_name,
         sender_email: config.sender_email,
         api_key: config.api_key,

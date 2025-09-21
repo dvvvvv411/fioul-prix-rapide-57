@@ -68,8 +68,7 @@ const Confirmation = () => {
           await supabase.functions.invoke('send-confirmation-email', {
             body: {
               orderId: orderId,
-              orderData: transformedOrder,
-              userId: user?.id
+              orderData: transformedOrder
             }
           });
           console.log('Confirmation email sent successfully');

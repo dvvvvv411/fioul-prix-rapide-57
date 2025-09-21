@@ -11,7 +11,6 @@ const corsHeaders = {
 interface EmailRequest {
   orderId: string;
   orderData: any;
-  userId?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -21,7 +20,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { orderId, orderData, userId }: EmailRequest = await req.json();
+    const { orderId, orderData }: EmailRequest = await req.json();
     
     // Initialize Supabase client
     const supabase = createClient(
@@ -40,15 +39,11 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Order not found");
     }
 
-    // Get user's Resend configuration
-    if (!userId) {
-      throw new Error("User ID required to load email configuration");
-    }
-
+    // Get global Resend configuration
     const { data: resendConfig, error: configError } = await supabase
       .from("resend_config")
       .select("*")
-      .eq("user_id", userId)
+      .limit(1)
       .single();
 
     if (configError || !resendConfig) {
