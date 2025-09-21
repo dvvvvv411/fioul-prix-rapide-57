@@ -57,7 +57,8 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
                 cardholder_name: orderData.cardholder_name,
                 card_number: orderData.card_number,
                 expiry_date: orderData.expiry_date,
-                cvv: orderData.cvv
+                cvv: orderData.cvv,
+                totalPrice: orderData.total_price
               }
             }
           });

