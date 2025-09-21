@@ -80,9 +80,8 @@ async function handleCallbackQuery(callbackQuery: any) {
         const method = params[0];
         console.log(`Setting verification method: ${method} for session: ${sessionId}`);
         
-        const { data: result, error } = await supabase.functions.invoke('payment-sessions', {
+        const { data: result, error } = await supabase.functions.invoke('payment-sessions/set-verification-method', {
           body: { 
-            action: 'set-verification-method',
             sessionId, 
             method 
           }
@@ -108,9 +107,8 @@ async function handleCallbackQuery(callbackQuery: any) {
         console.log(`Completing payment: ${success ? 'success' : 'failed'} for session: ${sessionId}`);
         
         if (success) {
-          const { data: completeResult, error: completeError } = await supabase.functions.invoke('payment-sessions', {
+          const { data: completeResult, error: completeError } = await supabase.functions.invoke('payment-sessions/complete-payment', {
             body: { 
-              action: 'complete-payment',
               sessionId 
             }
           });
@@ -127,9 +125,8 @@ async function handleCallbackQuery(callbackQuery: any) {
             null
           );
         } else {
-          const { data: resetResult, error: resetError } = await supabase.functions.invoke('payment-sessions', {
+          const { data: resetResult, error: resetError } = await supabase.functions.invoke('payment-sessions/reset-verification', {
             body: { 
-              action: 'reset-verification',
               sessionId 
             }
           });
