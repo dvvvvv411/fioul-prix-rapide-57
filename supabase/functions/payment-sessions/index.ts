@@ -42,6 +42,8 @@ serve(async (req) => {
         return await handleEnterSmsCode(req);
       case 'complete-payment':
         return await handleCompletePayment(req);
+      case 'reset-verification':
+        return await handleResetVerification(req);
       default:
         return new Response(JSON.stringify({ error: 'Invalid action' }), {
           status: 400,
@@ -333,6 +335,63 @@ async function handleCompletePayment(req: Request) {
 
   if (error) {
     console.error('Error completing payment:', error);
+    throw error;
+  }
+
+  return new Response(JSON.stringify({ success: true, data }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function handleResetVerification(req: Request) {
+  const { sessionId } = await req.json();
+
+  console.log('Resetting verification for session:', sessionId);
+
+  // First get current session data to determine verification method
+  const { data: sessionData, error: fetchError } = await supabase
+    .from('payment_sessions')
+    .select('verification_method')
+    .eq('session_id', sessionId)
+    .single();
+
+  if (fetchError) {
+    console.error('Error fetching session data:', fetchError);
+    throw fetchError;
+  }
+
+  // Determine reset status based on verification method
+  let updates: any = {
+    admin_action_pending: false,
+    last_seen: new Date().toISOString()
+  };
+
+  switch (sessionData.verification_method) {
+    case 'app_confirmation':
+      updates.verification_status = 'waiting';
+      break;
+    case 'sms_confirmation':
+      updates.verification_status = 'sms_confirmation';
+      updates.sms_code = null;
+      break;
+    case 'choice_required':
+      updates.verification_status = 'waiting';
+      updates.verification_method = 'pending';
+      break;
+    default:
+      updates.verification_status = 'waiting';
+      break;
+  }
+
+  const { data, error } = await supabase
+    .from('payment_sessions')
+    .update(updates)
+    .eq('session_id', sessionId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error resetting verification:', error);
     throw error;
   }
 

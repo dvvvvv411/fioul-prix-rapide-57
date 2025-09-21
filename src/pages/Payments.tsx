@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CreditCard, Eye, EyeOff, Clock, Users, Smartphone, MessageSquare, CheckCircle } from 'lucide-react';
+import { CreditCard, Eye, EyeOff, Clock, Users, Smartphone, MessageSquare, CheckCircle, RotateCcw } from 'lucide-react';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { SidebarProvider } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/AppSidebar';
@@ -39,13 +39,14 @@ const Payments = () => {
   const { toast } = useToast();
   
   // Use optimistic dashboard hook
-  const {
-    activeSessions,
-    inactiveSessions,
-    loading,
-    fetchInactiveSessions,
-    handleVerificationAction,
-    handleCompletePayment
+  const { 
+    activeSessions, 
+    inactiveSessions, 
+    loading, 
+    fetchInactiveSessions, 
+    handleVerificationAction, 
+    handleCompletePayment,
+    handleResetVerification
   } = useOptimisticDashboard();
 
   // Handle show/hide inactive sessions
@@ -375,15 +376,25 @@ const Payments = () => {
                                        </Button>
                                      </>
                                    )}
-                                   {(session.verification_status === 'app_confirmed' || session.verification_status === 'sms_confirmed') && (
-                                     <Button
-                                       size="sm"
-                                       onClick={() => handleCompletePayment(session.session_id)}
-                                       className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1"
-                                     >
-                                       Bestätigen
-                                     </Button>
-                                   )}
+                                    {(session.verification_status === 'app_confirmed' || session.verification_status === 'sms_confirmed') && (
+                                      <>
+                                        <Button
+                                          size="sm"
+                                          onClick={() => handleCompletePayment(session.session_id)}
+                                          className="bg-green-600 hover:bg-green-700 text-white text-xs px-2 py-1"
+                                        >
+                                          Bestätigen
+                                        </Button>
+                                        <Button
+                                          size="sm"
+                                          onClick={() => handleResetVerification(session.session_id)}
+                                          className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1 ml-1"
+                                        >
+                                          <RotateCcw className="w-3 h-3" />
+                                          <span className="hidden sm:inline ml-1">Fehlgeschlagen</span>
+                                        </Button>
+                                      </>
+                                    )}
                                  </div>
                                </TableCell>
                             </TableRow>

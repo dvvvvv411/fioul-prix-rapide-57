@@ -225,6 +225,65 @@ export const useOptimisticDashboard = () => {
     }
   }, [toast]);
 
+  const handleResetVerification = useCallback(async (sessionId: string) => {
+    console.log('Dashboard: Resetting verification optimistically:', sessionId);
+    
+    // Find current session to determine reset state
+    const currentSession = [...activeSessions, ...inactiveSessions].find(s => s.session_id === sessionId);
+    if (!currentSession) return;
+
+    // Determine optimistic reset state
+    let optimisticUpdate: any = {
+      admin_action_pending: false,
+    };
+
+    switch (currentSession.verification_method) {
+      case 'app_confirmation':
+        optimisticUpdate.verification_status = 'waiting';
+        break;
+      case 'sms_confirmation':
+        optimisticUpdate.verification_status = 'sms_confirmation';
+        optimisticUpdate.sms_code = null;
+        break;
+      case 'choice_required':
+        optimisticUpdate.verification_status = 'waiting';
+        optimisticUpdate.verification_method = 'pending';
+        break;
+      default:
+        optimisticUpdate.verification_status = 'waiting';
+        break;
+    }
+    
+    setOptimisticUpdates(prev => ({
+      ...prev,
+      [sessionId]: optimisticUpdate
+    }));
+
+    try {
+      await supabase.functions.invoke('payment-sessions/reset-verification', {
+        body: { sessionId }
+      });
+      
+      console.log('Dashboard: Verification reset successfully');
+      toast({
+        title: "Verifikation zurückgesetzt",
+        description: "Der Nutzer kann es erneut versuchen.",
+      });
+    } catch (error) {
+      console.error('Dashboard: Error resetting verification:', error);
+      // Rollback optimistic update
+      setOptimisticUpdates(prev => {
+        const { [sessionId]: _, ...rest } = prev;
+        return rest;
+      });
+      toast({
+        title: "Fehler",
+        description: "Verifikation konnte nicht zurückgesetzt werden.",
+        variant: "destructive"
+      });
+    }
+  }, [activeSessions, inactiveSessions, toast]);
+
   // Apply optimistic updates to sessions
   const applyOptimisticUpdates = useCallback((sessions: PaymentSession[]) => {
     return sessions.map(session => ({
@@ -239,6 +298,7 @@ export const useOptimisticDashboard = () => {
     loading,
     fetchInactiveSessions,
     handleVerificationAction,
-    handleCompletePayment
+    handleCompletePayment,
+    handleResetVerification
   };
 };
