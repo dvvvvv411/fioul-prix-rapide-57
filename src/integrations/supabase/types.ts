@@ -145,6 +145,36 @@ export type Database = {
           },
         ]
       }
+      resend_config: {
+        Row: {
+          api_key: string
+          created_at: string
+          id: string
+          sender_email: string
+          sender_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          api_key: string
+          created_at?: string
+          id?: string
+          sender_email: string
+          sender_name: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          api_key?: string
+          created_at?: string
+          id?: string
+          sender_email?: string
+          sender_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       users: {
         Row: {
           created_at: string | null

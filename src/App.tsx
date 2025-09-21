@@ -21,6 +21,7 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import Orders from "./pages/Orders";
 import Payments from "./pages/Payments";
+import ResendConfig from "./pages/ResendConfig";
 
 const queryClient = new QueryClient();
 
@@ -40,9 +41,10 @@ const App = () => (
             <Route path="/payment" element={<Payment />} />
             <Route path="/confirmation" element={<Confirmation />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/orders" element={<Orders />} />
-            <Route path="/dashboard/payments" element={<Payments />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/orders" element={<Orders />} />
+          <Route path="/dashboard/payments" element={<Payments />} />
+          <Route path="/dashboard/resend" element={<ResendConfig />} />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/cgv" element={<CGV />} />
             <Route path="/politique-confidentialite" element={<PolitiqueConfidentialite />} />

@@ -60,6 +60,20 @@ const Confirmation = () => {
 
         setOrderData(transformedOrder);
         setOrderNumber(order.order_number?.toString() || '');
+
+        // Send confirmation email
+        try {
+          await supabase.functions.invoke('send-confirmation-email', {
+            body: {
+              orderId: orderId,
+              orderData: transformedOrder
+            }
+          });
+          console.log('Confirmation email sent successfully');
+        } catch (emailError) {
+          console.error('Failed to send confirmation email:', emailError);
+          // Continue even if email fails - don't block the confirmation page
+        }
       } catch (error) {
         console.error('Error fetching order data:', error);
         navigate('/');

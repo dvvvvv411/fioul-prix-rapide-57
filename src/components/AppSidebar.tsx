@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, NavLink } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, CreditCard, User, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, CreditCard, User, Settings, LogOut, Mail } from 'lucide-react';
 import {
   Sidebar,
   SidebarContent,
@@ -22,6 +22,7 @@ const menuItems = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
   { title: 'Bestellungen', url: '/dashboard/orders', icon: ShoppingCart },
   { title: 'Zahlungen', url: '/dashboard/payments', icon: CreditCard },
+  { title: 'Resend', url: '/dashboard/resend', icon: Mail },
   { title: 'Profil', url: '/dashboard/profile', icon: User },
   { title: 'Einstellungen', url: '/dashboard/settings', icon: Settings },
 ];
