@@ -122,7 +122,7 @@ async function handleCallbackQuery(callbackQuery: any) {
           message.chat.id,
           message.message_id,
           successMessage,
-          method === 'choice_required' ? getVerificationChoiceButtons(sessionId) : null
+          null  // Keine Buttons mehr nach "Wahl" - User entscheidet auf der Website
         );
         break;
 
