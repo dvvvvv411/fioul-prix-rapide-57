@@ -27,7 +27,7 @@ const Header = () => {
     <>
       {/* Promotional Banner */}
       <div className="bg-total-red text-white py-2 px-4 text-center text-sm font-medium">
-        🚚 Livraison gratuite à partir de 2000L - Partout en France
+        🚚 Transport offert à partir de 2000L - Dans toute la France
       </div>
       
       {/* Main Header */}
@@ -92,7 +92,7 @@ const Header = () => {
                     onClick={handleCommanderClick}
                     className="bg-total-red hover:bg-red-700 text-white font-bold"
                   >
-                    Commander maintenant
+                     Commander dès maintenant
                   </Button>
                 </div>
               )}
@@ -143,7 +143,7 @@ const Header = () => {
                       onClick={handleCommanderClick}
                       className="bg-total-red hover:bg-red-700 text-white font-bold w-full"
                     >
-                      Commander maintenant
+                      Commander dès maintenant
                     </Button>
                   </>
                 )}

@@ -5,28 +5,28 @@ import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
 const PriceTrends = () => {
   const trends = [
     {
-      period: "Prix actuel",
+      period: "Tarif actuel",
       value: "70-73 ct/L",
       change: null,
-      description: "Fourchette de prix"
+      description: "Gamme de coûts"
     },
     {
-      period: "1 semaine",
+      period: "7 derniers jours",
       value: "+2,5 ct/L",
       change: "up",
-      description: "Hausse modérée"
+      description: "Augmentation mesurée"
     },
     {
-      period: "1 mois", 
+      period: "30 derniers jours", 
       value: "+1,8 ct/L",
       change: "up",
-      description: "Tendance haussière"
+      description: "Orientation à la hausse"
     },
     {
-      period: "1 an",
+      period: "12 derniers mois",
       value: "+0,1 ct/L",
       change: "stable",
-      description: "Quasi-stable"
+      description: "Pratiquement stable"
     }
   ];
 
@@ -67,10 +67,10 @@ const PriceTrends = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Tendances des Prix du Fioul
+            Évolution Tarifaire du Combustible
           </h2>
           <p className="text-xl text-gray-600">
-            Suivez l'évolution du marché en temps réel
+            Observez les fluctuations du marché en direct
           </p>
         </div>
 
@@ -101,15 +101,15 @@ const PriceTrends = () => {
           <CardContent className="p-6">
             <div className="text-center">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Analyse du marché
+                Synthèse du marché
               </h3>
               <p className="text-sm text-gray-600 mb-4">
-                Prix indicatifs pour une livraison de 3000L. Tarifs hors livraison, sous réserve de disponibilité.
+                Coûts estimatifs pour un approvisionnement de 3000L. Montants hors transport, selon disponibilité.
               </p>
               <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-500">
-                <span>• Dernière mise à jour : aujourd'hui</span>
-                <span>• Source : Marché français du fioul domestique</span>
-                <span>• Variation moyenne mensuelle : +1,2%</span>
+                <span>• Actualisation : ce jour</span>
+                <span>• Source : Marché hexagonal du combustible domestique</span>
+                <span>• Fluctuation moyenne sur 30 jours : +1,2%</span>
               </div>
             </div>
           </CardContent>

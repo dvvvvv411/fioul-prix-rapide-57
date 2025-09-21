@@ -23,16 +23,16 @@ const ContactHero = () => {
         <div className="text-center mb-12 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in">
             <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-              Contactez-nous
+              Joignez-nous
             </span>
             <span className="block bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mt-2">
-              pour votre fioul
+              pour votre combustible
             </span>
           </h1>
           
-          <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.2s' }}>
-            Notre équipe d'experts est à votre disposition pour vous conseiller 
-            et vous accompagner dans votre commande de fioul domestique
+           <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.2s' }}>
+            Notre équipe de spécialistes est à votre écoute pour vous orienter 
+            et vous épauler dans votre achat de combustible résidentiel
           </p>
 
           {/* Animated Contact Info Cards - Phone removed */}
@@ -42,8 +42,8 @@ const ContactHero = () => {
                 <Mail size={20} className="text-blue-600" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Email</div>
-                <div className="text-xs text-gray-500">Réponse rapide</div>
+                <div className="text-sm font-semibold text-gray-900">Courriel</div>
+                <div className="text-xs text-gray-500">Réaction rapide</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3 p-4 bg-white/90 backdrop-blur-sm border border-white/50 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 animate-fade-in" style={{ animationDelay: '0.8s' }}>
@@ -51,7 +51,7 @@ const ContactHero = () => {
                 <Clock size={20} className="text-amber-600" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Disponibilité</div>
+                <div className="text-sm font-semibold text-gray-900">Horaires</div>
                 <div className="text-xs text-gray-500">Lun-Ven 8h-18h</div>
               </div>
             </div>
@@ -63,7 +63,7 @@ const ContactHero = () => {
               size="lg" 
               className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl group hover:scale-105"
             >
-              Demander un devis gratuit
+              Solliciter un devis gratuit
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Button>
           </div>

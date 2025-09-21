@@ -4,24 +4,24 @@ import { Check } from 'lucide-react';
 const Benefits = () => {
   const benefits = [
     {
-      title: "Qualité et fiabilité",
-      description: "Nos produits respectent les plus hautes normes de qualité françaises. Chaque livraison est contrôlée pour garantir un fioul domestique de première qualité qui assure le bon fonctionnement de votre installation de chauffage."
+      title: "Excellence et fiabilité",
+      description: "Notre gamme répond aux standards les plus élevés établis par les normes hexagonales. Chaque approvisionnement fait l'objet d'un contrôle strict afin d'assurer un combustible domestique d'excellence qui optimise le rendement de votre système de chauffage."
     },
     {
-      title: "Conseil d'expert",
-      description: "Notre équipe de spécialistes vous accompagne dans le choix de vos besoins énergétiques. Disponibles par téléphone ou en ligne, nos conseillers vous guident pour optimiser votre commande et votre consommation."
+      title: "Accompagnement spécialisé",
+      description: "Notre équipe d'experts vous conseille dans la sélection adaptée à vos besoins énergétiques. Joignables par téléphone ou via notre plateforme, nos spécialistes vous orientent pour personnaliser votre commande et maîtriser votre consommation."
     },
     {
-      title: "Prix transparents",
-      description: "Aucun frais caché, aucune surprise sur votre facture. Nos tarifs sont clairement affichés et incluent tous les coûts. Vous payez exactement ce qui est annoncé, avec la possibilité de comparer nos prix en temps réel."
+      title: "Tarification claire",
+      description: "Aucun coût dissimulé, aucune mauvaise surprise sur votre facture. Nos montants sont explicitement indiqués et englobent l'ensemble des frais. Vous réglez précisément ce qui vous est présenté, avec la possibilité d'évaluer nos tarifs instantanément."
     },
     {
-      title: "Commande simplifiée",
-      description: "Passez votre commande en quelques clics sur notre plateforme intuitive. Suivez votre livraison en temps réel et gérez facilement vos factures depuis votre espace client personnalisé."
+      title: "Procédure d'achat facilitée",
+      description: "Finalisez votre achat en quelques manipulations sur notre interface ergonomique. Surveillez votre approvisionnement en temps réel et administrez aisément vos factures depuis votre espace client dédié."
     },
     {
-      title: "Livraison ponctuelle",
-      description: "Respect strict des créneaux de livraison convenus. Notre réseau de transporteurs professionnels assure une livraison sécurisée partout en France, avec suivi GPS et notification de passage."
+      title: "Acheminement ponctuel",
+      description: "Respect rigoureux des plages horaires d'acheminement établies. Notre réseau de transporteurs qualifiés garantit un service sécurisé sur l'ensemble du territoire, avec géolocalisation et alerte de passage."
     }
   ];
 
@@ -41,11 +41,11 @@ const Benefits = () => {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-orange-500 via-red-500 to-red-600 bg-clip-text text-transparent">
-                  Bonnes raisons
+                  Excellentes raisons
                 </span>
                 <br />
                 <span className="text-gray-900">
-                  de nous choisir
+                  de nous préférer
                 </span>
               </h1>
             </div>
@@ -83,7 +83,7 @@ const Benefits = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
                 <img 
                   src="/happy-couple.png"
-                  alt="Équipe professionnelle Fioul 24"
+                  alt="Équipe spécialisée Fioul 24"
                   className="w-full h-[500px] lg:h-[600px] object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 

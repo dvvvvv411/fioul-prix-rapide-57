@@ -5,20 +5,20 @@ const HowItWorks = () => {
   const steps = [
     {
       icon: Calculator,
-      title: "Calculez",
-      description: "Utilisez notre calculateur pour estimer votre commande",
+      title: "Évaluez",
+      description: "Employez notre simulateur pour estimer votre achat",
       step: "1"
     },
     {
       icon: ShoppingCart,
-      title: "Commandez",
-      description: "Finalisez votre achat en ligne en toute sécurité",
+      title: "Achetez",
+      description: "Validez votre acquisition en ligne en totale sécurité",
       step: "2"
     },
     {
       icon: Truck,
-      title: "Recevez",
-      description: "Livraison rapide directement chez vous",
+      title: "Obtenez",
+      description: "Transport express directement à votre domicile",
       step: "3"
     }
   ];
@@ -36,11 +36,11 @@ const HowItWorks = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             <span className="bg-gradient-to-r from-orange-500 via-red-500 to-red-600 bg-clip-text text-transparent">
-              Comment ça marche ?
+              Notre Processus
             </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Commander votre fioul en 3 étapes simples
+            Acquérir votre combustible en 3 phases simples
           </p>
         </div>
 

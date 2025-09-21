@@ -32,7 +32,7 @@ const ProductHero = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-sm">
               <Flame size={16} className="text-white" />
             </div>
-            <span className="text-sm font-semibold text-gray-700">Gamme Complète Fioul Domestique</span>
+            <span className="text-sm font-semibold text-gray-700">Gamme Intégrale Combustible Résidentiel</span>
           </div>
         </div>
 
@@ -40,16 +40,16 @@ const ProductHero = () => {
         <div className="text-center mb-12 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-              Nos Produits
+              Notre Gamme
             </span>
             <span className="block bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mt-2">
-              Fioul Premium
+              Combustible Haut de Gamme
             </span>
           </h1>
           
-          <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            Découvrez notre gamme complète de fioul domestique, du Standard économique au Premium haute performance, 
-            tous certifiés conformes aux normes françaises les plus strictes
+           <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            Explorez notre gamme intégrale de combustible résidentiel, de l'Économique accessible au Premium haute efficacité, 
+            tous homologués conformément aux standards hexagonaux les plus exigeants
           </p>
 
           {/* Product highlights */}
@@ -59,7 +59,7 @@ const ProductHero = () => {
                 <Flame size={20} className="text-total-blue" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Fioul Standard</div>
+                <div className="text-sm font-semibold text-gray-900">Fuel Économique</div>
                 <div className="text-xs text-gray-500">0,70€/L</div>
               </div>
             </div>
@@ -68,7 +68,7 @@ const ProductHero = () => {
                 <Star size={20} className="text-total-red" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Fioul Premium</div>
+                <div className="text-sm font-semibold text-gray-900">Fuel Haut de Gamme</div>
                 <div className="text-xs text-gray-500">0,73€/L</div>
               </div>
             </div>
@@ -77,8 +77,8 @@ const ProductHero = () => {
                 <Shield size={20} className="text-success-green" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Qualité certifiée</div>
-                <div className="text-xs text-gray-500">garantie</div>
+                <div className="text-sm font-semibold text-gray-900">Excellence homologuée</div>
+                <div className="text-xs text-gray-500">assurée</div>
               </div>
             </div>
           </div>
@@ -90,7 +90,7 @@ const ProductHero = () => {
               size="lg" 
               className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl group hover:scale-105"
             >
-              Commander maintenant
+              Acheter dès maintenant
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
@@ -99,7 +99,7 @@ const ProductHero = () => {
               size="lg" 
               className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 px-8 py-4 text-lg rounded-xl font-semibold transition-all duration-300 hover:scale-105"
             >
-              Comparer les produits
+              Analyser les gammes
             </Button>
           </div>
         </div>
