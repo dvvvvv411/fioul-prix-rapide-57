@@ -31,7 +31,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <span>Bestellübersicht</span>
+            <span>Résumé de commande</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="flex items-center justify-center py-12">
@@ -58,7 +58,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <span>Bestellübersicht</span>
+            <span>Résumé de commande</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -72,7 +72,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
                   {orderData.quantity.toLocaleString()} Liter
                 </p>
                 <p className="text-xs text-gray-500">
-                  €{productConfig.pricePerLiter.toFixed(2)} pro Liter
+                  €{productConfig.pricePerLiter.toFixed(2)} par litre
                 </p>
               </div>
               <div className="text-right">
@@ -86,24 +86,24 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
 
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Netto-Preis (HT)</span>
+                <span className="text-gray-600">Prix net (HT)</span>
                 <span>€{totalPricing.netPrice.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Lieferung</span>
+                <span className="text-gray-600">Livraison</span>
                 <span className="text-green-600 font-medium">
-                  {orderData.delivery_fee > 0 ? `€${orderData.delivery_fee}` : 'Kostenlos'}
+                  {orderData.delivery_fee > 0 ? `€${orderData.delivery_fee}` : 'Gratuit'}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">MwSt. (20%)</span>
+                <span className="text-gray-600">TVA (20%)</span>
                 <span>€{finalPricing.vatAmount.toFixed(2)}</span>
               </div>
               
               <Separator />
               
               <div className="flex justify-between font-semibold text-lg">
-                <span>Gesamtsumme (TTC)</span>
+                <span>Total (TTC)</span>
                 <span>€{orderData.final_price}</span>
               </div>
             </div>
@@ -116,7 +116,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Truck className="w-5 h-5" />
-            <span>Lieferinformationen</span>
+            <span>Informations de livraison</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -126,7 +126,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Lieferadresse</p>
+                  <p className="text-sm font-medium text-gray-900">Adresse de livraison</p>
                   <p className="text-sm text-gray-600">
                     {orderData.first_name} {orderData.last_name}<br />
                     {orderData.street}<br />
@@ -138,8 +138,8 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
               <div className="flex items-start space-x-3">
                 <Clock className="w-4 h-4 text-gray-500 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Lieferzeit</p>
-                  <p className="text-sm text-gray-600">2-3 Werktage nach Bestellung</p>
+                  <p className="text-sm font-medium text-gray-900">Délai de livraison</p>
+                  <p className="text-sm text-gray-600">2-3 jours ouvrés après commande</p>
                 </div>
               </div>
             </div>
@@ -159,7 +159,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
       {/* Order ID */}
       <div className="text-center pt-2">
         <p className="text-xs text-gray-500">
-          Bestell-ID: <span className="font-mono">{orderId}</span>
+          ID de commande : <span className="font-mono">{orderId}</span>
         </p>
       </div>
     </div>

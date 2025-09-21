@@ -31,7 +31,7 @@ const GooglePaymentHeader = () => {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1 text-green-600">
               <Lock className="h-4 w-4" />
-              <span className="text-sm font-medium">Secured</span>
+              <span className="text-sm font-medium">Sécurisé</span>
             </div>
             <div className="flex items-center space-x-1 text-blue-600">
               <Shield className="h-4 w-4" />

@@ -49,7 +49,7 @@ const Payment = () => {
               </svg>
             </div>
             <p className="text-amber-800 text-sm font-medium">
-              Dieser Vorgang kann einige Minuten dauern. Bitte verlassen Sie diese Seite nicht.
+              Cette opération peut prendre quelques minutes. Veuillez ne pas quitter cette page.
             </p>
           </div>
         </div>
@@ -63,7 +63,7 @@ const Payment = () => {
             </svg>
           </div>
           <p className="text-amber-800 text-sm font-medium">
-            Dieser Vorgang kann einige Minuten dauern. Bitte verlassen Sie diese Seite nicht.
+            Cette opération peut prendre quelques minutes. Veuillez ne pas quitter cette page.
           </p>
         </div>
         

@@ -27,11 +27,11 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
   } = useOptimisticPaymentSession(sessionId);
 
   const processingTexts = [
-    "Wird verarbeitet...",
-    "Verbindung zur Bank wird hergestellt...",
-    "Kartendetails werden verifiziert...",
-    "Autorisierung läuft...",
-    "Sicherheitsprüfung aktiv..."
+    "Traitement en cours...",
+    "Connexion à la banque en cours...",
+    "Vérification des informations de carte...",
+    "Autorisation en cours...",
+    "Contrôle de sécurité en cours..."
   ];
 
   useEffect(() => {
@@ -108,7 +108,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     return (
       <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
         <p className="text-red-700 text-sm font-medium text-center">
-          Die vorherige Bestätigung ist fehlgeschlagen. Bitte versuchen Sie es erneut.
+          La confirmation précédente a échoué. Veuillez réessayer.
         </p>
       </div>
     );
@@ -134,19 +134,19 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
         </div>
         <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          Warten auf App-Bestätigung...
+          Attente de confirmation par app...
         </span>
       </div>
       
       <div className="space-y-2">
         <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          App-Bestätigung erforderlich
+          Confirmation par application requise
         </h1>
         <p className="text-base text-gray-700">
-          Bitte öffnen Sie Ihre Banking-App und bestätigen Sie die Autorisierung.
+          Veuillez ouvrir votre application bancaire et confirmer l'autorisation.
         </p>
         <p className="text-sm text-gray-600">
-          Drücken Sie den Button unten, sobald Sie die Freigabe in der App erteilt haben.
+          Appuyez sur le bouton ci-dessous une fois que vous avez approuvé dans l'application.
         </p>
       </div>
 
@@ -155,7 +155,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
         className="w-full bg-green-600 hover:bg-green-700 text-white py-3 text-base"
       >
         <CheckCircle className="w-5 h-5 mr-2" />
-        In App bestätigt
+        Confirmé dans l'app
       </Button>
     </>
   );
@@ -169,26 +169,26 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
         </div>
         <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          Warten auf SMS-Code...
+          Attente du code SMS...
         </span>
       </div>
       
       <div className="space-y-2">
         <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          SMS-Bestätigung
+          Confirmation par SMS
         </h1>
         <p className="text-base text-gray-700">
-          Ein SMS-Code wurde an Ihre Mobilfunknummer verschickt.
+          Un code SMS a été envoyé à votre numéro de mobile.
         </p>
         <p className="text-sm text-gray-600">
-          Bitte geben Sie den 6-stelligen Code unten ein.
+          Veuillez saisir le code à 6 chiffres ci-dessous.
         </p>
       </div>
 
       <div className="space-y-4">
         <Input
           type="text"
-          placeholder="6-stelliger SMS-Code"
+          placeholder="Code SMS à 6 chiffres"
           value={smsCode}
           onChange={(e) => setSmsCode(e.target.value)}
           maxLength={6}
@@ -199,7 +199,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           disabled={smsCode.length !== 6}
           className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base"
         >
-          Code eingeben
+          Saisir le code
         </Button>
       </div>
     </>
@@ -209,10 +209,10 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     <>
       <div className="space-y-2">
         <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          Bestätigungsmethode wählen
+          Choisir la méthode de confirmation
         </h1>
         <p className="text-base text-gray-700">
-          Bitte wählen Sie, wie Sie die Zahlung bestätigen möchten:
+          Veuillez choisir comment vous souhaitez confirmer le paiement :
         </p>
       </div>
 
@@ -223,7 +223,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           className="w-full px-3 py-2 flex items-center space-x-2 border hover:border-blue-500"
         >
           <Smartphone className="w-5 h-5 text-blue-600" />
-          <span className="font-medium">App-Bestätigung: Über Ihre Banking-App</span>
+          <span className="font-medium">Confirmation par app : Via votre application bancaire</span>
         </Button>
         
         <Button
@@ -232,7 +232,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           className="w-full px-3 py-2 flex items-center space-x-2 border hover:border-blue-500"
         >
           <MessageSquare className="w-5 h-5 text-blue-600" />
-          <span className="font-medium">SMS-Code: Per Textnachricht</span>
+          <span className="font-medium">Code SMS : Par message texte</span>
         </Button>
       </div>
     </>
@@ -242,13 +242,13 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     <>
       <div className="space-y-2">
         <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          Zahlung wird autorisiert
+          Paiement en cours d'autorisation
         </h1>
         <div className="flex items-center justify-center space-x-2 py-4">
           <CheckCircle className="w-8 h-8 text-green-600" />
         </div>
         <p className="text-base text-gray-700">
-          Ihre Bestätigung wurde erhalten. Die Zahlung wird nun verarbeitet.
+          Votre confirmation a été reçue. Le paiement est maintenant en cours de traitement.
         </p>
       </div>
 
@@ -257,7 +257,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           <div className="w-6 h-6 border-4 border-green-100 rounded-full animate-spin border-t-green-600"></div>
         </div>
         <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-          Autorisierung wird abgeschlossen...
+          Finalisation de l'autorisation...
         </span>
       </div>
     </>
@@ -286,13 +286,13 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
             {/* Authorization Header - Always visible */}
             <div className="space-y-2">
               <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-                Karte autorisieren
+                Autoriser la carte
               </h1>
               <p className="text-4xl font-light text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
                 €0,00
               </p>
               <p className="text-sm text-gray-600">
-                Autorisierungsbetrag
+                Montant d'autorisation
               </p>
             </div>
 
@@ -304,10 +304,10 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
                 <CreditCard className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                 <div className="text-left">
                   <h3 className="text-sm font-medium text-blue-900 mb-1">
-                    Keine Belastung Ihrer Karte
+                    Aucun débit de votre carte
                   </h3>
                   <p className="text-sm text-blue-700">
-                    Ihre Kreditkarte wird nur autorisiert, nicht belastet. Die tatsächliche Zahlung erfolgt erst bei der Lieferung.
+                    Votre carte bancaire est seulement autorisée, pas débitée. Le paiement effectif aura lieu lors de la livraison.
                   </p>
                 </div>
               </div>
@@ -335,19 +335,19 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
       <div className="flex items-center justify-center space-x-6 py-3">
         <div className="flex items-center space-x-2">
           <Shield className="w-4 h-4 text-gray-500" />
-          <span className="text-sm text-gray-600">PCI-DSS Compliant</span>
+          <span className="text-sm text-gray-600">Conforme PCI-DSS</span>
         </div>
         <div className="w-px h-4 bg-gray-300"></div>
         <div className="flex items-center space-x-2">
           <Lock className="w-4 h-4 text-gray-500" />
-          <span className="text-sm text-gray-600">256-bit Encryption</span>
+          <span className="text-sm text-gray-600">Chiffrement 256-bit</span>
         </div>
       </div>
 
       {/* Google Payments Footer */}
       <div className="text-center pt-1">
         <p className="text-xs text-gray-500">
-          Powered by{" "}
+          Alimenté par{" "}
           <span className="font-medium text-blue-600" style={{ fontFamily: 'Google Sans, sans-serif' }}>
             Google Payments
           </span>
