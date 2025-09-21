@@ -171,7 +171,7 @@ const Confirmation = () => {
                     </div>
                   </div>
 
-                  <Button asChild className="w-full mt-6">
+                  <Button asChild className="w-full mt-6 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
                     <Link to="/" className="flex items-center gap-2">
                       <Home className="h-4 w-4" />
                       Zurück zur Startseite
