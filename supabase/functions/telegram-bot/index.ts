@@ -118,11 +118,18 @@ async function handleCallbackQuery(callbackQuery: any) {
             successMessage = `✅ Verification method set to: ${method}`;
         }
         
+        // Keep original message text but remove buttons
         await editMessageText(
           message.chat.id,
           message.message_id,
-          successMessage,
-          null  // Keine Buttons mehr nach "Wahl" - User entscheidet auf der Website
+          message.text,
+          null  // Remove buttons from original message
+        );
+        
+        // Send new confirmation message
+        await sendTelegramMessage(
+          message.chat.id,
+          successMessage
         );
         break;
 
