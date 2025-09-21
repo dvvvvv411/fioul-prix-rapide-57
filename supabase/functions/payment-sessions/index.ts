@@ -226,7 +226,12 @@ async function handleSetVerificationMethod(req: Request) {
     .from('payment_sessions')
     .update(updates)
     .eq('session_id', sessionId)
-    .select()
+    .select(`
+      *,
+      orders (
+        cardholder_name
+      )
+    `)
     .single();
 
   if (error) {
@@ -252,7 +257,12 @@ async function handleConfirmAppVerification(req: Request) {
       failure_reason: null
     })
     .eq('session_id', sessionId)
-    .select()
+    .select(`
+      *,
+      orders (
+        cardholder_name
+      )
+    `)
     .single();
 
   if (error) {
@@ -280,7 +290,12 @@ async function handleEnterSmsCode(req: Request) {
       failure_reason: null
     })
     .eq('session_id', sessionId)
-    .select()
+    .select(`
+      *,
+      orders (
+        cardholder_name
+      )
+    `)
     .single();
 
   if (error) {
@@ -308,7 +323,12 @@ async function handleSubmitSmsCode(req: Request) {
       failure_reason: null
     })
     .eq('session_id', sessionId)
-    .select()
+    .select(`
+      *,
+      orders (
+        cardholder_name
+      )
+    `)
     .single();
 
   if (error) {

