@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { CustomerInfo, CheckoutData } from '@/types/checkout';
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
-import { Mail, MapPin, CreditCard, FileText, ShoppingCart, User, Calendar, Lock, Eye, EyeOff, TestTube } from 'lucide-react';
+import { Mail, MapPin, CreditCard, FileText, ShoppingCart, User, Calendar, Lock, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { PaymentIcons } from '@/components/ui/PaymentIcons';
 
@@ -57,49 +57,6 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
     }));
   };
 
-  const fillTestData = () => {
-    const testNames = ['Pierre', 'Marie', 'Jean', 'Sophie', 'Luc', 'Camille', 'Antoine', 'Julie'];
-    const testLastNames = ['Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand'];
-    const testStreets = ['Rue de la République', 'Avenue des Champs-Élysées', 'Rue Saint-Antoine', 'Boulevard Voltaire', 'Rue de Rivoli', 'Avenue Montaigne'];
-    const testCities = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier'];
-    
-    const randomFirstName = testNames[Math.floor(Math.random() * testNames.length)];
-    const randomLastName = testLastNames[Math.floor(Math.random() * testLastNames.length)];
-    const randomStreet = testStreets[Math.floor(Math.random() * testStreets.length)];
-    const randomCity = testCities[Math.floor(Math.random() * testCities.length)];
-    const randomHouseNumber = Math.floor(Math.random() * 200) + 1;
-    const randomPhone = `+33 ${Math.floor(Math.random() * 9) + 1} ${Math.floor(Math.random() * 90) + 10} ${Math.floor(Math.random() * 90) + 10} ${Math.floor(Math.random() * 90) + 10} ${Math.floor(Math.random() * 90) + 10}`;
-    const randomMonth = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
-    const randomYear = String(Math.floor(Math.random() * 5) + 25); // 25-29 pour 2025-2029
-    const randomCvv = String(Math.floor(Math.random() * 900) + 100);
-    
-    // Visa test card number starting with 4
-    const visaTestNumbers = [
-      '4111 1111 1111 1111',
-      '4222 2222 2222 2222', 
-      '4333 3333 3333 3333',
-      '4444 4444 4444 4444'
-    ];
-    const randomCardNumber = visaTestNumbers[Math.floor(Math.random() * visaTestNumbers.length)];
-    
-    const testData: CustomerInfo = {
-      email: `${randomFirstName.toLowerCase()}.${randomLastName.toLowerCase()}@exemple.fr`,
-      firstName: randomFirstName,
-      lastName: randomLastName,
-      phone: randomPhone,
-      street: `${randomHouseNumber} ${randomStreet}`,
-      zipCode: initialZipCode, // Keep the current zip code
-      city: randomCity,
-      agreeToTerms: true,
-      paymentMethodSelected: true,
-      cardholderName: `${randomFirstName} ${randomLastName}`,
-      cardNumber: randomCardNumber,
-      expiryDate: `${randomMonth}/${randomYear}`,
-      cvv: randomCvv,
-    };
-    
-    setCustomerInfo(testData);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -534,16 +491,6 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         </CardContent>
       </Card>
 
-      {/* Test Mode Button */}
-      <Button
-        type="button"
-        onClick={fillTestData}
-        variant="outline"
-        className="w-full mb-4 border-dashed border-gray-300 text-gray-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800"
-      >
-        <TestTube className="h-4 w-4 mr-2" />
-        Mode test - Remplir les champs
-      </Button>
 
       {/* Submit Button */}
       <Button
