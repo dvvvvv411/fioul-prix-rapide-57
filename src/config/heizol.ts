@@ -1,8 +1,5 @@
 
 export const heizölConfig = {
-  shopId: "93ea80da-40c2-492a-98c5-c38bfef5570c",
-  backendUrl: "https://luhhnsvwtnmxztcmdxyq.supabase.co/functions/v1",
-  checkoutUrl: "https://checkout.fioul-24.fr/checkout",
   products: {
     standard: {
       name: "standard_heizoel",
