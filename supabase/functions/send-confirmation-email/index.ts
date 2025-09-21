@@ -88,198 +88,232 @@ const handler = async (req: Request): Promise<Response> => {
 function generateEmailHtml(orderData: any): string {
   return `
     <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Bestellbestätigung</title>
-        <style>
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            margin: 0;
-            padding: 0;
-            background-color: #f9fafb;
-          }
-          .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-          }
-          .header {
-            background: linear-gradient(135deg, #ea580c, #dc2626);
-            color: white;
-            padding: 32px 24px;
-            text-align: center;
-          }
-          .header h1 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: bold;
-          }
-          .content {
-            padding: 24px;
-          }
-          .success-badge {
-            background: linear-gradient(135deg, #ea580c, #dc2626);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 6px;
-            text-align: center;
-            margin-bottom: 24px;
-            font-weight: 600;
-          }
-          .order-details {
-            background-color: #f9fafb;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-          }
-          .detail-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e5e7eb;
-          }
-          .detail-row:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-            font-weight: bold;
-          }
-          .steps {
-            margin: 24px 0;
-          }
-          .step {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 16px;
-          }
-          .step-number {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ea580c, #dc2626);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            margin-right: 12px;
-            flex-shrink: 0;
-            margin-top: 2px;
-          }
-          .step-text {
-            color: #6b7280;
-            font-size: 14px;
-          }
-          .footer {
-            background-color: #f9fafb;
-            padding: 20px 24px;
-            text-align: center;
-            color: #6b7280;
-            font-size: 14px;
-          }
-          .delivery-time {
-            background: linear-gradient(135deg, #ea580c, #dc2626);
-            color: white;
-            padding: 12px;
-            border-radius: 6px;
-            text-align: center;
-            margin: 16px 0;
-            font-weight: 600;
-          }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-        <div class="header">
-          <h1>Total Fioul - Bestellbestätigung</h1>
-          <p style="margin: 8px 0 0 0; opacity: 0.9;">Bestellung #${orderData.orderNumber}</p>
-        </div>
-          
-          <div class="content">
-          <div class="success-badge">
-            Kartenautorisierung erfolgreich - Zahlung bei Lieferung
-          </div>
-            
-            <p>Vielen Dank für Ihre Bestellung! Ihre Kartenautorisierung war erfolgreich und die Bezahlung erfolgt direkt bei der Betankung.</p>
-            
-          <div class="delivery-time">
-            Geschätzte Lieferzeit: 2-3 Werktage
-          </div>
-            
-            <h3>Bestellübersicht</h3>
-            <div class="order-details">
-              <div class="detail-row">
-                <span>Produkt:</span>
-                <span>${orderData.product.displayName}</span>
-              </div>
-              <div class="detail-row">
-                <span>Menge:</span>
-                <span>${orderData.quantity} Liter</span>
-              </div>
-              <div class="detail-row">
-                <span>Preis pro Liter:</span>
-                <span>${orderData.product.pricePerLiter.toFixed(2)} €</span>
-              </div>
-              <div class="detail-row">
-                <span>Zwischensumme:</span>
-                <span>${orderData.subtotal.toFixed(2)} €</span>
-              </div>
-              <div class="detail-row">
-                <span>Liefergebühr:</span>
-                <span>${orderData.deliveryFee > 0 ? `${orderData.deliveryFee.toFixed(2)} €` : 'Kostenlos'}</span>
-              </div>
-              <div class="detail-row">
-                <span>Gesamtpreis (inkl. MwSt.):</span>
-                <span>${orderData.totalPrice.toFixed(2)} €</span>
-              </div>
-            </div>
-            
-            <h3>Lieferadresse</h3>
-            <div class="order-details">
-              <p style="margin: 0;">
-                ${orderData.firstName} ${orderData.lastName}<br>
-                ${orderData.street}<br>
-                ${orderData.zipCode} ${orderData.city}
-              </p>
-            </div>
-            
-            <h3>Nächste Schritte</h3>
-            <div class="steps">
-              <div class="step">
-                <div class="step-number">1</div>
-                <div class="step-text">Wir prüfen Ihre Bestellung und bestätigen den Liefertermin per E-Mail</div>
-              </div>
-              <div class="step">
-                <div class="step-number">2</div>
-                <div class="step-text">Unser Lieferteam kontaktiert Sie vor der Anlieferung</div>
-              </div>
-              <div class="step">
-                <div class="step-number">3</div>
-                <div class="step-text">Die Bezahlung erfolgt direkt bei der Betankung</div>
-              </div>
-            </div>
-          </div>
-          
-        <div class="footer">
-          <p>Bei Fragen zu Ihrer Bestellung können Sie uns jederzeit kontaktieren.</p>
-          <div style="margin: 20px 0; padding: 16px; background-color: #f3f4f6; border-radius: 6px; font-size: 12px; color: #6b7280;">
-            <strong>Total Pacifique Sàrl</strong><br />
-            5 rue Michel-Ange, 75016 Paris, France<br />
-            SIREN: 775744998 | SIRET: 77574499800037<br />
-            E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
-          </div>
-        </div>
-        </div>
-      </body>
+    <html lang="de">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Bestellbestätigung</title>
+      <!--[if gte mso 9]>
+      <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG/>
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+      </xml>
+      <![endif]-->
+    </head>
+    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; padding: 20px; min-height: 100%; table-layout: fixed;">
+        <tr>
+          <td align="center" style="padding: 0;">
+            <table cellpadding="0" cellspacing="0" border="0" width="600" style="background-color: #ffffff; border: 1px solid #e5e7eb; max-width: 600px; width: 100%;">
+              
+              <!-- Header -->
+              <tr>
+                <td style="background-color: #ea580c; color: #ffffff; padding: 32px 24px; text-align: center;">
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                      <td style="text-align: center;">
+                        <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Total Fioul - Bestellbestätigung</h1>
+                        <p style="margin: 8px 0 0 0; color: #ffffff; font-size: 16px; font-family: Arial, sans-serif;">Bestellung #${orderData.orderNumber}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              
+              <!-- Content -->
+              <tr>
+                <td style="padding: 24px;">
+                  
+                  <!-- Success Badge -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ea580c; margin: 0 0 24px 0;">
+                    <tr>
+                      <td style="padding: 12px 20px; text-align: center; color: #ffffff; font-weight: bold; font-family: Arial, sans-serif; font-size: 14px;">
+                        Kartenautorisierung erfolgreich - Zahlung bei Lieferung
+                      </td>
+                    </tr>
+                  </table>
+                  
+                  <!-- Main Text -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                      <td style="padding: 0 0 20px 0; font-family: Arial, sans-serif; font-size: 14px; color: #333333; line-height: 1.6;">
+                        Vielen Dank für Ihre Bestellung! Ihre Kartenautorisierung war erfolgreich und die Bezahlung erfolgt direkt bei der Betankung.
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Delivery Time -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ea580c; margin: 16px 0;">
+                    <tr>
+                      <td style="padding: 12px; text-align: center; color: #ffffff; font-weight: bold; font-family: Arial, sans-serif; font-size: 14px;">
+                        Geschätzte Lieferzeit: 2-3 Werktage
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Order Overview Title -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                      <td style="padding: 20px 0 10px 0;">
+                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Bestellübersicht</h3>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Order Details Section -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; margin: 0 0 20px 0;">
+                    <tr>
+                      <td style="padding: 20px;">
+                        
+                        <!-- Detail Rows -->
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                          <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Produkt:</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.product.displayName}</td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Menge:</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.quantity} Liter</td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Preis pro Liter:</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.product.pricePerLiter.toFixed(2)} €</td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Zwischensumme:</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.subtotal.toFixed(2)} €</td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Liefergebühr:</td>
+                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.deliveryFee > 0 ? `${orderData.deliveryFee.toFixed(2)} €` : 'Kostenlos'}</td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0; font-weight: bold; font-size: 16px; color: #333333; font-family: Arial, sans-serif;">Gesamtpreis (inkl. MwSt.):</td>
+                            <td style="padding: 8px 0; text-align: right; font-weight: bold; font-size: 16px; color: #333333; font-family: Arial, sans-serif;">${orderData.totalPrice.toFixed(2)} €</td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Delivery Address Title -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                      <td style="padding: 10px 0;">
+                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Lieferadresse</h3>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Delivery Address Section -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f9fafb; margin: 0 0 20px 0;">
+                    <tr>
+                      <td style="padding: 20px;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                          <tr>
+                            <td style="font-size: 14px; color: #333333; font-family: Arial, sans-serif; line-height: 1.6;">
+                              <strong>${orderData.firstName} ${orderData.lastName}</strong><br>
+                              ${orderData.street || ''}<br>
+                              ${orderData.zipCode} ${orderData.city || ''}
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Next Steps Title -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                      <td style="padding: 10px 0;">
+                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Nächste Schritte</h3>
+                      </td>
+                    </tr>
+                  </table>
+
+                  <!-- Next Steps Section -->
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 10px 0 20px 0;">
+                    <tr>
+                      <td>
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                          <tr>
+                            <td style="padding: 8px 0; font-size: 14px; color: #333333; font-family: Arial, sans-serif; vertical-align: top; width: 30px;">
+                              <table cellpadding="0" cellspacing="0" border="0" width="24" height="24" style="background-color: #ea580c;">
+                                <tr>
+                                  <td style="text-align: center; vertical-align: middle; color: #ffffff; font-size: 12px; font-weight: bold; font-family: Arial, sans-serif; line-height: 24px; width: 24px; height: 24px;">1</td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #6b7280; font-family: Arial, sans-serif;">
+                              Wir prüfen Ihre Bestellung und bestätigen den Liefertermin per E-Mail
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0; font-size: 14px; color: #333333; font-family: Arial, sans-serif; vertical-align: top; width: 30px;">
+                              <table cellpadding="0" cellspacing="0" border="0" width="24" height="24" style="background-color: #ea580c;">
+                                <tr>
+                                  <td style="text-align: center; vertical-align: middle; color: #ffffff; font-size: 12px; font-weight: bold; font-family: Arial, sans-serif; line-height: 24px; width: 24px; height: 24px;">2</td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #6b7280; font-family: Arial, sans-serif;">
+                              Unser Lieferteam kontaktiert Sie vor der Anlieferung
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="padding: 8px 0; font-size: 14px; color: #333333; font-family: Arial, sans-serif; vertical-align: top; width: 30px;">
+                              <table cellpadding="0" cellspacing="0" border="0" width="24" height="24" style="background-color: #ea580c;">
+                                <tr>
+                                  <td style="text-align: center; vertical-align: middle; color: #ffffff; font-size: 12px; font-weight: bold; font-family: Arial, sans-serif; line-height: 24px; width: 24px; height: 24px;">3</td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #6b7280; font-family: Arial, sans-serif;">
+                              Die Bezahlung erfolgt direkt bei der Betankung
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                  
+                </td>
+              </tr>
+
+              <!-- Footer -->
+              <tr>
+                <td style="background-color: #f9fafb; padding: 20px 24px; text-align: center;">
+                  <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                    <tr>
+                      <td style="text-align: center; font-size: 14px; color: #6b7280; font-family: Arial, sans-serif; padding: 0 0 20px 0;">
+                        Bei Fragen zu Ihrer Bestellung können Sie uns jederzeit kontaktieren.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="background-color: #f3f4f6; padding: 16px; text-align: center;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                          <tr>
+                            <td style="font-size: 12px; color: #6b7280; font-family: Arial, sans-serif; line-height: 1.5;">
+                              <strong>Total Pacifique Sàrl</strong><br>
+                              5 rue Michel-Ange, 75016 Paris, France<br>
+                              SIREN: 775744998 | SIRET: 77574499800037<br>
+                              E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
     </html>
   `;
 }
