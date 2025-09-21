@@ -24,8 +24,8 @@ const MentionsLegales = () => {
                 <p><strong>SIREN :</strong> 775744998</p>
                 <p><strong>SIRET :</strong> 77574499800037</p>
                 <p><strong>N° TVA intracommunautaire :</strong> FR64521322993</p>
-                <p><strong>Email :</strong> info@total-fioul.fr</p>
-                <p><strong>Site web :</strong> <a href="https://total-fioul.fr" className="text-blue-600 hover:underline">https://total-fioul.fr</a></p>
+                <p><strong>Email :</strong> info@fioulrapide.fr</p>
+                <p><strong>Site web :</strong> <a href="https://fioulrapide.fr" className="text-blue-600 hover:underline">https://fioulrapide.fr</a></p>
               </div>
             </section>
 
@@ -52,7 +52,7 @@ const MentionsLegales = () => {
                 Les informations contenues sur ce site sont aussi précises que possible et le site remis à jour à différentes périodes de l'année, mais peut toutefois contenir des inexactitudes ou des omissions.
               </p>
               <p className="mb-4">
-                Si vous constatez une lacune, erreur ou ce qui parait être un dysfonctionnement, merci de bien vouloir le signaler par email, à l'adresse info@total-fioul.fr, en décrivant le problème de la manière la plus précise possible.
+                Si vous constatez une lacune, erreur ou ce qui parait être un dysfonctionnement, merci de bien vouloir le signaler par email, à l'adresse info@fioulrapide.fr, en décrivant le problème de la manière la plus précise possible.
               </p>
             </section>
 
@@ -79,7 +79,7 @@ const MentionsLegales = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Droit applicable et juridiction compétente</h2>
               <p className="mb-4">
-                Tout litige en relation avec l'utilisation du site https://total-fioul.fr est soumis au droit français. Il est fait attribution exclusive de juridiction aux tribunaux compétents de Paris.
+                Tout litige en relation avec l'utilisation du site https://fioulrapide.fr est soumis au droit français. Il est fait attribution exclusive de juridiction aux tribunaux compétents de Paris.
               </p>
             </section>
           </div>
