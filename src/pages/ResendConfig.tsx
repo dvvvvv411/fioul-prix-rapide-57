@@ -7,6 +7,9 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Loader2, Mail, Save, TestTube } from "lucide-react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 
 interface ResendConfig {
   id?: string;
@@ -164,13 +167,25 @@ export default function ResendConfig() {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">Resend Konfiguration</h1>
-        <p className="text-muted-foreground">
-          Konfigurieren Sie Ihre E-Mail-Einstellungen für automatische Bestätigungs-E-Mails.
-        </p>
-      </div>
+    <ProtectedRoute>
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full">
+          <AppSidebar />
+          
+          <div className="flex-1 flex flex-col">
+            <header className="h-14 flex items-center border-b border-border px-6">
+              <SidebarTrigger className="mr-4" />
+              <h1 className="text-lg font-semibold">Resend Konfiguration</h1>
+            </header>
+            
+            <main className="flex-1 overflow-auto p-6">
+              <div className="max-w-4xl mx-auto space-y-6">
+                <div>
+                  <h2 className="text-2xl font-bold">E-Mail Service konfigurieren</h2>
+                  <p className="text-muted-foreground">
+                    Konfigurieren Sie Ihre E-Mail-Einstellungen für automatische Bestätigungs-E-Mails.
+                  </p>
+                </div>
 
       <Card>
         <CardHeader>
@@ -279,6 +294,11 @@ export default function ResendConfig() {
           </ul>
         </CardContent>
       </Card>
-    </div>
+              </div>
+            </main>
+          </div>
+        </div>
+      </SidebarProvider>
+    </ProtectedRoute>
   );
 }

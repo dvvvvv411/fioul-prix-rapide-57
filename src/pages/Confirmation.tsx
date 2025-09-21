@@ -9,10 +9,12 @@ import Footer from '@/components/Footer';
 import OrderSummary from '@/components/OrderSummary';
 import { supabase } from '@/integrations/supabase/client';
 import { OrderSummary as OrderSummaryType } from '@/types/checkout';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Confirmation = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const orderId = searchParams.get('orderId');
   const [orderData, setOrderData] = useState<OrderSummaryType | null>(null);
   const [orderNumber, setOrderNumber] = useState<string>('');
@@ -66,7 +68,8 @@ const Confirmation = () => {
           await supabase.functions.invoke('send-confirmation-email', {
             body: {
               orderId: orderId,
-              orderData: transformedOrder
+              orderData: transformedOrder,
+              userId: user?.id
             }
           });
           console.log('Confirmation email sent successfully');

@@ -11,6 +11,7 @@ const corsHeaders = {
 interface EmailRequest {
   orderId: string;
   orderData: any;
+  userId?: string;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -20,7 +21,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { orderId, orderData }: EmailRequest = await req.json();
+    const { orderId, orderData, userId }: EmailRequest = await req.json();
     
     // Initialize Supabase client
     const supabase = createClient(
@@ -28,7 +29,7 @@ const handler = async (req: Request): Promise<Response> => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Get resend configuration for the user (we'll need to get user_id from order first)
+    // Get order details
     const { data: order } = await supabase
       .from("orders")
       .select("email")
@@ -39,15 +40,30 @@ const handler = async (req: Request): Promise<Response> => {
       throw new Error("Order not found");
     }
 
-    // For now, we'll use default Resend configuration
-    // In a production app, you'd get the user's config from resend_config table
-    const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
+    // Get user's Resend configuration
+    if (!userId) {
+      throw new Error("User ID required to load email configuration");
+    }
+
+    const { data: resendConfig, error: configError } = await supabase
+      .from("resend_config")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (configError || !resendConfig) {
+      console.error("No resend configuration found:", configError);
+      throw new Error("Email configuration not found. Please configure Resend settings first.");
+    }
+
+    // Initialize Resend with user's API key
+    const resend = new Resend(resendConfig.api_key);
 
     // Generate email HTML content
     const emailHtml = generateEmailHtml(orderData);
 
     const emailResponse = await resend.emails.send({
-      from: "Bestellbestätigung <onboarding@resend.dev>",
+      from: `${resendConfig.sender_name} <${resendConfig.sender_email}>`,
       to: [order.email],
       subject: `Bestellbestätigung #${orderData.orderNumber}`,
       html: emailHtml,
