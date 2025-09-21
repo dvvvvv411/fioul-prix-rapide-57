@@ -5,6 +5,7 @@ import { CheckCircle, Truck, MapPin, Clock } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { heizölConfig } from '@/config/heizol';
 import { calculateFrenchPricing } from '@/utils/pricing';
+import logoImage from '@/assets/fioul24-logo.png';
 
 interface OrderDetailsPanelProps {
   orderId: string;
@@ -147,7 +148,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
             {/* Right side - Company Logo */}
             <div className="flex flex-col items-center justify-center">
               <img 
-                src="https://i.imgur.com/NqMqAH6.png" 
+                src={logoImage} 
                 alt="Fioul 24 Logo" 
                 className="h-16"
               />
