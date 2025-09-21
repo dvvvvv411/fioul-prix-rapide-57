@@ -210,10 +210,6 @@ export function EmailPreview({ senderName = "Ihr Unternehmen", senderEmail = "be
               SIREN: 775744998 | SIRET: 77574499800037<br />
               E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
             </div>
-            <p style={{ margin: "8px 0 0 0", fontSize: "12px", color: "#9ca3af" }}>
-              Von: {senderName} &lt;{senderEmail}&gt;<br />
-              Diese E-Mail wurde automatisch generiert. Bitte antworten Sie nicht auf diese E-Mail.
-            </p>
           </div>
         </div>
       </div>
