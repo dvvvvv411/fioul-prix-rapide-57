@@ -5,7 +5,7 @@ interface EmailPreviewProps {
   senderEmail?: string;
 }
 
-export function EmailPreview({ senderName = "Fioul 24", senderEmail = "commandes@fioul-24.fr" }: EmailPreviewProps) {
+export function EmailPreview({ senderName = "Fioul 24", senderEmail = "commandes@fioulfrance24.fr" }: EmailPreviewProps) {
   // Mock order data for preview
   const mockOrderData = {
     orderNumber: "TF-2024-001234",
@@ -208,7 +208,7 @@ export function EmailPreview({ senderName = "Fioul 24", senderEmail = "commandes
               <strong>Fuel 2000 Transports Sàrl</strong><br />
               23 rue de la Porte d'Aubervilliers, 75018 Paris, France<br />
               SIREN: 500830567 | SIRET: 50083056700011<br />
-              E-Mail: contact@fioul-24.fr | Website: https://fioul-24.fr
+              E-Mail: contact@fioulfrance24.fr | Website: https://fioulfrance24.fr
             </div>
           </div>
         </div>

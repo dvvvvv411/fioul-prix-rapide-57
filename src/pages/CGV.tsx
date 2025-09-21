@@ -36,7 +36,7 @@ const CGV = () => {
                 La commande peut être passée :
               </p>
               <ul className="list-disc pl-6 mb-4">
-                <li>Par email à contact@fioul-24.fr</li>
+                <li>Par email à contact@fioulfrance24.fr</li>
                 <li>Via le formulaire de contact sur notre site web</li>
               </ul>
               <p className="mb-4">

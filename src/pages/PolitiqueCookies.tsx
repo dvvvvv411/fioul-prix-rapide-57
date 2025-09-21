@@ -171,7 +171,7 @@ const PolitiqueCookies = () => {
                 Pour toute question concernant notre utilisation des cookies, contactez-nous :
               </p>
               <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                <p><strong>Email :</strong> contact@fioul-24.fr</p>
+                <p><strong>Email :</strong> contact@fioulfrance24.fr</p>
                 <p><strong>Adresse :</strong> Fuel 2000 Transports Sàrl, 23 rue de la Porte d'Aubervilliers, 75018 Paris</p>
               </div>
             </section>

@@ -299,7 +299,7 @@ function generateEmailHtml(orderData: any): string {
                                <strong>Fuel 2000 Transports Sàrl</strong><br>
                                23 rue de la Porte d'Aubervilliers, 75018 Paris, France<br>
                                SIREN: 500830567 | SIRET: 50083056700011<br>
-                               E-Mail: contact@fioul-24.fr | Website: https://fioul-24.fr
+                               E-Mail: contact@fioulfrance24.fr | Website: https://fioulfrance24.fr
                             </td>
                           </tr>
                         </table>

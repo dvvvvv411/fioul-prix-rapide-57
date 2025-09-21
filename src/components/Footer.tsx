@@ -24,7 +24,7 @@ const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Mail size={16} />
-                <span>contact@fioul-24.fr</span>
+                <span>contact@fioulfrance24.fr</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin size={16} />

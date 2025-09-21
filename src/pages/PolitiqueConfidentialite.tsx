@@ -16,7 +16,7 @@ const PolitiqueConfidentialite = () => {
                 Fuel 2000 Transports Sàrl, dont le siège social est situé 23 rue de la Porte d'Aubervilliers, 75018 Paris, France, immatriculée au RCS de Paris sous le numéro 500830567, est responsable du traitement de vos données personnelles.
               </p>
               <p className="mb-4">
-                <strong>Contact :</strong> contact@fioul-24.fr
+                <strong>Contact :</strong> contact@fioulfrance24.fr
               </p>
             </section>
 
@@ -113,7 +113,7 @@ const PolitiqueConfidentialite = () => {
                 <li><strong>Droit à la limitation :</strong> limiter le traitement dans certains cas</li>
               </ul>
               <p className="mb-4">
-                Pour exercer vos droits, contactez-nous à : contact@fioul-24.fr
+                Pour exercer vos droits, contactez-nous à : contact@fioulfrance24.fr
               </p>
             </section>
 
@@ -137,7 +137,7 @@ const PolitiqueConfidentialite = () => {
                 Pour toute question relative à cette politique de confidentialité, contactez-nous à :
               </p>
               <p className="mb-4">
-                <strong>Email :</strong> contact@fioul-24.fr<br/>
+                <strong>Email :</strong> contact@fioulfrance24.fr<br/>
                 <strong>Courrier :</strong> Fuel 2000 Transports Sàrl, 23 rue de la Porte d'Aubervilliers, 75018 Paris
               </p>
               <p className="mb-4">
