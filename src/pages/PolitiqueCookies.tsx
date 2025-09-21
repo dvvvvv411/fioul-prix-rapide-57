@@ -20,7 +20,7 @@ const PolitiqueCookies = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">2. Pourquoi utilisons-nous des cookies ?</h2>
               <p className="mb-4">
-                Total Pacifique Sàrl utilise des cookies pour :
+                Fuel 2000 Transports Sàrl utilise des cookies pour :
               </p>
               <ul className="list-disc pl-6 mb-4">
                 <li>Assurer le bon fonctionnement du site web</li>
@@ -171,8 +171,8 @@ const PolitiqueCookies = () => {
                 Pour toute question concernant notre utilisation des cookies, contactez-nous :
               </p>
               <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                <p><strong>Email :</strong> info@fioulrapide.fr</p>
-                <p><strong>Adresse :</strong> Total Pacifique Sàrl, 5 rue Michel-Ange, 75016 Paris</p>
+                <p><strong>Email :</strong> contact@fioul-24.fr</p>
+                <p><strong>Adresse :</strong> Fuel 2000 Transports Sàrl, 23 rue de la Porte d'Aubervilliers, 75018 Paris</p>
               </div>
             </section>
 

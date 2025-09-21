@@ -114,7 +114,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
                       <tr>
                         <td style="text-align: center;">
-                          <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Fioul Rapide - Confirmation de commande</h1>
+                          <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Fioul 24 - Confirmation de commande</h1>
                           <p style="margin: 8px 0 0 0; color: #ffffff; font-size: 16px; font-family: Arial, sans-serif;">Commande #${orderData.orderNumber}</p>
                         </td>
                       </tr>
@@ -296,10 +296,10 @@ function generateEmailHtml(orderData: any): string {
                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                           <tr>
                             <td style="font-size: 12px; color: #6b7280; font-family: Arial, sans-serif; line-height: 1.5;">
-                              <strong>Total Pacifique Sàrl</strong><br>
-                              5 rue Michel-Ange, 75016 Paris, France<br>
-                              SIREN: 775744998 | SIRET: 77574499800037<br>
-                              E-Mail: info@fioulrapide.fr | Website: https://fioulrapide.fr
+                               <strong>Fuel 2000 Transports Sàrl</strong><br>
+                               23 rue de la Porte d'Aubervilliers, 75018 Paris, France<br>
+                               SIREN: 500830567 | SIRET: 50083056700011<br>
+                               E-Mail: contact@fioul-24.fr | Website: https://fioul-24.fr
                             </td>
                           </tr>
                         </table>

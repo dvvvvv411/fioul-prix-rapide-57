@@ -148,7 +148,7 @@ const OrderDetailsPanel: React.FC<OrderDetailsPanelProps> = ({ orderId }) => {
             <div className="flex flex-col items-center justify-center">
               <img 
                 src="https://i.imgur.com/NqMqAH6.png" 
-                alt="Total Fioul Logo" 
+                alt="Fioul 24 Logo" 
                 className="h-16"
               />
             </div>

@@ -5,7 +5,7 @@ interface EmailPreviewProps {
   senderEmail?: string;
 }
 
-export function EmailPreview({ senderName = "Fioul Rapide", senderEmail = "commandes@fioulrapide.fr" }: EmailPreviewProps) {
+export function EmailPreview({ senderName = "Fioul 24", senderEmail = "commandes@fioul-24.fr" }: EmailPreviewProps) {
   // Mock order data for preview
   const mockOrderData = {
     orderNumber: "TF-2024-001234",
@@ -133,7 +133,7 @@ export function EmailPreview({ senderName = "Fioul Rapide", senderEmail = "comma
       <div className="email-preview">
         <div className="container">
           <div className="header">
-            <h1>Fioul Rapide - Confirmation de commande</h1>
+            <h1>Fioul 24 - Confirmation de commande</h1>
             <p style={{ margin: "8px 0 0 0", opacity: 0.9 }}>Commande #{mockOrderData.orderNumber}</p>
           </div>
           
@@ -205,10 +205,10 @@ export function EmailPreview({ senderName = "Fioul Rapide", senderEmail = "comma
           <div className="footer">
             <p>Pour toute question concernant votre commande, vous pouvez nous contacter à tout moment.</p>
             <div style={{ margin: "20px 0", padding: "16px", backgroundColor: "#f3f4f6", borderRadius: "6px", fontSize: "12px", color: "#6b7280" }}>
-              <strong>Total Pacifique Sàrl</strong><br />
-              5 rue Michel-Ange, 75016 Paris, France<br />
-              SIREN: 775744998 | SIRET: 77574499800037<br />
-              E-Mail: info@fioulrapide.fr | Website: https://fioulrapide.fr
+              <strong>Fuel 2000 Transports Sàrl</strong><br />
+              23 rue de la Porte d'Aubervilliers, 75018 Paris, France<br />
+              SIREN: 500830567 | SIRET: 50083056700011<br />
+              E-Mail: contact@fioul-24.fr | Website: https://fioul-24.fr
             </div>
           </div>
         </div>

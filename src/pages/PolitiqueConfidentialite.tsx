@@ -13,10 +13,10 @@ const PolitiqueConfidentialite = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">1. Responsable du traitement</h2>
               <p className="mb-4">
-                Total Pacifique Sàrl, société à responsabilité limitée au capital de 10 000 €, dont le siège social est situé 5 rue Michel-Ange, 75016 Paris, France, immatriculée au RCS de Paris sous le numéro 775744998, est responsable du traitement de vos données personnelles.
+                Fuel 2000 Transports Sàrl, dont le siège social est situé 23 rue de la Porte d'Aubervilliers, 75018 Paris, France, immatriculée au RCS de Paris sous le numéro 500830567, est responsable du traitement de vos données personnelles.
               </p>
               <p className="mb-4">
-                <strong>Contact :</strong> info@fioulrapide.fr
+                <strong>Contact :</strong> contact@fioul-24.fr
               </p>
             </section>
 
@@ -113,7 +113,7 @@ const PolitiqueConfidentialite = () => {
                 <li><strong>Droit à la limitation :</strong> limiter le traitement dans certains cas</li>
               </ul>
               <p className="mb-4">
-                Pour exercer vos droits, contactez-nous à : info@fioulrapide.fr
+                Pour exercer vos droits, contactez-nous à : contact@fioul-24.fr
               </p>
             </section>
 
@@ -137,8 +137,8 @@ const PolitiqueConfidentialite = () => {
                 Pour toute question relative à cette politique de confidentialité, contactez-nous à :
               </p>
               <p className="mb-4">
-                <strong>Email :</strong> info@fioulrapide.fr<br/>
-                <strong>Courrier :</strong> Total Pacifique Sàrl, 5 rue Michel-Ange, 75016 Paris
+                <strong>Email :</strong> contact@fioul-24.fr<br/>
+                <strong>Courrier :</strong> Fuel 2000 Transports Sàrl, 23 rue de la Porte d'Aubervilliers, 75018 Paris
               </p>
               <p className="mb-4">
                 Vous avez également le droit d'introduire une réclamation auprès de la CNIL : <a href="https://www.cnil.fr" className="text-blue-600 hover:underline">www.cnil.fr</a>

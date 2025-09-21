@@ -48,7 +48,7 @@ export function AppSidebar() {
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-sm">TF</span>
             </div>
-            <div className="text-lg font-bold text-foreground">Total Fioul</div>
+            <div className="text-lg font-bold text-foreground">Fioul 24</div>
           </div>
         )}
         {collapsed && (

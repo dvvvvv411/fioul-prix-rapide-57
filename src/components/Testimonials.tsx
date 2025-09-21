@@ -7,7 +7,7 @@ const Testimonials = () => {
     {
       name: "Marie Dubois",
       location: "Lyon",
-      text: "Livraison ponctuelle et service impeccable. Je recommande vivement Total Fioul France !",
+      text: "Livraison ponctuelle et service impeccable. Je recommande vivement Fioul 24 !",
       rating: 5
     },
     {

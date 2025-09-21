@@ -16,16 +16,14 @@ const MentionsLegales = () => {
                 Le présent site web est édité par :
               </p>
               <div className="bg-gray-50 p-6 rounded-lg mb-6">
-                <p><strong>Raison sociale :</strong> Total Pacifique Sàrl</p>
-                <p><strong>Forme juridique :</strong> Société à responsabilité limitée (SARL)</p>
-                <p><strong>Capital social :</strong> 10 000 €</p>
-                <p><strong>Siège social :</strong> 5 rue Michel-Ange, 75016 Paris, France</p>
-                <p><strong>Directeur de la publication :</strong> Patrick Pouyanné</p>
-                <p><strong>SIREN :</strong> 775744998</p>
-                <p><strong>SIRET :</strong> 77574499800037</p>
-                <p><strong>N° TVA intracommunautaire :</strong> FR64521322993</p>
-                <p><strong>Email :</strong> info@fioulrapide.fr</p>
-                <p><strong>Site web :</strong> <a href="https://fioulrapide.fr" className="text-blue-600 hover:underline">https://fioulrapide.fr</a></p>
+                <p><strong>Raison sociale :</strong> Fuel 2000 Transports Sàrl</p>
+                <p><strong>Siège social :</strong> 23 rue de la Porte d'Aubervilliers, 75018 Paris, France</p>
+                <p><strong>Gérant :</strong> William Boscher</p>
+                <p><strong>SIREN :</strong> 500830567</p>
+                <p><strong>SIRET :</strong> 50083056700011</p>
+                <p><strong>N° TVA intracommunautaire :</strong> FR66603090631</p>
+                <p><strong>Email :</strong> contact@fioul-24.fr</p>
+                <p><strong>Site web :</strong> <a href="https://fioul-24.fr" className="text-blue-600 hover:underline">https://fioul-24.fr</a></p>
               </div>
             </section>
 
@@ -52,14 +50,14 @@ const MentionsLegales = () => {
                 Les informations contenues sur ce site sont aussi précises que possible et le site remis à jour à différentes périodes de l'année, mais peut toutefois contenir des inexactitudes ou des omissions.
               </p>
               <p className="mb-4">
-                Si vous constatez une lacune, erreur ou ce qui parait être un dysfonctionnement, merci de bien vouloir le signaler par email, à l'adresse info@fioulrapide.fr, en décrivant le problème de la manière la plus précise possible.
+                Si vous constatez une lacune, erreur ou ce qui parait être un dysfonctionnement, merci de bien vouloir le signaler par email, à l'adresse contact@fioul-24.fr, en décrivant le problème de la manière la plus précise possible.
               </p>
             </section>
 
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Liens hypertextes</h2>
               <p className="mb-4">
-                Les liens hypertextes mis en place dans le cadre du présent site web en direction d'autres ressources présentes sur le réseau Internet ne sauraient engager la responsabilité de Total Pacifique Sàrl.
+                Les liens hypertextes mis en place dans le cadre du présent site web en direction d'autres ressources présentes sur le réseau Internet ne sauraient engager la responsabilité de Fuel 2000 Transports Sàrl.
               </p>
             </section>
 
@@ -79,7 +77,7 @@ const MentionsLegales = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Droit applicable et juridiction compétente</h2>
               <p className="mb-4">
-                Tout litige en relation avec l'utilisation du site https://fioulrapide.fr est soumis au droit français. Il est fait attribution exclusive de juridiction aux tribunaux compétents de Paris.
+                Tout litige en relation avec l'utilisation du site https://fioul-24.fr est soumis au droit français. Il est fait attribution exclusive de juridiction aux tribunaux compétents de Paris.
               </p>
             </section>
           </div>

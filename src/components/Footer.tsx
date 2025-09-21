@@ -15,7 +15,7 @@ const Footer = () => {
           <div>
             <img 
               src="https://i.imgur.com/NqMqAH6.png" 
-              alt="Total Fioul France"
+              alt="Fioul 24"
               className="h-24 mb-4"
             />
             <p className="text-gray-300 mb-4">
@@ -24,7 +24,7 @@ const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Mail size={16} />
-                <span>info@fioulrapide.fr</span>
+                <span>contact@fioul-24.fr</span>
               </div>
               <div className="flex items-center gap-2">
                 <MapPin size={16} />
@@ -58,7 +58,7 @@ const Footer = () => {
 
         <div className="border-t border-gray-700 mt-8 pt-8">
           <div className="text-center text-gray-400">
-            © 2025 Total Fioul France. Tous droits réservés.
+            © 2025 Fioul 24. Tous droits réservés.
           </div>
         </div>
       </div>
