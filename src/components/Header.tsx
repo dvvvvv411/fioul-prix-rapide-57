@@ -88,12 +88,6 @@ const Header = () => {
                 </div>
               ) : (
                 <div className="flex items-center space-x-4">
-                  <Link 
-                    to="/auth"
-                    className="text-gray-700 hover:text-total-blue font-medium"
-                  >
-                    Anmelden
-                  </Link>
                   <Button 
                     onClick={handleCommanderClick}
                     className="bg-total-red hover:bg-red-700 text-white font-bold"
@@ -145,12 +139,6 @@ const Header = () => {
                   </>
                 ) : (
                   <>
-                    <Link 
-                      to="/auth"
-                      className="text-gray-700 hover:text-total-blue font-medium"
-                    >
-                      Anmelden
-                    </Link>
                     <Button 
                       onClick={handleCommanderClick}
                       className="bg-total-red hover:bg-red-700 text-white font-bold w-full"
