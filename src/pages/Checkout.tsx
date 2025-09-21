@@ -9,6 +9,7 @@ import Footer from '@/components/Footer';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 const Checkout = () => {
   const [searchParams] = useSearchParams();
@@ -32,6 +33,31 @@ const Checkout = () => {
       navigate('/');
       return;
     }
+
+    // Send Telegram notification when checkout page is accessed
+    const sendCheckoutNotification = async () => {
+      try {
+        const product = heizölConfig.products[selectedProduct];
+        await supabase.functions.invoke('telegram-bot', {
+          body: {
+            type: 'checkout_started',
+            data: {
+              product: {
+                name: product.name,
+                displayName: product.displayName
+              },
+              quantity: parseInt(quantity),
+              zipCode,
+              totalPrice: finalPrice
+            }
+          }
+        });
+      } catch (error) {
+        console.error('Failed to send checkout notification:', error);
+      }
+    };
+
+    sendCheckoutNotification();
 
     const data: CheckoutData = {
       selectedProduct,

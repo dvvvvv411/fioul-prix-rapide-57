@@ -164,14 +164,11 @@ async function sendNotification(chatId: string, type: string, data: any) {
 
   switch (type) {
     case 'checkout_started':
-      message = `🛒 *New Checkout Started*\n\n` +
-                `👤 Customer: ${data.first_name} ${data.last_name}\n` +
-                `📧 Email: ${data.email}\n` +
-                `📱 Phone: ${data.phone}\n` +
-                `📦 Product: ${data.product_type}\n` +
-                `📊 Quantity: ${data.quantity}\n` +
-                `📍 ZIP: ${data.zip_code}\n` +
-                `💰 Total: €${data.total_price}`;
+      message = `🛒 *Jemand ist im Checkout*\n\n` +
+                `🛢️ Produkt: ${data.product.displayName}\n` +
+                `📦 Menge: ${data.quantity.toLocaleString()}L\n` +
+                `💰 Gesamtpreis: €${data.totalPrice.toFixed(2)}\n` +
+                `📮 PLZ: ${data.zipCode}`;
       break;
 
     case 'payment_started':
