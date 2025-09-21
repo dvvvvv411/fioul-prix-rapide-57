@@ -227,19 +227,19 @@ function generateEmailHtml(orderData: any): string {
               </div>
               <div class="detail-row">
                 <span>Preis pro Liter:</span>
-                <span>${(orderData.product.pricePerLiter / 100).toFixed(2)} €</span>
+                <span>${orderData.product.pricePerLiter.toFixed(2)} €</span>
               </div>
               <div class="detail-row">
                 <span>Zwischensumme:</span>
-                <span>${(orderData.subtotal / 100).toFixed(2)} €</span>
+                <span>${orderData.subtotal.toFixed(2)} €</span>
               </div>
               <div class="detail-row">
                 <span>Liefergebühr:</span>
-                <span>${orderData.deliveryFee > 0 ? `${(orderData.deliveryFee / 100).toFixed(2)} €` : 'Kostenlos'}</span>
+                <span>${orderData.deliveryFee > 0 ? `${orderData.deliveryFee.toFixed(2)} €` : 'Kostenlos'}</span>
               </div>
               <div class="detail-row">
                 <span>Gesamtpreis (inkl. MwSt.):</span>
-                <span>${(orderData.totalPrice / 100).toFixed(2)} €</span>
+                <span>${orderData.totalPrice.toFixed(2)} €</span>
               </div>
             </div>
             

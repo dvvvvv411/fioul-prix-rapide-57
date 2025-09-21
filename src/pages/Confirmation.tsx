@@ -40,18 +40,23 @@ const Confirmation = () => {
           return;
         }
 
+        // Get product config for correct pricePerLiter
+        const productConfig = order.product_type === 'standard' ? 
+          { name: 'standard', displayName: 'Fioul Standard', pricePerLiter: 0.70 } :
+          { name: 'premium', displayName: 'Fioul Premium', pricePerLiter: 0.73 };
+
         // Transform database order to OrderSummary format
         const transformedOrder: OrderSummaryType = {
           product: {
             name: order.product_type,
-            displayName: order.product_type === 'standard' ? 'Standard-Heizöl' : 'Premium-Heizöl',
-            pricePerLiter: Number(order.total_price) / order.quantity
+            displayName: productConfig.displayName,
+            pricePerLiter: productConfig.pricePerLiter
           },
           quantity: order.quantity,
           subtotal: Number(order.total_price),
           deliveryFee: Number(order.delivery_fee),
-          netPrice: Number(order.final_price),
-          vatAmount: Number(order.final_price) * 0.2 / 1.2,
+          netPrice: Number(order.total_price),
+          vatAmount: Number(order.delivery_fee) + Number(order.total_price) - Number(order.final_price),
           totalPrice: Number(order.final_price),
           zipCode: order.zip_code,
           firstName: order.first_name,
@@ -68,7 +73,10 @@ const Confirmation = () => {
           await supabase.functions.invoke('send-confirmation-email', {
             body: {
               orderId: orderId,
-              orderData: transformedOrder
+              orderData: {
+                ...transformedOrder,
+                orderNumber: order.order_number?.toString() || 'N/A'
+              }
             }
           });
           console.log('Confirmation email sent successfully');
