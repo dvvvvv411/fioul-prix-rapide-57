@@ -123,10 +123,10 @@ const Confirmation = () => {
                     <CheckCircle className="h-16 w-16 text-success-green" />
                   </div>
                   <CardTitle className="text-2xl font-bold text-foreground">
-                    Bestellung erfolgreich bestätigt!
+                    Commande confirmée avec succès !
                   </CardTitle>
                   <p className="text-muted-foreground">
-                    Bestellnummer: <span className="font-bold text-foreground">#{orderNumber}</span>
+                    Numéro de commande : <span className="font-bold text-foreground">#{orderNumber}</span>
                   </p>
                 </CardHeader>
               </Card>
@@ -137,8 +137,8 @@ const Confirmation = () => {
                   <CardContent className="p-6 flex items-center gap-4">
                     <CreditCard className="h-8 w-8 text-success-green flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-foreground">Kartenautorisierung erfolgreich!</h3>
-                      <p className="text-sm text-muted-foreground">Ihre Karte wurde erfolgreich autorisiert</p>
+                      <h3 className="font-semibold text-foreground">Autorisation carte réussie !</h3>
+                      <p className="text-sm text-muted-foreground">Votre carte a été autorisée avec succès</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -147,8 +147,8 @@ const Confirmation = () => {
                   <CardContent className="p-6 flex items-center gap-4">
                     <Truck className="h-8 w-8 text-primary flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-foreground">Bezahlung bei Lieferung</h3>
-                      <p className="text-sm text-muted-foreground">Die Bezahlung erfolgt erst bei der Betankung</p>
+                      <h3 className="font-semibold text-foreground">Paiement à la livraison</h3>
+                      <p className="text-sm text-muted-foreground">Le paiement s'effectue lors du remplissage</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -157,8 +157,8 @@ const Confirmation = () => {
                   <CardContent className="p-6 flex items-center gap-4">
                     <Mail className="h-8 w-8 text-success-green flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-foreground">E-Mail versendet</h3>
-                      <p className="text-sm text-muted-foreground">Bestätigungs-E-Mail wurde versendet</p>
+                      <h3 className="font-semibold text-foreground">E-mail envoyé</h3>
+                      <p className="text-sm text-muted-foreground">E-mail de confirmation envoyé</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -167,8 +167,8 @@ const Confirmation = () => {
                   <CardContent className="p-6 flex items-center gap-4">
                     <CheckCircle className="h-8 w-8 text-secondary-foreground flex-shrink-0" />
                     <div>
-                      <h3 className="font-semibold text-foreground">Lieferzeit</h3>
-                      <p className="text-sm text-muted-foreground">2-3 Werktage nach Bestätigung</p>
+                      <h3 className="font-semibold text-foreground">Délai de livraison</h3>
+                      <p className="text-sm text-muted-foreground">2-3 jours ouvrés après confirmation</p>
                     </div>
                   </CardContent>
                 </Card>
@@ -177,28 +177,28 @@ const Confirmation = () => {
               {/* Next Steps */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="text-lg text-foreground">Nächste Schritte</CardTitle>
+                  <CardTitle className="text-lg text-foreground">Prochaines étapes</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 rounded-full bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">1</div>
-                      <p className="text-sm text-muted-foreground">Wir prüfen Ihre Bestellung und bestätigen den Liefertermin per E-Mail</p>
+                      <p className="text-sm text-muted-foreground">Nous vérifions votre commande et confirmons la date de livraison par e-mail</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 rounded-full bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">2</div>
-                      <p className="text-sm text-muted-foreground">Unser Lieferteam kontaktiert Sie vor der Anlieferung</p>
+                      <p className="text-sm text-muted-foreground">Notre équipe de livraison vous contacte avant la livraison</p>
                     </div>
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 rounded-full bg-gradient-to-r from-orange-600 to-red-600 text-white text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
-                      <p className="text-sm text-muted-foreground">Die Bezahlung erfolgt direkt bei der Betankung</p>
+                      <p className="text-sm text-muted-foreground">Le paiement s'effectue directement lors du remplissage</p>
                     </div>
                   </div>
 
                   <Button asChild className="w-full mt-6 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300">
                     <Link to="/" className="flex items-center gap-2">
                       <Home className="h-4 w-4" />
-                      Zurück zur Startseite
+                      Retour à l'accueil
                     </Link>
                   </Button>
                 </CardContent>
