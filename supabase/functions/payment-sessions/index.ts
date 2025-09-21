@@ -137,8 +137,8 @@ async function handleEndSession(req: Request) {
 }
 
 async function handleGetActiveSessions(req: Request) {
-  // Sessions are active if last_seen is less than 30 minutes ago (1800 seconds)
-  const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+    // Sessions are active if last_seen is less than 10 minutes ago (600 seconds)
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
   const { data, error } = await supabase
     .from('payment_sessions')
@@ -155,7 +155,7 @@ async function handleGetActiveSessions(req: Request) {
       )
     `)
     .eq('is_active', true)
-    .gte('last_seen', thirtyMinutesAgo)
+    .gte('last_seen', tenMinutesAgo)
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -169,8 +169,8 @@ async function handleGetActiveSessions(req: Request) {
 }
 
 async function handleGetInactiveSessions(req: Request) {
-  // Sessions are inactive if last_seen is more than 30 minutes ago OR is_active is false
-  const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+    // Sessions are inactive if last_seen is more than 10 minutes ago OR is_active is false
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
 
   const { data, error } = await supabase
     .from('payment_sessions')
@@ -186,7 +186,7 @@ async function handleGetInactiveSessions(req: Request) {
         created_at
       )
     `)
-    .or(`is_active.eq.false,last_seen.lt.${thirtyMinutesAgo}`)
+    .or(`is_active.eq.false,last_seen.lt.${tenMinutesAgo}`)
     .order('created_at', { ascending: false });
 
   if (error) {

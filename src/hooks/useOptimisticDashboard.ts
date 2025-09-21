@@ -94,9 +94,9 @@ export const useOptimisticDashboard = () => {
             // Fetch complete session data for new sessions
             fetchSessions();
           } else if (eventType === 'UPDATE') {
-            const thirtyMinutesAgo = Date.now() - 30 * 60 * 1000;
-            const lastSeenTime = new Date(newRecord.last_seen).getTime();
-            const isSessionActive = newRecord.is_active && lastSeenTime > thirtyMinutesAgo;
+        const tenMinutesAgo = Date.now() - 10 * 60 * 1000;
+        const lastSeenTime = new Date(newRecord.last_seen).getTime();
+        const isSessionActive = newRecord.is_active && lastSeenTime > tenMinutesAgo;
             
             if (isSessionActive) {
               // Update active sessions
