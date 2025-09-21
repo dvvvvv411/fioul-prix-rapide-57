@@ -60,7 +60,7 @@ const handler = async (req: Request): Promise<Response> => {
     const emailResponse = await resend.emails.send({
       from: `${resendConfig.sender_name} <${resendConfig.sender_email}>`,
       to: [order.email],
-      subject: `Bestellbestätigung #${orderData.orderNumber}`,
+      subject: `Confirmation de commande #${orderData.orderNumber}`,
       html: emailHtml,
     });
 
@@ -88,11 +88,11 @@ const handler = async (req: Request): Promise<Response> => {
 function generateEmailHtml(orderData: any): string {
   return `
     <!DOCTYPE html>
-    <html lang="de">
+    <html lang="fr">
     <head>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Bestellbestätigung</title>
+      <title>Confirmation de commande</title>
       <!--[if gte mso 9]>
       <xml>
         <o:OfficeDocumentSettings>
@@ -114,8 +114,8 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                       <td style="text-align: center;">
-                        <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Total Fioul - Bestellbestätigung</h1>
-                        <p style="margin: 8px 0 0 0; color: #ffffff; font-size: 16px; font-family: Arial, sans-serif;">Bestellung #${orderData.orderNumber}</p>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Total Fioul - Confirmation de commande</h1>
+                        <p style="margin: 8px 0 0 0; color: #ffffff; font-size: 16px; font-family: Arial, sans-serif;">Commande #${orderData.orderNumber}</p>
                       </td>
                     </tr>
                   </table>
@@ -130,7 +130,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ea580c; margin: 0 0 24px 0;">
                     <tr>
                       <td style="padding: 12px 20px; text-align: center; color: #ffffff; font-weight: bold; font-family: Arial, sans-serif; font-size: 14px;">
-                        Kartenautorisierung erfolgreich - Zahlung bei Lieferung
+                        Autorisation carte réussie - Paiement à la livraison
                       </td>
                     </tr>
                   </table>
@@ -139,7 +139,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                       <td style="padding: 0 0 20px 0; font-family: Arial, sans-serif; font-size: 14px; color: #333333; line-height: 1.6;">
-                        Vielen Dank für Ihre Bestellung! Ihre Kartenautorisierung war erfolgreich und die Bezahlung erfolgt direkt bei der Betankung.
+                        Merci pour votre commande ! L'autorisation de votre carte a réussi et le paiement s'effectue directement lors du remplissage.
                       </td>
                     </tr>
                   </table>
@@ -148,7 +148,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #ea580c; margin: 16px 0;">
                     <tr>
                       <td style="padding: 12px; text-align: center; color: #ffffff; font-weight: bold; font-family: Arial, sans-serif; font-size: 14px;">
-                        Geschätzte Lieferzeit: 2-3 Werktage
+                        Délai de livraison estimé : 2-3 jours ouvrés
                       </td>
                     </tr>
                   </table>
@@ -157,7 +157,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                       <td style="padding: 20px 0 10px 0;">
-                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Bestellübersicht</h3>
+                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Résumé de la commande</h3>
                       </td>
                     </tr>
                   </table>
@@ -202,7 +202,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                       <td style="padding: 10px 0;">
-                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Lieferadresse</h3>
+                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Adresse de livraison</h3>
                       </td>
                     </tr>
                   </table>
@@ -228,7 +228,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                       <td style="padding: 10px 0;">
-                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Nächste Schritte</h3>
+                        <h3 style="margin: 0; font-size: 18px; color: #333333; font-family: Arial, sans-serif;">Prochaines étapes</h3>
                       </td>
                     </tr>
                   </table>
@@ -247,7 +247,7 @@ function generateEmailHtml(orderData: any): string {
                               </table>
                             </td>
                             <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #6b7280; font-family: Arial, sans-serif;">
-                              Wir prüfen Ihre Bestellung und bestätigen den Liefertermin per E-Mail
+                              Nous vérifions votre commande et confirmons la date de livraison par e-mail
                             </td>
                           </tr>
                           <tr>
@@ -259,7 +259,7 @@ function generateEmailHtml(orderData: any): string {
                               </table>
                             </td>
                             <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #6b7280; font-family: Arial, sans-serif;">
-                              Unser Lieferteam kontaktiert Sie vor der Anlieferung
+                              Notre équipe de livraison vous contacte avant la livraison
                             </td>
                           </tr>
                           <tr>
@@ -271,7 +271,7 @@ function generateEmailHtml(orderData: any): string {
                               </table>
                             </td>
                             <td style="padding: 8px 0 8px 12px; font-size: 14px; color: #6b7280; font-family: Arial, sans-serif;">
-                              Die Bezahlung erfolgt direkt bei der Betankung
+                              Le paiement s'effectue directement lors du remplissage
                             </td>
                           </tr>
                         </table>
@@ -288,7 +288,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                       <td style="text-align: center; font-size: 14px; color: #6b7280; font-family: Arial, sans-serif; padding: 0 0 20px 0;">
-                        Bei Fragen zu Ihrer Bestellung können Sie uns jederzeit kontaktieren.
+                        Pour toute question concernant votre commande, vous pouvez nous contacter à tout moment.
                       </td>
                     </tr>
                     <tr>

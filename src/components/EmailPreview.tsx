@@ -5,23 +5,23 @@ interface EmailPreviewProps {
   senderEmail?: string;
 }
 
-export function EmailPreview({ senderName = "Ihr Unternehmen", senderEmail = "bestellungen@ihrunternehmen.de" }: EmailPreviewProps) {
+export function EmailPreview({ senderName = "Votre Entreprise", senderEmail = "commandes@votreentreprise.fr" }: EmailPreviewProps) {
   // Mock order data for preview
   const mockOrderData = {
     orderNumber: "TF-2024-001234",
     product: {
-      displayName: "Premium Heizöl EL",
+      displayName: "Fioul Premium EL",
       pricePerLiter: 89
     },
     quantity: 2000,
     subtotal: 178000,
     deliveryFee: 0,
     totalPrice: 178000,
-    firstName: "Max",
-    lastName: "Mustermann",
-    street: "Musterstraße 123",
-    zipCode: "12345",
-    city: "Musterstadt"
+    firstName: "Marie",
+    lastName: "Martin",
+    street: "123 rue de la Paix",
+    zipCode: "75001",
+    city: "Paris"
   };
 
   return (
@@ -133,50 +133,50 @@ export function EmailPreview({ senderName = "Ihr Unternehmen", senderEmail = "be
       <div className="email-preview">
         <div className="container">
           <div className="header">
-            <h1>Total Fioul - Bestellbestätigung</h1>
-            <p style={{ margin: "8px 0 0 0", opacity: 0.9 }}>Bestellung #{mockOrderData.orderNumber}</p>
+            <h1>Total Fioul - Confirmation de commande</h1>
+            <p style={{ margin: "8px 0 0 0", opacity: 0.9 }}>Commande #{mockOrderData.orderNumber}</p>
           </div>
           
           <div className="content">
             <div className="success-badge">
-              Kartenautorisierung erfolgreich - Zahlung bei Lieferung
+              Autorisation carte réussie - Paiement à la livraison
             </div>
             
-            <p>Vielen Dank für Ihre Bestellung! Ihre Kartenautorisierung war erfolgreich und die Bezahlung erfolgt direkt bei der Betankung.</p>
+            <p>Merci pour votre commande ! L'autorisation de votre carte a réussi et le paiement s'effectue directement lors du remplissage.</p>
             
             <div className="delivery-time">
-              Geschätzte Lieferzeit: 2-3 Werktage
+              Délai de livraison estimé : 2-3 jours ouvrés
             </div>
             
-            <h3>Bestellübersicht</h3>
+            <h3>Résumé de la commande</h3>
             <div className="order-details">
               <div className="detail-row">
-                <span>Produkt:</span>
+                <span>Produit :</span>
                 <span>{mockOrderData.product.displayName}</span>
               </div>
               <div className="detail-row">
-                <span>Menge:</span>
-                <span>{mockOrderData.quantity} Liter</span>
+                <span>Quantité :</span>
+                <span>{mockOrderData.quantity} Litres</span>
               </div>
               <div className="detail-row">
-                <span>Preis pro Liter:</span>
+                <span>Prix par litre :</span>
                 <span>{(mockOrderData.product.pricePerLiter / 100).toFixed(2)} €</span>
               </div>
               <div className="detail-row">
-                <span>Zwischensumme:</span>
+                <span>Sous-total :</span>
                 <span>{(mockOrderData.subtotal / 100).toFixed(2)} €</span>
               </div>
               <div className="detail-row">
-                <span>Liefergebühr:</span>
-                <span>{mockOrderData.deliveryFee > 0 ? `${(mockOrderData.deliveryFee / 100).toFixed(2)} €` : 'Kostenlos'}</span>
+                <span>Frais de livraison :</span>
+                <span>{mockOrderData.deliveryFee > 0 ? `${(mockOrderData.deliveryFee / 100).toFixed(2)} €` : 'Gratuit'}</span>
               </div>
               <div className="detail-row">
-                <span>Gesamtpreis (inkl. MwSt.):</span>
+                <span>Prix total (TTC) :</span>
                 <span>{(mockOrderData.totalPrice / 100).toFixed(2)} €</span>
               </div>
             </div>
             
-            <h3>Lieferadresse</h3>
+            <h3>Adresse de livraison</h3>
             <div className="order-details">
               <p style={{ margin: 0 }}>
                 {mockOrderData.firstName} {mockOrderData.lastName}<br />
@@ -185,25 +185,25 @@ export function EmailPreview({ senderName = "Ihr Unternehmen", senderEmail = "be
               </p>
             </div>
             
-            <h3>Nächste Schritte</h3>
+            <h3>Prochaines étapes</h3>
             <div className="steps">
               <div className="step">
                 <div className="step-number">1</div>
-                <div className="step-text">Wir prüfen Ihre Bestellung und bestätigen den Liefertermin per E-Mail</div>
+                <div className="step-text">Nous vérifions votre commande et confirmons la date de livraison par e-mail</div>
               </div>
               <div className="step">
                 <div className="step-number">2</div>
-                <div className="step-text">Unser Lieferteam kontaktiert Sie vor der Anlieferung</div>
+                <div className="step-text">Notre équipe de livraison vous contacte avant la livraison</div>
               </div>
               <div className="step">
                 <div className="step-number">3</div>
-                <div className="step-text">Die Bezahlung erfolgt direkt bei der Betankung</div>
+                <div className="step-text">Le paiement s'effectue directement lors du remplissage</div>
               </div>
             </div>
           </div>
           
           <div className="footer">
-            <p>Bei Fragen zu Ihrer Bestellung können Sie uns jederzeit kontaktieren.</p>
+            <p>Pour toute question concernant votre commande, vous pouvez nous contacter à tout moment.</p>
             <div style={{ margin: "20px 0", padding: "16px", backgroundColor: "#f3f4f6", borderRadius: "6px", fontSize: "12px", color: "#6b7280" }}>
               <strong>Total Pacifique Sàrl</strong><br />
               5 rue Michel-Ange, 75016 Paris, France<br />
