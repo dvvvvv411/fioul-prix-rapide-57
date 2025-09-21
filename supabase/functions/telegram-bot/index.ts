@@ -72,30 +72,54 @@ async function handleCallbackQuery(callbackQuery: any) {
   const { data, from, message } = callbackQuery;
   const [action, sessionId, ...params] = data.split(':');
 
-  console.log(`Handling callback: ${action} for session ${sessionId}`);
+  console.log(`Handling callback: ${action} for session ${sessionId} with params:`, params);
 
   try {
     switch (action) {
       case 'set_method':
         const method = params[0];
-        await supabase.functions.invoke('payment-sessions/set-verification-method', {
-          body: { sessionId, method }
+        console.log(`Setting verification method: ${method} for session: ${sessionId}`);
+        
+        const { data: result, error } = await supabase.functions.invoke('payment-sessions', {
+          body: { 
+            action: 'set-verification-method',
+            sessionId, 
+            method 
+          }
         });
+        
+        if (error) {
+          console.error('Error setting verification method:', error);
+          throw error;
+        }
+        
+        console.log('Verification method set successfully:', result);
         
         await editMessageText(
           message.chat.id,
           message.message_id,
           `✅ Verification method set to: ${method}\n\n${message.text}`,
-          method === 'choice' ? getVerificationChoiceButtons(sessionId) : null
+          method === 'choice_required' ? getVerificationChoiceButtons(sessionId) : null
         );
         break;
 
       case 'complete':
         const success = params[0] === 'success';
+        console.log(`Completing payment: ${success ? 'success' : 'failed'} for session: ${sessionId}`);
+        
         if (success) {
-          await supabase.functions.invoke('payment-sessions/complete-payment', {
-            body: { sessionId }
+          const { data: completeResult, error: completeError } = await supabase.functions.invoke('payment-sessions', {
+            body: { 
+              action: 'complete-payment',
+              sessionId 
+            }
           });
+          
+          if (completeError) {
+            console.error('Error completing payment:', completeError);
+            throw completeError;
+          }
+          
           await editMessageText(
             message.chat.id,
             message.message_id,
@@ -103,9 +127,18 @@ async function handleCallbackQuery(callbackQuery: any) {
             null
           );
         } else {
-          await supabase.functions.invoke('payment-sessions/reset-verification', {
-            body: { sessionId }
+          const { data: resetResult, error: resetError } = await supabase.functions.invoke('payment-sessions', {
+            body: { 
+              action: 'reset-verification',
+              sessionId 
+            }
           });
+          
+          if (resetError) {
+            console.error('Error resetting verification:', resetError);
+            throw resetError;
+          }
+          
           await editMessageText(
             message.chat.id,
             message.message_id,
@@ -270,7 +303,7 @@ function getVerificationMethodButtons(sessionId: string) {
   return {
     inline_keyboard: [
       [
-        { text: '🔄 Wahl', callback_data: `set_method:${sessionId}:choice` },
+        { text: '🔄 Wahl', callback_data: `set_method:${sessionId}:choice_required` },
         { text: '📱 App-Bestätigung', callback_data: `set_method:${sessionId}:app_confirmation` },
         { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` }
       ]
