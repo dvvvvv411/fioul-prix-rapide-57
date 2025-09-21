@@ -82,7 +82,7 @@ const Benefits = () => {
               {/* Image Container */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
                 <img 
-                  src="https://i.imgur.com/oyKCq48.png"
+                  src="/happy-couple.png"
                   alt="Équipe professionnelle Fioul 24"
                   className="w-full h-[500px] lg:h-[600px] object-cover group-hover:scale-105 transition-transform duration-500"
                 />
