@@ -43,9 +43,21 @@ const OrderSummary = ({ orderData }: OrderSummaryProps) => {
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm">
               <MapPin className="h-4 w-4 text-muted-foreground" />
-              <span className="text-muted-foreground">Lieferung nach:</span>
-              <span className="font-medium text-foreground">{orderData.zipCode}</span>
+              <span className="text-muted-foreground">Lieferadresse:</span>
             </div>
+            {orderData.firstName && orderData.lastName && (
+              <div className="ml-6 text-sm">
+                <div className="font-medium text-foreground">
+                  {orderData.firstName} {orderData.lastName}
+                </div>
+                {orderData.street && (
+                  <div className="text-muted-foreground">{orderData.street}</div>
+                )}
+                <div className="text-muted-foreground">
+                  {orderData.zipCode} {orderData.city}
+                </div>
+              </div>
+            )}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-sm">
                 <Truck className="h-4 w-4 text-muted-foreground" />

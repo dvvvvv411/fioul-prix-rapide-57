@@ -36,4 +36,8 @@ export interface OrderSummary {
   vatAmount: number;
   totalPrice: number;
   zipCode: string;
+  firstName?: string;
+  lastName?: string;
+  street?: string;
+  city?: string;
 }

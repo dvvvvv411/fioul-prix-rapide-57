@@ -51,7 +51,11 @@ const Confirmation = () => {
           netPrice: Number(order.final_price),
           vatAmount: Number(order.final_price) * 0.2 / 1.2,
           totalPrice: Number(order.final_price),
-          zipCode: order.zip_code
+          zipCode: order.zip_code,
+          firstName: order.first_name,
+          lastName: order.last_name,
+          street: order.street,
+          city: order.city
         };
 
         setOrderData(transformedOrder);
@@ -80,10 +84,10 @@ const Confirmation = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
+    <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 flex flex-col">
       <Header />
       
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-12 flex-1">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Column - Confirmation Details */}
@@ -125,9 +129,9 @@ const Confirmation = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="border border-accent/20">
+                <Card className="border border-success-green/20">
                   <CardContent className="p-6 flex items-center gap-4">
-                    <Mail className="h-8 w-8 text-accent flex-shrink-0" />
+                    <Mail className="h-8 w-8 text-success-green flex-shrink-0" />
                     <div>
                       <h3 className="font-semibold text-foreground">E-Mail versendet</h3>
                       <p className="text-sm text-muted-foreground">Bestätigungs-E-Mail wurde versendet</p>
@@ -165,16 +169,6 @@ const Confirmation = () => {
                       <div className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-sm font-bold flex items-center justify-center flex-shrink-0 mt-0.5">3</div>
                       <p className="text-sm text-muted-foreground">Die Bezahlung erfolgt direkt bei der Betankung</p>
                     </div>
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-2">
-                    <h4 className="font-semibold text-foreground">Kontakt bei Fragen:</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Telefon: <span className="font-medium text-foreground">0800 123 456</span><br />
-                      E-Mail: <span className="font-medium text-foreground">service@heizoel-discount.de</span>
-                    </p>
                   </div>
 
                   <Button asChild className="w-full mt-6">
