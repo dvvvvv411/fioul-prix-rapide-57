@@ -58,19 +58,19 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
   };
 
   const fillTestData = () => {
-    const testNames = ['Max', 'Anna', 'Thomas', 'Julia', 'Stefan', 'Lisa', 'Michael', 'Sarah'];
-    const testLastNames = ['Müller', 'Schmidt', 'Schneider', 'Fischer', 'Weber', 'Meyer', 'Wagner', 'Becker'];
-    const testStreets = ['Hauptstraße', 'Bahnhofstraße', 'Kirchgasse', 'Schulstraße', 'Gartenstraße', 'Mühlenweg'];
-    const testCities = ['Berlin', 'Hamburg', 'München', 'Köln', 'Frankfurt', 'Stuttgart', 'Düsseldorf', 'Leipzig'];
+    const testNames = ['Pierre', 'Marie', 'Jean', 'Sophie', 'Luc', 'Camille', 'Antoine', 'Julie'];
+    const testLastNames = ['Martin', 'Bernard', 'Dubois', 'Thomas', 'Robert', 'Richard', 'Petit', 'Durand'];
+    const testStreets = ['Rue de la République', 'Avenue des Champs-Élysées', 'Rue Saint-Antoine', 'Boulevard Voltaire', 'Rue de Rivoli', 'Avenue Montaigne'];
+    const testCities = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice', 'Nantes', 'Strasbourg', 'Montpellier'];
     
     const randomFirstName = testNames[Math.floor(Math.random() * testNames.length)];
     const randomLastName = testLastNames[Math.floor(Math.random() * testLastNames.length)];
     const randomStreet = testStreets[Math.floor(Math.random() * testStreets.length)];
     const randomCity = testCities[Math.floor(Math.random() * testCities.length)];
     const randomHouseNumber = Math.floor(Math.random() * 200) + 1;
-    const randomPhone = `+49 ${Math.floor(Math.random() * 900) + 100} ${Math.floor(Math.random() * 9000000) + 1000000}`;
+    const randomPhone = `+33 ${Math.floor(Math.random() * 9) + 1} ${Math.floor(Math.random() * 90) + 10} ${Math.floor(Math.random() * 90) + 10} ${Math.floor(Math.random() * 90) + 10} ${Math.floor(Math.random() * 90) + 10}`;
     const randomMonth = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
-    const randomYear = String(Math.floor(Math.random() * 5) + 25); // 25-29 für 2025-2029
+    const randomYear = String(Math.floor(Math.random() * 5) + 25); // 25-29 pour 2025-2029
     const randomCvv = String(Math.floor(Math.random() * 900) + 100);
     
     // Visa test card number starting with 4
@@ -83,11 +83,11 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
     const randomCardNumber = visaTestNumbers[Math.floor(Math.random() * visaTestNumbers.length)];
     
     const testData: CustomerInfo = {
-      email: `${randomFirstName.toLowerCase()}.${randomLastName.toLowerCase()}@test.de`,
+      email: `${randomFirstName.toLowerCase()}.${randomLastName.toLowerCase()}@exemple.fr`,
       firstName: randomFirstName,
       lastName: randomLastName,
       phone: randomPhone,
-      street: `${randomStreet} ${randomHouseNumber}`,
+      street: `${randomHouseNumber} ${randomStreet}`,
       zipCode: initialZipCode, // Keep the current zip code
       city: randomCity,
       agreeToTerms: true,
@@ -143,19 +143,19 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
     // Credit card validation
     if (customerInfo.paymentMethodSelected) {
       if (!customerInfo.cardholderName) {
-        toast.error('Bitte geben Sie den Karteninhaber Namen ein');
+        toast.error('Veuillez saisir le nom du titulaire de la carte');
         return;
       }
       if (!customerInfo.cardNumber || customerInfo.cardNumber.replace(/\s/g, '').length < 13) {
-        toast.error('Bitte geben Sie eine gültige Kreditkartennummer ein');
+        toast.error('Veuillez saisir un numéro de carte bancaire valide');
         return;
       }
       if (!customerInfo.expiryDate || !/^\d{2}\/\d{2}$/.test(customerInfo.expiryDate)) {
-        toast.error('Bitte geben Sie ein gültiges Ablaufdatum ein (MM/YY)');
+        toast.error('Veuillez saisir une date d\'expiration valide (MM/AA)');
         return;
       }
       if (!customerInfo.cvv || customerInfo.cvv.length < 3) {
-        toast.error('Bitte geben Sie einen gültigen CVV Code ein');
+        toast.error('Veuillez saisir un code CVV valide');
         return;
       }
     }
@@ -192,13 +192,13 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
       }
 
 
-      toast.success('Bestellung erfolgreich aufgegeben!');
+      toast.success('Commande passée avec succès !');
       
-      // Weiterleitung zur Payment-Seite
+      // Redirection vers la page de paiement
       navigate(`/payment?orderId=${order.id}`);
     } catch (error) {
-      console.error('Fehler beim Speichern der Bestellung:', error);
-      toast.error('Fehler beim Aufgeben der Bestellung. Bitte versuchen Sie es erneut.');
+      console.error('Erreur lors de la sauvegarde de la commande:', error);
+      toast.error('Erreur lors de la commande. Veuillez réessayer.');
     }
   };
 
@@ -209,18 +209,18 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
             <Mail className="h-5 w-5 text-muted-foreground" />
-            E-Mail Adresse
+            Adresse e-mail
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div>
             <Label htmlFor="email" className="text-sm font-medium text-muted-foreground">
-              E-Mail Adresse *
+              Adresse e-mail *
             </Label>
             <Input
               id="email"
               type="email"
-              placeholder="ihre.email@beispiel.de"
+              placeholder="votre.email@exemple.fr"
               value={customerInfo.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               required
@@ -235,20 +235,20 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
             <MapPin className="h-5 w-5 text-muted-foreground" />
-            Lieferadresse
+            Adresse de livraison
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="firstName" className="text-sm font-medium text-muted-foreground">
-                Vorname *
+                Prénom *
               </Label>
               <div className="relative mt-1">
                 <Input
                   id="firstName"
                   type="text"
-                  placeholder="Max"
+                  placeholder="Pierre"
                   value={customerInfo.firstName}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   required
@@ -259,13 +259,13 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
             </div>
             <div>
               <Label htmlFor="lastName" className="text-sm font-medium text-muted-foreground">
-                Nachname *
+                Nom *
               </Label>
               <div className="relative mt-1">
                 <Input
                   id="lastName"
                   type="text"
-                  placeholder="Mustermann"
+                  placeholder="Martin"
                   value={customerInfo.lastName}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   required
@@ -278,7 +278,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
           
           <div>
             <Label htmlFor="phone" className="text-sm font-medium text-muted-foreground">
-              Telefonnummer *
+              Numéro de téléphone *
             </Label>
             <div className="relative mt-1">
               <Input
@@ -296,7 +296,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
           
           <div>
             <Label htmlFor="street" className="text-sm font-medium text-muted-foreground">
-              Straße und Hausnummer *
+              Rue et numéro *
             </Label>
             <Input
               id="street"
@@ -312,7 +312,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="zipCode" className="text-sm font-medium text-muted-foreground">
-                PLZ *
+                Code postal *
               </Label>
               <Input
                 id="zipCode"
@@ -328,7 +328,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
             </div>
             <div>
               <Label htmlFor="city" className="text-sm font-medium text-muted-foreground">
-                Stadt *
+                Ville *
               </Label>
               <Input
                 id="city"
@@ -349,7 +349,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
             <CreditCard className="h-5 w-5 text-muted-foreground" />
-            Zahlungsart
+            Mode de paiement
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -363,14 +363,14 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
                   <Label htmlFor="credit-card" className="flex items-center gap-3 cursor-pointer">
                     <CreditCard className="h-5 w-5 text-muted-foreground" />
                     <div className="flex-1">
-                      <div className="font-medium text-foreground">Kreditkarte</div>
+                      <div className="font-medium text-foreground">Carte bancaire</div>
                       <div className="text-sm text-muted-foreground">Visa, Mastercard, American Express</div>
                     </div>
                   </Label>
                 </div>
                 <div className="flex items-center gap-3">
                   <Badge variant="default" className="text-xs font-medium bg-green-100 text-green-800 border-green-200 dark:bg-green-900 dark:text-green-100 dark:border-green-800">
-                    Zahlung nach Lieferung
+                    Paiement après livraison
                   </Badge>
                   <PaymentIcons />
                 </div>
@@ -382,13 +382,13 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
             <div className="mt-6 p-4 border border-border rounded-lg bg-muted/20 space-y-4">
               <div>
                 <Label htmlFor="cardholderName" className="text-sm font-medium text-muted-foreground">
-                  Karteninhaber *
+                  Titulaire de la carte *
                 </Label>
                 <div className="relative mt-1">
                   <Input
                     id="cardholderName"
                     type="text"
-                    placeholder="Max Mustermann"
+                    placeholder="Pierre Martin"
                     value={customerInfo.cardholderName}
                     onChange={(e) => handleInputChange('cardholderName', e.target.value)}
                     className="pl-10"
@@ -399,7 +399,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
 
               <div>
                 <Label htmlFor="cardNumber" className="text-sm font-medium text-muted-foreground">
-                  Kreditkartennummer *
+                  Numéro de carte bancaire *
                 </Label>
                 <div className="relative mt-1">
                   <Input
@@ -427,7 +427,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="expiryDate" className="text-sm font-medium text-muted-foreground">
-                    Ablaufdatum *
+                    Date d'expiration *
                   </Label>
                   <div className="relative mt-1">
                     <Input
@@ -491,10 +491,10 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
               <Lock className="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5" />
               <div className="flex-1">
                 <h4 className="font-semibold text-green-900 dark:text-green-100 mb-2">
-                  Sicherheitshinweis zur Zahlung
+                  Information de sécurité du paiement
                 </h4>
                 <p className="text-sm text-green-800 dark:text-green-200 leading-relaxed">
-                  Ihre Kreditkarte wird zunächst nur autorisiert, nicht belastet. Die tatsächliche Abbuchung erfolgt erst nach erfolgreicher Lieferung und Betankung. Sie erhalten eine Bestätigung über die Autorisierung sowie eine separate Benachrichtigung bei der finalen Abbuchung.
+                  Votre carte bancaire sera d'abord uniquement autorisée, non débitée. Le débit effectif n'aura lieu qu'après la livraison et le remplissage réussis. Vous recevrez une confirmation de l'autorisation ainsi qu'une notification séparée lors du débit final.
                 </p>
               </div>
             </div>
@@ -507,7 +507,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         <CardHeader className="pb-3">
           <CardTitle className="text-lg font-semibold flex items-center gap-2 text-foreground">
             <FileText className="h-5 w-5 text-muted-foreground" />
-            AGB & Datenschutz
+            CGV & Confidentialité
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -520,15 +520,15 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
               className="mt-1"
             />
             <Label htmlFor="terms" className="text-sm text-muted-foreground leading-relaxed cursor-pointer">
-              Ich stimme den{' '}
+              J'accepte les{' '}
               <a href="/cgv" target="_blank" className="text-total-blue hover:underline font-medium">
-                Allgemeinen Geschäftsbedingungen
+                Conditions Générales de Vente
               </a>{' '}
-              und der{' '}
+              et la{' '}
               <a href="/politique-confidentialite" target="_blank" className="text-total-blue hover:underline font-medium">
-                Datenschutzerklärung
+                Politique de Confidentialité
               </a>{' '}
-              zu *
+              *
             </Label>
           </div>
         </CardContent>
@@ -542,7 +542,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         className="w-full mb-4 border-dashed border-gray-300 text-gray-600 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400 dark:hover:bg-gray-800"
       >
         <TestTube className="h-4 w-4 mr-2" />
-        Testmodus - Felder ausfüllen
+        Mode test - Remplir les champs
       </Button>
 
       {/* Submit Button */}
@@ -555,12 +555,12 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         {isSubmitting ? (
           <div className="flex items-center gap-2">
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-            Verarbeitung...
+            Traitement en cours...
           </div>
         ) : (
           <div className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5" />
-            Zahlung autorisieren - {totalPrice.toFixed(2)}€
+            Autoriser le paiement - {totalPrice.toFixed(2)}€
           </div>
         )}
       </Button>

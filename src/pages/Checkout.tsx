@@ -29,7 +29,7 @@ const Checkout = () => {
 
     // Validate required parameters
     if (!zipCode || totalPrice === 0) {
-      toast.error('Ungültige Bestelldaten. Bitte starten Sie erneut vom Preisrechner.');
+      toast.error('Données de commande invalides. Veuillez recommencer depuis le calculateur de prix.');
       navigate('/');
       return;
     }
@@ -103,8 +103,8 @@ const Checkout = () => {
       
       // Here you would integrate with your payment processor
       // For now, we'll show a success message
-      toast.success('Bestellung erfolgreich übermittelt!', {
-        description: 'Sie erhalten in Kürze eine Bestätigungs-E-Mail.'
+      toast.success('Commande transmise avec succès !', {
+        description: 'Vous recevrez bientôt un e-mail de confirmation.'
       });
       
       // Redirect to success page or home
@@ -117,7 +117,7 @@ const Checkout = () => {
       
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Fehler bei der Bestellung. Bitte versuchen Sie es erneut.');
+      toast.error('Erreur lors de la commande. Veuillez réessayer.');
     } finally {
       setIsSubmitting(false);
     }
@@ -133,7 +133,7 @@ const Checkout = () => {
         <Header />
         <main className="container mx-auto px-4 py-8">
           <div className="text-center">
-            <p className="text-muted-foreground">Bestelldaten werden geladen...</p>
+            <p className="text-muted-foreground">Chargement des données de commande...</p>
           </div>
         </main>
         <Footer />
@@ -154,15 +154,15 @@ const Checkout = () => {
             className="text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Zurück zum Preisrechner
+            Retour au calculateur de prix
           </Button>
         </div>
 
         {/* Page Title */}
         <div className="max-w-7xl mx-auto mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Checkout</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Finaliser la commande</h1>
           <p className="text-muted-foreground">
-            Vervollständigen Sie Ihre Bestellung für {orderSummary.quantity.toLocaleString()}L {orderSummary.product.displayName}
+            Finalisez votre commande pour {orderSummary.quantity.toLocaleString()}L {orderSummary.product.displayName}
           </p>
         </div>
 
