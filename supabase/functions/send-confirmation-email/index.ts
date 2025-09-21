@@ -169,30 +169,30 @@ function generateEmailHtml(orderData: any): string {
                         
                         <!-- Detail Rows -->
                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                          <tr>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Produkt:</td>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.product.displayName}</td>
-                          </tr>
-                          <tr>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Menge:</td>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.quantity} Liter</td>
-                          </tr>
-                          <tr>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Preis pro Liter:</td>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.product.pricePerLiter.toFixed(2)} €</td>
-                          </tr>
-                          <tr>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Zwischensumme:</td>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.subtotal.toFixed(2)} €</td>
-                          </tr>
-                          <tr>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Liefergebühr:</td>
-                            <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.deliveryFee > 0 ? `${orderData.deliveryFee.toFixed(2)} €` : 'Kostenlos'}</td>
-                          </tr>
-                          <tr>
-                            <td style="padding: 8px 0; font-weight: bold; font-size: 16px; color: #333333; font-family: Arial, sans-serif;">Gesamtpreis (inkl. MwSt.):</td>
-                            <td style="padding: 8px 0; text-align: right; font-weight: bold; font-size: 16px; color: #333333; font-family: Arial, sans-serif;">${orderData.totalPrice.toFixed(2)} €</td>
-                          </tr>
+                           <tr>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Produit :</td>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.product.displayName}</td>
+                           </tr>
+                           <tr>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Quantité :</td>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.quantity} Litres</td>
+                           </tr>
+                           <tr>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Prix par litre :</td>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.product.pricePerLiter.toFixed(2)} €</td>
+                           </tr>
+                           <tr>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Sous-total :</td>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.subtotal.toFixed(2)} €</td>
+                           </tr>
+                           <tr>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">Frais de livraison :</td>
+                             <td style="padding: 8px 0; border-bottom: 1px solid #e5e7eb; text-align: right; font-size: 14px; color: #333333; font-family: Arial, sans-serif;">${orderData.deliveryFee > 0 ? `${orderData.deliveryFee.toFixed(2)} €` : 'Gratuit'}</td>
+                           </tr>
+                           <tr>
+                             <td style="padding: 8px 0; font-weight: bold; font-size: 16px; color: #333333; font-family: Arial, sans-serif;">Prix total (TTC) :</td>
+                             <td style="padding: 8px 0; text-align: right; font-weight: bold; font-size: 16px; color: #333333; font-family: Arial, sans-serif;">${orderData.totalPrice.toFixed(2)} €</td>
+                           </tr>
                         </table>
                       </td>
                     </tr>
