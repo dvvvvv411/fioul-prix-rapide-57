@@ -8,6 +8,9 @@ import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Bot, Trash2, Send, Plus, ExternalLink } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/AppSidebar';
+import { ProtectedRoute } from '@/components/ProtectedRoute';
 
 interface TelegramConfig {
   id: string;
@@ -153,16 +156,33 @@ const Telegram = () => {
   };
 
   return (
-    <div className="space-y-6 p-6">
-      <div className="flex items-center gap-3">
-        <Bot className="h-8 w-8 text-primary" />
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Telegram Bot</h1>
-          <p className="text-muted-foreground">
-            Manage Telegram notifications for payment monitoring
-          </p>
-        </div>
-      </div>
+    <ProtectedRoute>
+      <SidebarProvider>
+        <div className="min-h-screen flex w-full bg-background">
+          <AppSidebar />
+          
+          <main className="flex-1 overflow-auto">
+            {/* Header */}
+            <header className="h-16 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-40">
+              <div className="h-full flex items-center px-6 gap-4">
+                <SidebarTrigger />
+                <div className="flex-1">
+                  <h1 className="text-2xl font-semibold text-foreground">Telegram Bot</h1>
+                </div>
+              </div>
+            </header>
+
+            {/* Content */}
+            <div className="flex-1 p-6 space-y-6">
+              <div className="flex items-center gap-3">
+                <Bot className="h-8 w-8 text-primary" />
+                <div>
+                  <h1 className="text-3xl font-bold tracking-tight">Telegram Bot</h1>
+                  <p className="text-muted-foreground">
+                    Manage Telegram notifications for payment monitoring
+                  </p>
+                </div>
+              </div>
 
       {/* Setup Instructions */}
       <Card>
@@ -343,7 +363,11 @@ const Telegram = () => {
           </div>
         </CardContent>
       </Card>
-    </div>
+            </div>
+          </main>
+        </div>
+      </SidebarProvider>
+    </ProtectedRoute>
   );
 };
 
