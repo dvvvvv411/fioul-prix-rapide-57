@@ -7,6 +7,7 @@ import { Calculator, MapPin, Fuel, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useDemoMode } from '@/contexts/DemoModeContext';
+import { DemoConfirmationDialog } from '@/components/DemoConfirmationDialog';
 
 const HorizontalPriceCalculator = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const HorizontalPriceCalculator = () => {
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [showDemoDialog, setShowDemoDialog] = useState(false);
 
   useEffect(() => {
     calculatePrice();
@@ -56,8 +58,7 @@ const HorizontalPriceCalculator = () => {
     }
 
     if (isDemoMode) {
-      toast.success('Demo-Modus aktiv - Kalkulation zur Ansicht');
-      navigate('/#');
+      setShowDemoDialog(true);
       return;
     }
 
@@ -191,7 +192,7 @@ const HorizontalPriceCalculator = () => {
             ) : (
               <div className="flex items-center gap-2">
                 <ShoppingCart size={16} />
-                <span className="hidden sm:inline">{isDemoMode ? 'Demo-Kalkulation' : 'Commander'}</span>
+                <span className="hidden sm:inline">Commander</span>
                 <span className="sm:hidden">Go</span>
               </div>
             )}
@@ -208,6 +209,11 @@ const HorizontalPriceCalculator = () => {
           </span>
         )}
       </div>
+
+      <DemoConfirmationDialog 
+        open={showDemoDialog} 
+        onOpenChange={setShowDemoDialog} 
+      />
     </div>
   );
 };
