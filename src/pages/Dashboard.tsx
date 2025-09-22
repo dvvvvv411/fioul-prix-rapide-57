@@ -129,9 +129,9 @@ const Dashboard = () => {
                         <Settings className="h-8 w-8 text-primary mb-2" />
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="font-medium text-sm">Demo-Modus</h3>
+                            <h3 className="font-medium text-sm">Globaler Demo-Modus</h3>
                             <p className="text-xs text-muted-foreground">
-                              {isDemoMode ? 'Aktiviert' : 'Deaktiviert'}
+                              Für alle Website-Besucher {isDemoMode ? 'aktiviert' : 'deaktiviert'}
                             </p>
                           </div>
                           <Switch
