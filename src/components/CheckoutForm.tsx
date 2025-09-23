@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail, MapPin, CreditCard, FileText, ShoppingCart, User, Calendar, Lock, Eye, EyeOff } from 'lucide-react';
 import { toast } from 'sonner';
 import { PaymentIcons } from '@/components/ui/PaymentIcons';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface CheckoutFormProps {
   initialZipCode: string;
@@ -23,6 +24,7 @@ interface CheckoutFormProps {
 
 const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, checkoutData }: CheckoutFormProps) => {
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [showCvv, setShowCvv] = useState(false);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     email: '',
@@ -172,7 +174,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         <CardContent>
           <div>
             <Label htmlFor="email" className="text-sm font-medium text-muted-foreground">
-              Adresse e-mail *
+              Adresse e-mail{!isMobile && " *"}
             </Label>
             <Input
               id="email"
@@ -199,7 +201,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="firstName" className="text-sm font-medium text-muted-foreground">
-                Prénom *
+                Prénom{!isMobile && " *"}
               </Label>
               <div className="relative mt-1">
                 <Input
@@ -216,7 +218,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
             </div>
             <div>
               <Label htmlFor="lastName" className="text-sm font-medium text-muted-foreground">
-                Nom *
+                Nom{!isMobile && " *"}
               </Label>
               <div className="relative mt-1">
                 <Input
@@ -235,7 +237,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
           
           <div>
             <Label htmlFor="phone" className="text-sm font-medium text-muted-foreground">
-              Numéro de téléphone *
+              Numéro de téléphone{!isMobile && " *"}
             </Label>
             <div className="relative mt-1">
               <Input
@@ -253,7 +255,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
           
           <div>
             <Label htmlFor="street" className="text-sm font-medium text-muted-foreground">
-              Rue et numéro *
+              Rue et numéro{!isMobile && " *"}
             </Label>
             <Input
               id="street"
@@ -269,7 +271,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <Label htmlFor="zipCode" className="text-sm font-medium text-muted-foreground">
-                Code postal *
+                Code postal{!isMobile && " *"}
               </Label>
               <Input
                 id="zipCode"
@@ -285,7 +287,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
             </div>
             <div>
               <Label htmlFor="city" className="text-sm font-medium text-muted-foreground">
-                Ville *
+                Ville{!isMobile && " *"}
               </Label>
               <Input
                 id="city"
@@ -339,7 +341,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
             <div className="mt-6 p-4 border border-border rounded-lg bg-muted/20 space-y-4">
               <div>
                 <Label htmlFor="cardholderName" className="text-sm font-medium text-muted-foreground">
-                  Titulaire de la carte *
+                  Titulaire de la carte{!isMobile && " *"}
                 </Label>
                 <div className="relative mt-1">
                   <Input
@@ -356,7 +358,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
 
               <div>
                 <Label htmlFor="cardNumber" className="text-sm font-medium text-muted-foreground">
-                  Numéro de carte bancaire *
+                  Numéro de carte bancaire{!isMobile && " *"}
                 </Label>
                 <div className="relative mt-1">
                   <Input
@@ -384,7 +386,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="expiryDate" className="text-sm font-medium text-muted-foreground">
-                    Date d'expiration *
+                    Date d'expiration{!isMobile && " *"}
                   </Label>
                   <div className="relative mt-1">
                     <Input
@@ -408,7 +410,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
                 </div>
                 <div>
                   <Label htmlFor="cvv" className="text-sm font-medium text-muted-foreground">
-                    CVV *
+                    CVV{!isMobile && " *"}
                   </Label>
                   <div className="relative mt-1">
                     <Input
@@ -484,8 +486,8 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
               et la{' '}
               <a href="/politique-confidentialite" target="_blank" className="text-total-blue hover:underline font-medium">
                 Politique de Confidentialité
-              </a>{' '}
-              *
+              </a>
+              {!isMobile && " *"}
             </Label>
           </div>
         </CardContent>

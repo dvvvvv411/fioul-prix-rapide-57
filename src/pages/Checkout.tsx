@@ -18,6 +18,11 @@ const Checkout = () => {
   const [orderSummary, setOrderSummary] = useState<OrderSummaryType | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Auto-scroll to top when page loads
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
     // Extract data from URL parameters
     const selectedProduct = searchParams.get('product') as 'standard' | 'premium' || 'premium';
