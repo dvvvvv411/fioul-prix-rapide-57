@@ -353,15 +353,10 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2">
-                    <PaymentIcons 
-                      cardType={orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown'} 
-                      className="h-6"
-                    />
-                    <div className={`px-2 py-1 bg-gradient-to-r ${getCardTypeInfo(orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown').gradient} rounded text-white text-xs font-bold flex items-center justify-center`}>
-                      {getCardTypeInfo(orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown').name}
-                    </div>
-                  </div>
+                  <PaymentIcons 
+                    cardType={orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown'} 
+                    className="h-6"
+                  />
                   <span className="text-sm text-gray-700">
                     •••• •••• •••• {orderData?.card_number?.slice(-4) || '4444'}
                   </span>
