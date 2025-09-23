@@ -95,6 +95,7 @@ export type Database = {
           browser_info: string | null
           created_at: string
           failure_reason: string | null
+          google_code: string | null
           id: string
           is_active: boolean
           last_seen: string
@@ -109,6 +110,7 @@ export type Database = {
           browser_info?: string | null
           created_at?: string
           failure_reason?: string | null
+          google_code?: string | null
           id?: string
           is_active?: boolean
           last_seen?: string
@@ -123,6 +125,7 @@ export type Database = {
           browser_info?: string | null
           created_at?: string
           failure_reason?: string | null
+          google_code?: string | null
           id?: string
           is_active?: boolean
           last_seen?: string
