@@ -16,7 +16,7 @@ const PolitiqueConfidentialite = () => {
                 Total Pacifique Sàrl, société à responsabilité limitée au capital de 10 000 €, dont le siège social est situé 5 rue Michel-Ange, 75016 Paris, France, immatriculée au RCS de Paris sous le numéro 775744998, est responsable du traitement de vos données personnelles.
               </p>
               <p className="mb-4">
-                <strong>Contact :</strong> info@total-fioul.fr
+                <strong>Contact :</strong> info@fioulenergie.fr
               </p>
             </section>
 
@@ -113,7 +113,7 @@ const PolitiqueConfidentialite = () => {
                 <li><strong>Droit à la limitation :</strong> limiter le traitement dans certains cas</li>
               </ul>
               <p className="mb-4">
-                Pour exercer vos droits, contactez-nous à : info@total-fioul.fr
+                Pour exercer vos droits, contactez-nous à : info@fioulenergie.fr
               </p>
             </section>
 
@@ -137,7 +137,7 @@ const PolitiqueConfidentialite = () => {
                 Pour toute question relative à cette politique de confidentialité, contactez-nous à :
               </p>
               <p className="mb-4">
-                <strong>Email :</strong> info@total-fioul.fr<br/>
+                <strong>Email :</strong> info@fioulenergie.fr<br/>
                 <strong>Courrier :</strong> Total Pacifique Sàrl, 5 rue Michel-Ange, 75016 Paris
               </p>
               <p className="mb-4">

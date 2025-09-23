@@ -171,7 +171,7 @@ const PolitiqueCookies = () => {
                 Pour toute question concernant notre utilisation des cookies, contactez-nous :
               </p>
               <div className="bg-gray-50 p-4 rounded-lg mb-4">
-                <p><strong>Email :</strong> info@total-fioul.fr</p>
+                <p><strong>Email :</strong> info@fioulenergie.fr</p>
                 <p><strong>Adresse :</strong> Total Pacifique Sàrl, 5 rue Michel-Ange, 75016 Paris</p>
               </div>
             </section>

@@ -114,7 +114,7 @@ function generateEmailHtml(orderData: any): string {
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
                     <tr>
                       <td style="text-align: center;">
-                        <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Total Fioul - Confirmation de commande</h1>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Fioul Énergie - Confirmation de commande</h1>
                         <p style="margin: 8px 0 0 0; color: #ffffff; font-size: 16px; font-family: Arial, sans-serif;">Commande #${orderData.orderNumber}</p>
                       </td>
                     </tr>
@@ -299,7 +299,7 @@ function generateEmailHtml(orderData: any): string {
                               <strong>Total Pacifique Sàrl</strong><br>
                               5 rue Michel-Ange, 75016 Paris, France<br>
                               SIREN: 775744998 | SIRET: 77574499800037<br>
-                              E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
+                              E-Mail: info@fioulenergie.fr | Website: https://fioulenergie.fr
                             </td>
                           </tr>
                         </table>

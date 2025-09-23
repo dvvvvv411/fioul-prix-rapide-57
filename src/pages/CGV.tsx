@@ -36,7 +36,7 @@ const CGV = () => {
                 La commande peut être passée :
               </p>
               <ul className="list-disc pl-6 mb-4">
-                <li>Par email à info@total-fioul.fr</li>
+                <li>Par email à info@fioulenergie.fr</li>
                 <li>Via le formulaire de contact sur notre site web</li>
               </ul>
               <p className="mb-4">

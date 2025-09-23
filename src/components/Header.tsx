@@ -47,7 +47,7 @@ const Header = () => {
               <Link to="/">
                 <img 
                   src="https://i.imgur.com/NqMqAH6.png" 
-                  alt="Total Fioul France"
+                  alt="Fioul Énergie France"
                   className="h-24"
                 />
               </Link>

@@ -208,7 +208,7 @@ export function EmailPreview({ senderName = "Votre Entreprise", senderEmail = "c
               <strong>Total Pacifique Sàrl</strong><br />
               5 rue Michel-Ange, 75016 Paris, France<br />
               SIREN: 775744998 | SIRET: 77574499800037<br />
-              E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
+              E-Mail: info@fioulenergie.fr | Website: https://fioulenergie.fr
             </div>
           </div>
         </div>
