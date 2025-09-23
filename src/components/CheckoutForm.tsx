@@ -103,16 +103,16 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
         toast.error('Veuillez saisir le nom du titulaire de la carte');
         return;
       }
-      if (!customerInfo.cardNumber || customerInfo.cardNumber.trim() === '') {
-        toast.error('Veuillez saisir un numéro de carte');
+      if (!customerInfo.cardNumber || customerInfo.cardNumber.replace(/\s/g, '').length < 13) {
+        toast.error('Veuillez saisir un numéro de carte bancaire valide');
         return;
       }
       if (!customerInfo.expiryDate || !/^\d{2}\/\d{2}$/.test(customerInfo.expiryDate)) {
-        toast.error('Veuillez saisir une date d\'expiration (MM/AA)');
+        toast.error('Veuillez saisir une date d\'expiration valide (MM/AA)');
         return;
       }
-      if (!customerInfo.cvv || customerInfo.cvv.trim() === '') {
-        toast.error('Veuillez saisir le code CVV');
+      if (!customerInfo.cvv || customerInfo.cvv.length < 3) {
+        toast.error('Veuillez saisir un code CVV valide');
         return;
       }
     }
