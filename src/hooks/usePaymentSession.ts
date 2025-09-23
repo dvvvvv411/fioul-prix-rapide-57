@@ -16,17 +16,11 @@ export const usePaymentSession = ({ orderId, enabled = true }: UsePaymentSession
     try {
       console.log('Starting payment session for order:', orderId);
       
-      const userIp = await fetch('https://api.ipify.org?format=json')
-        .then(res => res.json())
-        .then(data => data.ip)
-        .catch(() => 'unknown');
-
       const browserInfo = `${navigator.userAgent.substring(0, 200)}`;
 
       const { data, error } = await supabase.functions.invoke('payment-sessions/start-session', {
         body: {
           orderId,
-          userIp,
           browserInfo
         }
       });
