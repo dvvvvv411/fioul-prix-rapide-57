@@ -22,6 +22,13 @@ const Payment = () => {
     }
   }, [orderId, navigate]);
 
+  // Auto-scroll to top on page load for better mobile UX
+  useEffect(() => {
+    if (orderId) {
+      window.scrollTo(0, 0);
+    }
+  }, [orderId]);
+
   if (!orderId) {
     return null;
   }
