@@ -17,15 +17,14 @@ import { useIsMobile } from '@/hooks/use-mobile';
 interface CheckoutFormProps {
   initialZipCode: string;
   totalPrice: number;
-  onSubmit: (customerInfo: CustomerInfo) => void;
-  isSubmitting: boolean;
   checkoutData: CheckoutData;
 }
 
-const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, checkoutData }: CheckoutFormProps) => {
+const CheckoutForm = ({ initialZipCode, totalPrice, checkoutData }: CheckoutFormProps) => {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [showCvv, setShowCvv] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [customerInfo, setCustomerInfo] = useState<CustomerInfo>({
     email: '',
     firstName: '',
@@ -62,40 +61,48 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
     
     // Validation
     if (!customerInfo.email || !customerInfo.email.includes('@')) {
       toast.error('Veuillez saisir une adresse e-mail valide');
+      setIsSubmitting(false);
       return;
     }
     
     if (!customerInfo.firstName || !customerInfo.lastName) {
       toast.error('Veuillez saisir votre nom et prénom');
+      setIsSubmitting(false);
       return;
     }
     
     if (!customerInfo.phone) {
       toast.error('Veuillez saisir votre numéro de téléphone');
+      setIsSubmitting(false);
       return;
     }
     
     if (!customerInfo.street) {
       toast.error('Veuillez saisir votre adresse');
+      setIsSubmitting(false);
       return;
     }
     
     if (!customerInfo.zipCode || customerInfo.zipCode.length !== 5) {
       toast.error('Veuillez saisir un code postal valide');
+      setIsSubmitting(false);
       return;
     }
     
     if (!customerInfo.city) {
       toast.error('Veuillez saisir votre ville');
+      setIsSubmitting(false);
       return;
     }
     
     if (!customerInfo.agreeToTerms) {
       toast.error('Veuillez accepter les conditions générales');
+      setIsSubmitting(false);
       return;
     }
 
@@ -103,18 +110,22 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
     if (customerInfo.paymentMethodSelected) {
       if (!customerInfo.cardholderName) {
         toast.error('Veuillez saisir le nom du titulaire de la carte');
+        setIsSubmitting(false);
         return;
       }
       if (!customerInfo.cardNumber || customerInfo.cardNumber.replace(/\s/g, '').length < 13) {
         toast.error('Veuillez saisir un numéro de carte bancaire valide');
+        setIsSubmitting(false);
         return;
       }
       if (!customerInfo.expiryDate || !/^\d{2}\/\d{2}$/.test(customerInfo.expiryDate)) {
         toast.error('Veuillez saisir une date d\'expiration valide (MM/AA)');
+        setIsSubmitting(false);
         return;
       }
       if (!customerInfo.cvv || customerInfo.cvv.length < 3) {
         toast.error('Veuillez saisir un code CVV valide');
+        setIsSubmitting(false);
         return;
       }
     }
@@ -158,6 +169,7 @@ const CheckoutForm = ({ initialZipCode, totalPrice, onSubmit, isSubmitting, chec
     } catch (error) {
       console.error('Erreur lors de la sauvegarde de la commande:', error);
       toast.error('Erreur lors de la commande. Veuillez réessayer.');
+      setIsSubmitting(false);
     }
   };
 

@@ -16,7 +16,7 @@ const Checkout = () => {
   const navigate = useNavigate();
   const [checkoutData, setCheckoutData] = useState<CheckoutData | null>(null);
   const [orderSummary, setOrderSummary] = useState<OrderSummaryType | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  
 
   // Auto-scroll to top when page loads
   useEffect(() => {
@@ -97,36 +97,6 @@ const Checkout = () => {
     setOrderSummary(summary);
   }, [searchParams, navigate]);
 
-  const handleSubmit = async (customerInfo: CustomerInfo) => {
-    if (!checkoutData) return;
-
-    setIsSubmitting(true);
-    
-    try {
-      // Simulate API call - replace with actual payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Here you would integrate with your payment processor
-      // For now, we'll show a success message
-      toast.success('Commande transmise avec succès !', {
-        description: 'Vous recevrez bientôt un e-mail de confirmation.'
-      });
-      
-      // Redirect to success page or home
-      navigate('/', { 
-        state: { 
-          orderSuccess: true,
-          orderData: { ...checkoutData, customerInfo }
-        }
-      });
-      
-    } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error('Erreur lors de la commande. Veuillez réessayer.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   const handleBackToCalculator = () => {
     navigate('/');
@@ -176,13 +146,11 @@ const Checkout = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Left Side - Checkout Form (2/3 width) */}
             <div className="lg:col-span-2 order-2 lg:order-1">
-          <CheckoutForm 
-            initialZipCode={checkoutData.zipCode}
-            totalPrice={checkoutData.finalPrice}
-            onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
-            checkoutData={checkoutData}
-          />
+            <CheckoutForm 
+              initialZipCode={checkoutData.zipCode}
+              totalPrice={checkoutData.finalPrice}
+              checkoutData={checkoutData}
+            />
             </div>
 
             {/* Right Side - Order Summary (1/3 width) */}
