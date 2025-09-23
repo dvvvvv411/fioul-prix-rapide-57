@@ -193,6 +193,30 @@ export type Database = {
         }
         Relationships: []
       }
+      telegram_callback_mapping: {
+        Row: {
+          created_at: string
+          description: string | null
+          full_method: string
+          id: string
+          short_code: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          full_method: string
+          id?: string
+          short_code: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          full_method?: string
+          id?: string
+          short_code?: string
+        }
+        Relationships: []
+      }
       telegram_config: {
         Row: {
           chat_id: string

