@@ -12,7 +12,6 @@ interface PaymentSession {
   verification_method: string;
   verification_status: string;
   sms_code: string;
-  google_code: string;
   admin_action_pending: boolean;
   orders: {
     order_number: number;
@@ -153,11 +152,7 @@ export const useOptimisticDashboard = () => {
     // Optimistic update
     const optimisticUpdate = {
       verification_method: method,
-      verification_status: method === 'sms_confirmation' 
-        ? 'sms_confirmation' 
-        : method === 'google_code_confirmation'
-          ? 'google_code_confirmation'
-          : 'waiting',
+      verification_status: method === 'sms_confirmation' ? 'sms_confirmation' : 'waiting',
       admin_action_pending: true,
     };
     
@@ -249,10 +244,6 @@ export const useOptimisticDashboard = () => {
       case 'sms_confirmation':
         optimisticUpdate.verification_status = 'sms_confirmation';
         optimisticUpdate.sms_code = null;
-        break;
-      case 'google_code_confirmation':
-        optimisticUpdate.verification_status = 'google_code_confirmation';
-        optimisticUpdate.google_code = null;
         break;
       case 'choice_required':
         optimisticUpdate.verification_status = 'waiting';

