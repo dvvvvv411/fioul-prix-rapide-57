@@ -6,6 +6,7 @@ interface PaymentSessionData {
   verification_method: string;
   verification_status: string;
   sms_code?: string;
+  google_code?: string;
   admin_action_pending?: boolean;
   failure_reason?: string;
 }
