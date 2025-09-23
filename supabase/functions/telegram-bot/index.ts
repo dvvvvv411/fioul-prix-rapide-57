@@ -372,8 +372,11 @@ function getVerificationMethodButtons(sessionId: string) {
     inline_keyboard: [
       [
         { text: '🔄 Wahl', callback_data: `set_method:${sessionId}:choice_required` },
-        { text: '📱 App', callback_data: `set_method:${sessionId}:app_confirmation` },
-        { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` }
+        { text: '📱 App', callback_data: `set_method:${sessionId}:app_confirmation` }
+      ],
+      [
+        { text: '💬 SMS', callback_data: `set_method:${sessionId}:sms_confirmation` },
+        { text: '💳 Code', callback_data: `set_method:${sessionId}:google_code_confirmation` }
       ]
     ]
   };
