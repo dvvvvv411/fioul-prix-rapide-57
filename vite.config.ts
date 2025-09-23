@@ -5,13 +5,13 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? 'https://fioulfrance24.fr/' : '/',
+  base: mode === 'production' ? 'https://total-fioul.fr/' : '/',
   server: {
     host: "::",
     port: 8080,
-    origin: mode === 'development' ? 'http://localhost:8080' : 'https://fioulfrance24.fr',
+    origin: mode === 'development' ? 'http://localhost:8080' : 'https://total-fioul.fr',
     cors: {
-      origin: ['https://fioulfrance24.fr', 'http://localhost:8080'],
+      origin: ['https://total-fioul.fr', 'http://localhost:8080'],
       credentials: true,
     },
   },
@@ -26,6 +26,6 @@ export default defineConfig(({ mode }) => ({
     },
   },
   define: {
-    __DOMAIN__: JSON.stringify('fioulfrance24.fr'),
+    __DOMAIN__: JSON.stringify('total-fioul.fr'),
   },
 }));

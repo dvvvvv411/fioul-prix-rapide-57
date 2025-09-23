@@ -5,27 +5,27 @@ import { Star, Quote } from 'lucide-react';
 const Testimonials = () => {
   const testimonials = [
     {
-      name: "Sophie Moreau",
-      location: "Bordeaux",
-      text: "Acheminement à l'heure et prestation irréprochable. Je préconise fortement Fioul 24 !",
+      name: "Marie Dubois",
+      location: "Lyon",
+      text: "Livraison ponctuelle et service impeccable. Je recommande vivement Total Fioul France !",
       rating: 5
     },
     {
-      name: "Julien Rousseau",
-      location: "Lille", 
-      text: "Tarifs avantageux et combustible d'excellence. La procédure d'achat en ligne est très claire.",
+      name: "Pierre Martin",
+      location: "Marseille", 
+      text: "Prix compétitifs et fioul de qualité. La commande en ligne est très simple.",
       rating: 5
     },
     {
-      name: "Amélie Bertrand",
-      location: "Strasbourg",
-      text: "Achat facile et transport express. Assistance clientèle très disponible pour toute interrogation.",
+      name: "Sophie Laurent",
+      location: "Toulouse",
+      text: "Commande simple et livraison rapide. Service client très réactif en cas de question.",
       rating: 5
     },
     {
-      name: "François Mercier",
-      location: "Rennes",
-      text: "Prestation formidable ! L'outil de calcul tarifaire est très utile et transparent.",
+      name: "Jean-Michel Bernard",
+      location: "Nantes",
+      text: "Excellent service ! Le calculateur de prix est très pratique et transparent.",
       rating: 5
     }
   ];
@@ -43,11 +43,11 @@ const Testimonials = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             <span className="bg-gradient-to-r from-orange-600 via-red-500 to-red-600 bg-clip-text text-transparent">
-              Avis de nos Clients
+              Témoignages Clients
             </span>
           </h2>
           <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Ils nous accordent leur confiance pour leur combustible
+            Ils nous font confiance pour leur fioul
           </p>
           
           {/* Modern Trust Badge */}
@@ -60,7 +60,7 @@ const Testimonials = () => {
             <div className="h-6 w-px bg-gray-300"></div>
             <div className="text-left">
               <div className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent">4.9/5</div>
-              <div className="text-sm text-gray-600">sur 1,247 évaluations</div>
+              <div className="text-sm text-gray-600">sur 1,247 avis</div>
             </div>
           </div>
         </div>

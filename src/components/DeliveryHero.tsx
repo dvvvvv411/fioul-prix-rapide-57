@@ -35,7 +35,7 @@ const DeliveryHero = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-sm">
               <Truck size={16} className="text-white" />
             </div>
-            <span className="text-sm font-semibold text-gray-700">Acheminement Spécialisé</span>
+            <span className="text-sm font-semibold text-gray-700">Livraison Professionnelle</span>
             <ChevronRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
@@ -44,16 +44,16 @@ const DeliveryHero = () => {
         <div className="text-center mb-12 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-              Acheminement express
+              Livraison rapide
             </span>
             <span className="block bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mt-2">
-              sur tout le territoire
+              partout en France
             </span>
           </h1>
           
-           <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            Service de transport expert avec géolocalisation en direct. 
-            Transport offert dès 2000L dans toute la France hexagonale
+          <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            Service de livraison professionnel avec suivi GPS en temps réel. 
+            Livraison gratuite dès 2000L dans toute la France métropolitaine
           </p>
 
           {/* Animated Trust Indicators */}
@@ -63,7 +63,7 @@ const DeliveryHero = () => {
                 <Truck size={20} className="text-green-600" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Transport offert</div>
+                <div className="text-sm font-semibold text-gray-900">Livraison gratuite</div>
                 <div className="text-xs text-gray-500">dès 2000L</div>
               </div>
             </div>
@@ -72,7 +72,7 @@ const DeliveryHero = () => {
                 <Clock size={20} className="text-blue-600" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Acheminement express</div>
+                <div className="text-sm font-semibold text-gray-900">Livraison rapide</div>
                 <div className="text-xs text-gray-500">48-72h</div>
               </div>
             </div>
@@ -81,8 +81,8 @@ const DeliveryHero = () => {
                 <MapPin size={20} className="text-amber-600" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Couverture nationale</div>
-                <div className="text-xs text-gray-500">hexagonale</div>
+                <div className="text-sm font-semibold text-gray-900">Toute la France</div>
+                <div className="text-xs text-gray-500">métropolitaine</div>
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@ const DeliveryHero = () => {
               size="lg" 
               className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl group hover:scale-105"
             >
-              Acheter dès maintenant
+              Commander maintenant
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
@@ -103,7 +103,7 @@ const DeliveryHero = () => {
               size="lg" 
               className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 px-8 py-4 text-lg rounded-xl font-semibold transition-all duration-300 hover:scale-105"
             >
-              Nous joindre
+              Nous contacter
             </Button>
           </div>
         </div>

@@ -13,7 +13,7 @@ const CGV = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Article 1 - Objet</h2>
               <p className="mb-4">
-                Les présentes Conditions Générales de Vente (CGV) s'appliquent à toutes les ventes de fioul domestique effectuées par Fuel 2000 Transports Sàrl auprès de particuliers et professionnels sur le territoire français.
+                Les présentes Conditions Générales de Vente (CGV) s'appliquent à toutes les ventes de fioul domestique effectuées par Total Pacifique Sàrl auprès de particuliers et professionnels sur le territoire français.
               </p>
             </section>
 
@@ -36,7 +36,7 @@ const CGV = () => {
                 La commande peut être passée :
               </p>
               <ul className="list-disc pl-6 mb-4">
-                <li>Par email à contact@fioulfrance24.fr</li>
+                <li>Par email à info@total-fioul.fr</li>
                 <li>Via le formulaire de contact sur notre site web</li>
               </ul>
               <p className="mb-4">
@@ -75,7 +75,7 @@ const CGV = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Article 6 - Qualité du produit</h2>
               <p className="mb-4">
-                Fuel 2000 Transports Sàrl s'engage à livrer un fioul domestique conforme aux normes en vigueur (NF EN 14214 pour le biodiesel et NF M15-011 pour le fioul domestique).
+                Total Pacifique Sàrl s'engage à livrer un fioul domestique conforme aux normes en vigueur (NF EN 14214 pour le biodiesel et NF M15-011 pour le fioul domestique).
               </p>
               <p className="mb-4">
                 Toute réclamation concernant la qualité du produit doit être formulée dans les 8 jours suivant la livraison.
@@ -85,7 +85,7 @@ const CGV = () => {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-800 mb-4">Article 7 - Responsabilité</h2>
               <p className="mb-4">
-                La responsabilité de Fuel 2000 Transports Sàrl ne peut être engagée en cas de :
+                La responsabilité de Total Pacifique Sàrl ne peut être engagée en cas de :
               </p>
               <ul className="list-disc pl-6 mb-4">
                 <li>Force majeure ou cas fortuit</li>

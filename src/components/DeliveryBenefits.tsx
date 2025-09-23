@@ -4,24 +4,24 @@ import { Check } from 'lucide-react';
 const DeliveryBenefits = () => {
   const benefits = [
     {
-      title: "Transport offert dès 2000L",
-      description: "Bénéficiez du transport offert pour tout achat à partir de 2000 litres. Un bénéfice économique considérable qui vous permet de réaliser des économies complémentaires sur vos achats de combustible."
+      title: "Livraison gratuite dès 2000L",
+      description: "Profitez de la livraison gratuite pour toute commande à partir de 2000 litres. Un avantage économique significatif qui vous permet de réaliser des économies supplémentaires sur vos achats de fioul."
     },
     {
-      title: "Prestation express et rigoureuse",
-      description: "Nos équipes d'acheminement respectent minutieusement les plages horaires définies. Transport standard sous 48-72h sur tout le territoire hexagonal avec géolocalisation en direct."
+      title: "Service rapide et ponctuel",
+      description: "Nos équipes de livraison respectent scrupuleusement les créneaux horaires convenus. Livraison standard sous 48-72h partout en France métropolitaine avec suivi GPS en temps réel."
     },
     {
-      title: "Transporteurs qualifiés",
-      description: "Notre réseau de transporteurs certifiés dispose de camions-citernes récents et respectueux des standards de sécurité. Conducteurs formés et expérimentés pour un acheminement en totale sûreté."
+      title: "Transporteurs professionnels",
+      description: "Notre réseau de transporteurs agréés dispose de camions-citernes modernes et conformes aux normes de sécurité. Chauffeurs formés et expérimentés pour une livraison en toute sécurité."
     },
     {
-      title: "Surveillance en direct",
-      description: "Observez votre achat depuis la préparation jusqu'à l'acheminement grâce à notre dispositif de géolocalisation perfectionné. Alertes SMS et email pour vous informer à chaque phase."
+      title: "Suivi en temps réel",
+      description: "Suivez votre commande depuis la préparation jusqu'à la livraison grâce à notre système de tracking avancé. Notifications SMS et email pour vous tenir informé à chaque étape."
     },
     {
-      title: "Desserte territoriale intégrale",
-      description: "Nous acheminons sur tout le territoire hexagonal, des métropoles aux espaces ruraux. Notre maillage territorial nous permet d'assurer une prestation d'excellence sur l'ensemble du pays."
+      title: "Couverture nationale complète",
+      description: "Nous livrons partout en France métropolitaine, des grandes villes aux zones rurales. Notre maillage territorial nous permet d'assurer un service de qualité sur l'ensemble du territoire."
     }
   ];
 
@@ -41,11 +41,11 @@ const DeliveryBenefits = () => {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
                 <span className="bg-gradient-to-r from-orange-500 via-red-500 to-red-600 bg-clip-text text-transparent">
-                  Notre prestation
+                  Notre service
                 </span>
                 <br />
                 <span className="text-gray-900">
-                  d'acheminement
+                  de livraison
                 </span>
               </h1>
             </div>
@@ -82,8 +82,8 @@ const DeliveryBenefits = () => {
               {/* Image Container */}
               <div className="relative rounded-2xl overflow-hidden shadow-2xl group">
                 <img 
-                  src="/happy-couple.png"
-                  alt="Véhicule d'acheminement Fioul 24"
+                  src="https://i.imgur.com/oyKCq48.png"
+                  alt="Camion de livraison Total Fioul France"
                   className="w-full h-[500px] lg:h-[600px] object-cover group-hover:scale-105 transition-transform duration-500"
                 />
                 

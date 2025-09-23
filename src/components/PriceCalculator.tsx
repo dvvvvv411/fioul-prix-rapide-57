@@ -8,12 +8,9 @@ import { heizölConfig } from '@/config/heizol';
 import { Truck, Calculator, Gift } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useDemoMode } from '@/contexts/DemoModeContext';
-import { DemoConfirmationDialog } from '@/components/DemoConfirmationDialog';
 
 const PriceCalculator = () => {
   const navigate = useNavigate();
-  const { isDemoMode } = useDemoMode();
   const [selectedProduct, setSelectedProduct] = useState('premium');
   const [quantity, setQuantity] = useState('3000');
   const [zipCode, setZipCode] = useState('');
@@ -21,7 +18,6 @@ const PriceCalculator = () => {
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [showDemoDialog, setShowDemoDialog] = useState(false);
 
   useEffect(() => {
     calculatePrice();
@@ -67,11 +63,6 @@ const PriceCalculator = () => {
 
     if (!zipCode || zipCode.length !== 5) {
       toast.error('Veuillez saisir un code postal valide');
-      return;
-    }
-
-    if (isDemoMode) {
-      setShowDemoDialog(true);
       return;
     }
 
@@ -232,11 +223,6 @@ const PriceCalculator = () => {
         <p className="text-xs text-gray-500 text-center mt-2">
           Prix indicatifs TTC • Commande minimum : {heizölConfig.limits.minLiters.toLocaleString()}L
         </p>
-
-        <DemoConfirmationDialog 
-          open={showDemoDialog} 
-          onOpenChange={setShowDemoDialog} 
-        />
       </CardContent>
     </Card>
   );

@@ -5,33 +5,33 @@ const Advantages = () => {
   const advantages = [
     {
       icon: Truck,
-      title: "Transport offert dès 2000L",
-      description: "Réalisez des économies sur les coûts d'acheminement"
+      title: "Livraison gratuite dès 2000L",
+      description: "Économisez sur les frais de transport"
     },
     {
       icon: Check,
-      title: "Tarifs clairs sans dissimulation",
-      description: "Aucun coût masqué, tout est explicite"
+      title: "Prix transparents sans surprise",
+      description: "Pas de frais cachés, tout est affiché"
     },
     {
       icon: Flame,
-      title: "Acheminement express national",
-      description: "Service territorial d'excellence"
+      title: "Livraison rapide partout en France",
+      description: "Service national de qualité"
     },
     {
       icon: Phone,
-      title: "Assistance clientèle dynamique",
-      description: "Support accessible et expert"
+      title: "Service client réactif",
+      description: "Support disponible et professionnel"
     },
     {
       icon: CreditCard,
-      title: "Règlement protégé",
-      description: "Opérations blindées et sûres"
+      title: "Paiement sécurisé",
+      description: "Transactions protégées et fiables"
     },
     {
       icon: Star,
-      title: "Excellence homologuée",
-      description: "Combustible aux normes hexagonales"
+      title: "Qualité certifiée",
+      description: "Fioul conforme aux normes françaises"
     }
   ];
 
@@ -47,10 +47,10 @@ const Advantages = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Nos Engagements
+            Nos Garanties
           </h2>
           <p className="text-xl text-gray-600">
-            Votre contentement constitue notre préoccupation première
+            Votre satisfaction est notre priorité
           </p>
         </div>
 

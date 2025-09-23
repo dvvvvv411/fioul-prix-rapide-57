@@ -6,12 +6,9 @@ import { heizölConfig } from '@/config/heizol';
 import { Calculator, MapPin, Fuel, ShoppingCart } from 'lucide-react';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useDemoMode } from '@/contexts/DemoModeContext';
-import { DemoConfirmationDialog } from '@/components/DemoConfirmationDialog';
 
 const HorizontalPriceCalculator = () => {
   const navigate = useNavigate();
-  const { isDemoMode } = useDemoMode();
   const [selectedProduct, setSelectedProduct] = useState('premium');
   const [quantity, setQuantity] = useState('3000');
   const [zipCode, setZipCode] = useState('');
@@ -19,7 +16,6 @@ const HorizontalPriceCalculator = () => {
   const [deliveryFee, setDeliveryFee] = useState(0);
   const [finalPrice, setFinalPrice] = useState(0);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [showDemoDialog, setShowDemoDialog] = useState(false);
 
   useEffect(() => {
     calculatePrice();
@@ -54,11 +50,6 @@ const HorizontalPriceCalculator = () => {
 
     if (!zipCode || zipCode.length !== 5) {
       toast.error('Veuillez saisir un code postal valide');
-      return;
-    }
-
-    if (isDemoMode) {
-      setShowDemoDialog(true);
       return;
     }
 
@@ -209,11 +200,6 @@ const HorizontalPriceCalculator = () => {
           </span>
         )}
       </div>
-
-      <DemoConfirmationDialog 
-        open={showDemoDialog} 
-        onOpenChange={setShowDemoDialog} 
-      />
     </div>
   );
 };

@@ -60,7 +60,7 @@ const Auth = () => {
         <Card className="shadow-lg">
           <CardHeader className="text-center space-y-2">
             <div className="flex items-center justify-center mb-4">
-              <div className="text-2xl font-bold text-primary">Fioul 24</div>
+              <div className="text-2xl font-bold text-primary">Total Fioul</div>
             </div>
             <CardTitle className="text-2xl">Willkommen</CardTitle>
             <CardDescription>

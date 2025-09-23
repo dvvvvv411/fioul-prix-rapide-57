@@ -33,7 +33,7 @@ const Hero = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center shadow-sm">
               <Flame size={16} className="text-white" />
             </div>
-            <span className="text-sm font-semibold text-gray-700">Combustible Résidentiel Haut de Gamme</span>
+            <span className="text-sm font-semibold text-gray-700">Fioul Domestique Premium</span>
             <ChevronRight size={16} className="text-gray-400 group-hover:translate-x-1 transition-transform" />
           </div>
         </div>
@@ -42,16 +42,16 @@ const Hero = () => {
         <div className="text-center mb-12 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 bg-clip-text text-transparent">
-              Combustible premium
+              Fioul de qualité
             </span>
             <span className="block bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent mt-2">
-              à votre domicile
+              livré chez vous
             </span>
           </h1>
           
-           <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            Sélectionnez votre fuel domestique Standard ou Premium avec des tarifs clairs 
-            et un transport express dans toute la France
+          <p className="text-xl text-gray-600 mb-10 leading-relaxed max-w-3xl mx-auto font-light animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            Commandez votre fioul Standard ou Premium en ligne avec des prix transparents 
+            et une livraison rapide partout en France
           </p>
 
           {/* Animated Trust Indicators */}
@@ -61,7 +61,7 @@ const Hero = () => {
                 <Truck size={20} className="text-green-600" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Transport offert</div>
+                <div className="text-sm font-semibold text-gray-900">Livraison gratuite</div>
                 <div className="text-xs text-gray-500">dès 2000L</div>
               </div>
             </div>
@@ -70,8 +70,8 @@ const Hero = () => {
                 <Shield size={20} className="text-blue-600" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Tarifs clairs</div>
-                <div className="text-xs text-gray-500">sans frais cachés</div>
+                <div className="text-sm font-semibold text-gray-900">Prix transparents</div>
+                <div className="text-xs text-gray-500">sans surprise</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3 p-4 bg-white/90 backdrop-blur-sm border border-white/50 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 animate-fade-in" style={{ animationDelay: '1s' }}>
@@ -79,8 +79,8 @@ const Hero = () => {
                 <Star size={20} className="text-amber-600" />
               </div>
               <div className="text-left">
-                <div className="text-sm font-semibold text-gray-900">Excellence vérifiée</div>
-                <div className="text-xs text-gray-500">assurée</div>
+                <div className="text-sm font-semibold text-gray-900">Qualité certifiée</div>
+                <div className="text-xs text-gray-500">garantie</div>
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@ const Hero = () => {
               size="lg" 
               className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-semibold px-8 py-4 text-lg shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl group hover:scale-105"
             >
-              Calculer un prix complet
+              Obtenir un devis détaillé
               <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button 
@@ -100,7 +100,7 @@ const Hero = () => {
               size="lg" 
               className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 px-8 py-4 text-lg rounded-xl font-semibold transition-all duration-300 hover:scale-105"
             >
-              Joindre un expert
+              Contacter un conseiller
             </Button>
           </div>
         </div>

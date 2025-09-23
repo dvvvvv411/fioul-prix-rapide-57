@@ -5,19 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDemoMode } from '@/contexts/DemoModeContext';
-import { BarChart3, Package, TrendingUp, Users, Settings } from 'lucide-react';
-import { Switch } from '@/components/ui/switch';
-import { toast } from 'sonner';
+import { BarChart3, Package, TrendingUp, Users } from 'lucide-react';
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const { isDemoMode, setDemoMode } = useDemoMode();
-
-  const handleDemoModeToggle = (enabled: boolean) => {
-    setDemoMode(enabled);
-    toast.success(enabled ? 'Demo-Modus aktiviert' : 'Demo-Modus deaktiviert');
-  };
 
   const stats = [
     {
@@ -124,22 +115,6 @@ const Dashboard = () => {
                         <BarChart3 className="h-8 w-8 text-primary mb-2" />
                         <h3 className="font-medium text-sm">Preise vergleichen</h3>
                         <p className="text-xs text-muted-foreground">Aktuelle Preise</p>
-                      </div>
-                      <div className="p-4 border border-border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
-                        <Settings className="h-8 w-8 text-primary mb-2" />
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="font-medium text-sm">Globaler Demo-Modus</h3>
-                            <p className="text-xs text-muted-foreground">
-                              Für alle Website-Besucher {isDemoMode ? 'aktiviert' : 'deaktiviert'}
-                            </p>
-                          </div>
-                          <Switch
-                            checked={isDemoMode}
-                            onCheckedChange={handleDemoModeToggle}
-                            className="ml-2"
-                          />
-                        </div>
                       </div>
                     </div>
                   </CardContent>

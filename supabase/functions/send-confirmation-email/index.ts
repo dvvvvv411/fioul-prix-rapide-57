@@ -112,12 +112,12 @@ function generateEmailHtml(orderData: any): string {
               <tr>
                 <td style="background-color: #ea580c; color: #ffffff; padding: 32px 24px; text-align: center;">
                   <table cellpadding="0" cellspacing="0" border="0" width="100%">
-                      <tr>
-                        <td style="text-align: center;">
-                          <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Fioul 24 - Confirmation de commande</h1>
-                          <p style="margin: 8px 0 0 0; color: #ffffff; font-size: 16px; font-family: Arial, sans-serif;">Commande #${orderData.orderNumber}</p>
-                        </td>
-                      </tr>
+                    <tr>
+                      <td style="text-align: center;">
+                        <h1 style="margin: 0; font-size: 24px; font-weight: bold; color: #ffffff; font-family: Arial, sans-serif;">Total Fioul - Confirmation de commande</h1>
+                        <p style="margin: 8px 0 0 0; color: #ffffff; font-size: 16px; font-family: Arial, sans-serif;">Commande #${orderData.orderNumber}</p>
+                      </td>
+                    </tr>
                   </table>
                 </td>
               </tr>
@@ -296,10 +296,10 @@ function generateEmailHtml(orderData: any): string {
                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                           <tr>
                             <td style="font-size: 12px; color: #6b7280; font-family: Arial, sans-serif; line-height: 1.5;">
-                               <strong>Fuel 2000 Transports Sàrl</strong><br>
-                               23 rue de la Porte d'Aubervilliers, 75018 Paris, France<br>
-                               SIREN: 500830567 | SIRET: 50083056700011<br>
-                               E-Mail: contact@fioulfrance24.fr | Website: https://fioulfrance24.fr
+                              <strong>Total Pacifique Sàrl</strong><br>
+                              5 rue Michel-Ange, 75016 Paris, France<br>
+                              SIREN: 775744998 | SIRET: 77574499800037<br>
+                              E-Mail: info@total-fioul.fr | Website: https://total-fioul.fr
                             </td>
                           </tr>
                         </table>

@@ -27,7 +27,7 @@ const Header = () => {
     <>
       {/* Promotional Banner */}
       <div className="bg-total-red text-white py-2 px-4 text-center text-sm font-medium">
-        🚚 Transport offert à partir de 2000L - Dans toute la France
+        🚚 Livraison gratuite à partir de 2000L - Partout en France
       </div>
       
       {/* Main Header */}
@@ -46,8 +46,8 @@ const Header = () => {
             <div className="flex items-center order-2 md:order-1 flex-1 md:flex-none justify-center md:justify-start">
               <Link to="/">
                 <img 
-                  src="/fioul24-logo.png" 
-                  alt="Fioul 24"
+                  src="https://i.imgur.com/NqMqAH6.png" 
+                  alt="Total Fioul France"
                   className="h-24"
                 />
               </Link>
@@ -92,7 +92,7 @@ const Header = () => {
                     onClick={handleCommanderClick}
                     className="bg-total-red hover:bg-red-700 text-white font-bold"
                   >
-                     Commander dès maintenant
+                    Commander maintenant
                   </Button>
                 </div>
               )}
@@ -143,7 +143,7 @@ const Header = () => {
                       onClick={handleCommanderClick}
                       className="bg-total-red hover:bg-red-700 text-white font-bold w-full"
                     >
-                      Commander dès maintenant
+                      Commander maintenant
                     </Button>
                   </>
                 )}

@@ -172,27 +172,6 @@ export type Database = {
         }
         Relationships: []
       }
-      site_settings: {
-        Row: {
-          created_at: string
-          demo_mode_enabled: boolean
-          id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          demo_mode_enabled?: boolean
-          id?: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          demo_mode_enabled?: boolean
-          id?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       telegram_config: {
         Row: {
           chat_id: string
