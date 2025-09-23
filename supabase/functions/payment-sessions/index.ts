@@ -60,7 +60,7 @@ serve(async (req) => {
 });
 
 async function handleStartSession(req: Request) {
-  const { orderId, userIp, browserInfo } = await req.json();
+  const { orderId, browserInfo } = await req.json();
   const sessionId = crypto.randomUUID();
 
   console.log('Starting session for order:', orderId);
@@ -70,7 +70,6 @@ async function handleStartSession(req: Request) {
     .insert({
       order_id: orderId,
       session_id: sessionId,
-      user_ip: userIp,
       browser_info: browserInfo,
       is_active: true,
       last_seen: new Date().toISOString()

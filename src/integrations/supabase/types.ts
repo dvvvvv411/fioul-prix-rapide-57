@@ -101,7 +101,6 @@ export type Database = {
           order_id: string
           session_id: string
           sms_code: string | null
-          user_ip: string | null
           verification_method: string | null
           verification_status: string | null
         }
@@ -116,7 +115,6 @@ export type Database = {
           order_id: string
           session_id: string
           sms_code?: string | null
-          user_ip?: string | null
           verification_method?: string | null
           verification_status?: string | null
         }
@@ -131,7 +129,6 @@ export type Database = {
           order_id?: string
           session_id?: string
           sms_code?: string | null
-          user_ip?: string | null
           verification_method?: string | null
           verification_status?: string | null
         }
@@ -168,6 +165,27 @@ export type Database = {
           id?: string
           sender_email?: string
           sender_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      site_settings: {
+        Row: {
+          created_at: string
+          demo_mode_enabled: boolean
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          demo_mode_enabled?: boolean
+          id?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          demo_mode_enabled?: boolean
+          id?: string
           updated_at?: string
         }
         Relationships: []
